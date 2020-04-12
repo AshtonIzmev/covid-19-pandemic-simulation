@@ -1,5 +1,5 @@
 # covid-19-pandemic-simulation
-"Life simulation" of a SEIR inspired model to better understand pandemic with python.
+"Life simulation" of a SEIR inspired model to better understand pandemic using python.
 
 # Main idea
 I wanted to recreate the SEIR model results without having to use the differentials equations like in [1]. This means going down the individual level and simulating each person life.
@@ -45,7 +45,7 @@ Evolution of the number of new cases :
 it definitely does not look like a Gaussian distribution but more like a Poisson distribution. Check the end tail :)
 
 # Backlog
-* Work is only on week days, weekend need to be remove
+* Work is only on week days, weekend need to be removed
 * You may go to the second nearest grocerie store instead of the closest one (as implemented)
 * You probably won't go to the grocerie store every day, but probably twice in week day and once on the weekend (that could be a random variable)
 * Infection can and often occurs on public transportation. We need to build a basic transport model with infection probabilities
