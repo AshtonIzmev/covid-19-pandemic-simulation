@@ -47,7 +47,8 @@ stats = []
 for _ in range(N_DAYS):
     # INFECTION AT HOME
     propagate_to_houses(all_ind_hou, all_hou_ind, all_ind_inf, all_ind_con)
-    propagate_to_workplaces(all_ind_wor, all_wor_ind, all_ind_inf, all_ind_con)
+    if(not (((_-5)%7==0)or ((_-6)%7==0))):
+        propagate_to_workplaces(all_ind_wor, all_wor_ind, all_ind_inf, all_ind_con)
     propagate_to_stores(all_ind_hou, all_hou_sto, all_sto_hou, all_hou_adu, all_ind_inf, all_ind_con)
     increment_pandemic_1_day(all_ind_inf, all_ind_age, all_ind_con)
     stats.append((len(get_healthy_people(all_ind_inf)),
