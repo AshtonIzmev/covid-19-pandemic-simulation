@@ -1,0 +1,98 @@
+import random
+import unittest
+
+import numpy
+
+from initiator.core import build_individual_houses_map, build_individual_adult_map, build_individual_age_map, \
+    build_house_adult_map, build_house_store_map, build_individual_work_map
+from initiator.helper import invert_map
+
+
+class TestInitiation(unittest.TestCase):
+
+    @classmethod
+    def setUp(cls):
+        random.seed(12)
+
+    def test_build_individual_houses_map__big_families(self):
+        result = build_individual_houses_map(5, 0.1)
+        self.assertEqual(result, {0: 0, 1: 0, 2: 0, 3: 0, 4: 1})
+
+    def test_build_individual_houses_map__medium_families(self):
+        result = build_individual_houses_map(5, 0.5)
+        self.assertEqual(result, {0: 0, 1: 1, 2: 1, 3: 2, 4: 2})
+
+    def test_build_individual_houses_map__small_families(self):
+        result = build_individual_houses_map(5, 0.95)
+        self.assertEqual(result, {0: 0, 1: 1, 2: 2, 3: 3, 4: 4})
+
+    def test_build_individual_houses_map__average_american_household(self):
+        result = build_individual_houses_map(100, 0.17)
+        self.assertEqual(numpy.mean([len(v) for k, v in invert_map(result).items()]), 2.5)
+
+    def test_build_individual_adult_map(self):
+        input_individual_houses_map = {
+            0: 0, 1: 0, 2: 0, 3: 0,
+            4: 1, 5: 1, 6: 1,
+            7: 2, 8: 2,
+            9: 3
+        }
+        result = build_individual_adult_map(input_individual_houses_map)
+        self.assertEqual(result, {
+            0: 1, 1: 1, 2: 0, 3: 0,
+            4: 1, 5: 1, 6: 0,
+            7: 1, 8: 1,
+            9: 1
+        })
+
+    def test_build_individual_age_map(self):
+        input_individual_houses_map = {
+            0: 0, 1: 0, 2: 0, 3: 0,
+            4: 1, 5: 1, 6: 1,
+            7: 2, 8: 2,
+            9: 3
+        }
+        result = build_individual_age_map(input_individual_houses_map)
+        self.assertEqual(result, {
+            0: 35, 1: 47, 2: 1, 3: 13,
+            4: 22, 5: 35, 6: 13,
+            7: 26, 8: 37,
+            9: 20
+        })
+
+    def test_build_house_adult_map(self):
+        input_individual_houses_map = {
+            0: 0, 1: 0, 2: 0, 3: 0,
+            4: 1, 5: 1, 6: 1,
+            7: 2, 8: 2,
+            9: 3
+        }
+        input_individual_adult_map = {
+            0: 1, 1: 1, 2: 0, 3: 0,
+            4: 1, 5: 1, 6: 0,
+            7: 1, 8: 1,
+            9: 1
+        }
+        result = build_house_adult_map(input_individual_houses_map, input_individual_adult_map)
+        self.assertEqual(result, {0: [0, 1], 1: [4, 5], 2: [7, 8], 3: [9]})
+
+    def test_build_house_store_map(self):
+        geo_position_store = [(5, 5), (4, 4), (3, 3), (2, 2), (1, 1)]
+        geo_position_house = [(5.1, 5.2), (4.1, 4.2), (3.1, 3.2), (2.1, 2.2), (1.1, 1.2)]
+        result = build_house_store_map(geo_position_store, geo_position_house)
+        self.assertEqual(result, {0: 0, 1: 1, 2: 2, 3: 3, 4: 4})
+
+    def test_build_individual_work_map(self):
+        input_individual_adult_map = {
+            0: 1, 1: 1, 2: 0, 3: 0,
+            4: 1, 5: 1, 6: 0,
+            7: 1, 8: 1,
+            9: 1
+        }
+        result = build_individual_work_map(input_individual_adult_map)
+        self.assertEqual(result, {0: 0, 4: 0, 5: 0})
+
+
+if __name__ == '__main__':
+    unittest.main()
+

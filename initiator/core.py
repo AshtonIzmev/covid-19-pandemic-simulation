@@ -3,10 +3,9 @@ import random
 from scipy import spatial
 
 from initiator.helper import get_r, invert_map, pick_age, get_center_squized_random, pick_random_company_size
-from initiator.parameters import PROBA_SAME_HOUSE_RATE
 
 
-def build_individual_houses_map(number_individual_arg):
+def build_individual_houses_map(number_individual_arg, proba_same_house_rate):
     # Individual -> House
     all_ind_hou = {}
     i_hou = 0
@@ -19,7 +18,7 @@ def build_individual_houses_map(number_individual_arg):
             i_ind = i_ind + 1  # GOTO next person
             is_first_person = False
             continue
-        if prob_keep_hou > PROBA_SAME_HOUSE_RATE:
+        if prob_keep_hou > proba_same_house_rate:
             all_ind_hou[i_ind] = i_hou  # Attach Next person
             i_ind = i_ind + 1  # GOTO next person
             prob_keep_hou = prob_keep_hou / 2  # Divide probability keep_foy
@@ -40,8 +39,10 @@ def build_individual_adult_map(individual_house_map_arg):
     incr_ind = 1
     i_ind = 1
     while i_ind < len(individual_house_map_arg):
-        if individual_house_map_arg[i_ind] != individual_house_map_arg[i_ind-1]: # We have a new house
+        if individual_house_map_arg[i_ind] != individual_house_map_arg[i_ind-1]:  # We have a new house
             incr_ind = 0
+        # First two persons in a house are adults since children cannot live alone
+        # Could be extended to monoparental families but anyway ...
         if incr_ind < 2:
             all_ind_adu[i_ind] = 1
         else:
@@ -71,8 +72,9 @@ def build_house_adult_map(individual_house_map_arg, individual_adult_map_arg):
     # House -> List of adults (needed to check you goes to the store)
     all_hou_adu = {}
     for k, v in individual_house_map_arg.items():
-        all_hou_adu[v] = [i for i in all_hou_adu.get(v, []) if individual_adult_map_arg[i] == 1]
-        all_hou_adu[v].append(k)
+        all_hou_adu[v] = all_hou_adu.get(v, [])
+        if individual_adult_map_arg[k] == 1:
+            all_hou_adu[v].append(k)
     return all_hou_adu
 
 
@@ -88,9 +90,9 @@ def build_geo_positions_workplace(number_workpolace_arg):
     return [(get_center_squized_random(), get_center_squized_random()) for i in range(number_workpolace_arg)]
 
 
-def build_house_store_map(geo_position_store_arg, geo_position_house_arg, number_house_arg):
+def build_house_store_map(geo_position_store_arg, geo_position_house_arg):
     distance, indexes = spatial.KDTree(geo_position_store_arg).query(geo_position_house_arg)
-    all_hou_sto = dict(zip(range(number_house_arg), indexes))
+    all_hou_sto = dict(zip(range(len(geo_position_house_arg)), indexes))
     return all_hou_sto
 
 
@@ -105,7 +107,6 @@ def build_individual_work_map(individual_adult_map_arg):
                     and individual_adult_map_arg[i] == 1])
     random.shuffle(workers)
     all_ind_wor = {}
-    i_ind = 0
     i_wor = 0
     while len(workers) > 0:
         for j in range(pick_random_company_size()):
