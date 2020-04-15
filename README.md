@@ -5,6 +5,7 @@ This project is subject to heavy changes until 2020/04/20.
 
 # Getting started
 ```bash
+pip install -r requirements.txt
 # To plot new daily cases
 python -m simulator.main new  
 # To plot infection daily states

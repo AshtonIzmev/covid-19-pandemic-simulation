@@ -8,5 +8,6 @@ HA_K = "house_to_adult_mapping"
 HS_K = "house_to_store_mapping"
 SH_K = "store_to_house_mapping"
 
-IINC_K = "individual_to_incubation_mapping"
-ICON_K = "individual_to_contagion_mapping"
+DEC_K = "individual_to_incubation_mapping"
+CON_K = "individual_to_contagion_mapping"
+STA_K = "individual_to_state_mapping"

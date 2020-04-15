@@ -5,6 +5,7 @@ from initiator.core import build_individual_houses_map, build_house_individual_m
 from initiator.helper import get_r
 from simulator.dynamic_helper import get_default_infection_parameters
 from simulator.keys import *
+from simulator.parameters import HEALTHY_V, INFECTED_V
 
 
 def get_environment_simulation(number_of_individuals_arg, same_house_rate_arg, number_store_per_house_arg):
@@ -37,20 +38,26 @@ def get_environment_simulation(number_of_individuals_arg, same_house_rate_arg, n
     }
 
 
+# TIME_TO_DECISION  : time between infection and decision (immunity/death)
+# TIME_TO_CONTAGION : time between infection and contagiosity
 def get_virus_simulation_t0(number_of_individuals_arg, infection_initialization_rate_arg):
     inn_ind_cov = dict(zip(range(number_of_individuals_arg),
                            [int(get_r() <= infection_initialization_rate_arg) for i in range(number_of_individuals_arg)]))
 
-    all_ind_inf = dict(zip(range(number_of_individuals_arg), [-1] * number_of_individuals_arg))
-    all_ind_con = dict(zip(range(number_of_individuals_arg),  [0] * number_of_individuals_arg))
-    ind_infected_init = [k for k, v in inn_ind_cov.items() if v == 1]
+    life_state = dict(zip(range(number_of_individuals_arg), [HEALTHY_V] * number_of_individuals_arg))
 
-    for ind in ind_infected_init:
-        incubation, contagiosity = get_default_infection_parameters()
-        all_ind_inf[ind] = incubation
-        all_ind_con[ind] = contagiosity
+    time_to_decision = dict(zip(range(number_of_individuals_arg),
+                                [get_default_infection_parameters()[0] for _ in range(number_of_individuals_arg)]))
+    time_to_contagion = dict(zip(range(number_of_individuals_arg),
+                                 [get_default_infection_parameters()[1] for _ in range(number_of_individuals_arg)]))
+
+    infected_individual_init = [k for k, v in inn_ind_cov.items() if v == 1]
+
+    for individual in infected_individual_init:
+        life_state[individual] = INFECTED_V
 
     return {
-        IINC_K: all_ind_inf,
-        ICON_K: all_ind_con,
+        DEC_K: time_to_decision,
+        CON_K: time_to_contagion,
+        STA_K: life_state
     }

@@ -2,8 +2,7 @@ from initiator.helper import flatten, get_random_choice_list
 from initiator.helper import get_infection_parameters
 from initiator.helper import get_r, get_mortalty_rate
 from simulator.keys import *
-from simulator.parameters import LOWER_CONTAGION_BOUND, LOWER_INFECTION_BOUND, \
-    UPPER_CONTAGION_BOUND, UPPER_INFECTION_BOUND, HEALTHY_STATE, DEAD_STATE, IMMUNE_STATE
+from simulator.parameters import *
 
 
 # Assuming 0 is Monday
@@ -16,40 +15,39 @@ def get_default_infection_parameters():
                                     LOWER_CONTAGION_BOUND, UPPER_CONTAGION_BOUND)
 
 
-def update_infection_period(who_is_infected, virus_dic):
-    for i in who_is_infected:
-        if virus_dic[IINC_K][i] == HEALTHY_STATE:  # If has never been infected
-            incubation, contagion = get_default_infection_parameters()
-            virus_dic[IINC_K][i] = incubation
-            virus_dic[ICON_K][i] = contagion
+def update_infection_period(newly_infected_individuals_arg, virus_dic):
+    for i in newly_infected_individuals_arg:
+        if virus_dic[STA_K][i] == HEALTHY_V:
+            virus_dic[STA_K][i] = INFECTED_V
 
 
 def increment_pandemic_1_day(env_dic, virus_dic):
     for i in get_infected_people(virus_dic):
-        virus_dic[ICON_K][i] = virus_dic[ICON_K][i] - 1
-        if virus_dic[IINC_K][i] > DEAD_STATE + 1:
-            virus_dic[IINC_K][i] = virus_dic[IINC_K][i] - 1
-        elif virus_dic[IINC_K][i] == DEAD_STATE + 1:  # Decide over life
+        # Contagion and decision periods are decremented
+        virus_dic[CON_K][i] = virus_dic[CON_K][i] - 1
+        virus_dic[DEC_K][i] = virus_dic[DEC_K][i] - 1
+        # Decide over life
+        if virus_dic[DEC_K][i] == 0:
             if get_r() < get_mortalty_rate(env_dic[IAG_K][i]):
-                virus_dic[IINC_K][i] = 0
+                virus_dic[STA_K][i] = DEAD_V
             else:
-                virus_dic[IINC_K][i] = -2  # Grant immunity
+                virus_dic[STA_K][i] = IMMUNE_V
 
 
 def get_infected_people(virus_dic):
-    return [k for k, v in virus_dic[IINC_K].items() if v > DEAD_STATE]
+    return [k for k, v in virus_dic[STA_K].items() if v == INFECTED_V]
 
 
 def get_deadpeople(virus_dic):
-    return [k for k, v in virus_dic[IINC_K].items() if v == DEAD_STATE]
+    return [k for k, v in virus_dic[STA_K].items() if v == DEAD_V]
 
 
 def get_healthy_people(virus_dic):
-    return [k for k, v in virus_dic[IINC_K].items() if v == HEALTHY_STATE]
+    return [k for k, v in virus_dic[STA_K].items() if v == HEALTHY_V]
 
 
 def get_immune_people(virus_dic):
-    return [k for k, v in virus_dic[IINC_K].items() if v == IMMUNE_STATE]
+    return [k for k, v in virus_dic[STA_K].items() if v == IMMUNE_V]
 
 
 def get_pandemic_statistics(virus_dic):
@@ -58,7 +56,11 @@ def get_pandemic_statistics(virus_dic):
 
 
 def is_contagious(individual_arg, virus_dic):
-    return virus_dic[ICON_K][individual_arg] < 0
+    return virus_dic[STA_K][individual_arg] == INFECTED_V and virus_dic[CON_K][individual_arg] < 0
+
+
+def is_alive(individual_arg, virus_dic):
+    return virus_dic[STA_K][individual_arg] != DEAD_V
 
 
 def propagate_to_houses(env_dic, virus_dic, probability_home_infection_arg):
@@ -90,7 +92,7 @@ def propagate_to_workplaces(env_dic, virus_dic, probability_work_infection_arg):
 def propagate_to_stores(env_dic, virus_dic, probability_store_infection_arg):
     # Filter on living people because we have a random choice to make in each house
     # People who will go to their store (one person per house as imposed by lockdown)
-    individuals_gotostore = get_random_choice_list([[i for i in env_dic[HA_K][h] if virus_dic[IINC_K][i] != DEAD_STATE]
+    individuals_gotostore = get_random_choice_list([[i for i in env_dic[HA_K][h] if is_alive(i, virus_dic)]
                                                     for h in range(len(env_dic[HA_K]))])
 
     # Contagious people who will go to their store
