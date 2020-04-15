@@ -11,9 +11,11 @@ def get_r():
 
 
 def get_random_choice_list(list_of_list_arg):
+    result = []
     for list_arg in list_of_list_arg:
         if len(list_arg) > 0:
-            yield random.choice(list_arg)
+            result.append(random.choice(list_arg))
+    return result
 
 
 def get_infection_parameters(lower_infection_bound, upper_infection_bound,

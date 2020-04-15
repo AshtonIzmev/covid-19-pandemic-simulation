@@ -1,6 +1,8 @@
 # covid-19-pandemic-simulation
 "Life simulation" of a SEIR inspired model to better understand pandemic using python.
 
+This project is subject to heavy changes until 2020/04/20.
+
 # Getting started
 ```bash
 # To plot new daily cases

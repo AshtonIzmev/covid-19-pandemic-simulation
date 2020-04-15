@@ -42,7 +42,7 @@ def get_virus_simulation_t0(number_of_individuals_arg, infection_initialization_
                            [int(get_r() <= infection_initialization_rate_arg) for i in range(number_of_individuals_arg)]))
 
     all_ind_inf = dict(zip(range(number_of_individuals_arg), [-1] * number_of_individuals_arg))
-    all_ind_con = dict(zip(range(number_of_individuals_arg), [-1] * number_of_individuals_arg))
+    all_ind_con = dict(zip(range(number_of_individuals_arg),  [0] * number_of_individuals_arg))
     ind_infected_init = [k for k, v in inn_ind_cov.items() if v == 1]
 
     for ind in ind_infected_init:
