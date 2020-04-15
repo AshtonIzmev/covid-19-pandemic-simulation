@@ -17,16 +17,14 @@ So what is "life" in a pandemic lockdown situation (where almost all nations are
 
 
 # Input parameters
-* N : number of person involved in this simulation (default 5000)
-* N_days : number of days for the simulation (default 120)
+* N_INDIVIDUALS : number of person involved in this simulation (default 5000)
+* N_DAYS : number of days for the simulation (default 120)
 * NB_STO_PER_HOU : number of house for each store (default 20)
 * PROBA_SAME_HOUSE_RATE : probability used to define the number of individuals in a house (default 0.1 builds 3.57 average people per house)
-* PROB_INFECTION_AT_HOME : probability of getting infected if an infected individual lives in the same house (defaut 0.5)
-* PROB_INFECTION_AT_WORK : probability of getting infected if an infected individual works in the same place (default 0.1)
-* PROB_INFECTION_AT_STORE : probability of getting infected if an infected individual shops at the same store (default 0.05 since we tend to spend less time in a store)
-* TPE_MAX_EMPLOYEES : number of employees in a small size company (default 3)
-* PME_MAX_EMPLOYEES : number of employees in a medium size company (default 15)
-* GE_MAX_EMPLOYEES : number of employees in a large size company (default 50)
+* INITIAL_INNOCULATION_PCT : Percentage of people who get the virus at day 0
+* PROB_HOUSE_INFECTION : probability of getting infected if an infected individual lives in the same house (defaut 0.5)
+* PROB_WORK_INFECTION : probability of getting infected if an infected individual works in the same place (default 0.1)
+* PROB_STORE_INFECTION : probability of getting infected if an infected individual shops at the same store (default 0.05 since we tend to spend less time in a store)
 
 All those parameters can be discussed and will be enriched as I keep enhancing this simulation model.
 

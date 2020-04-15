@@ -1,0 +1,12 @@
+IH_K = "individual_to_house_mapping"
+HI_K = "house_to_individual_mapping"
+IAD_K = "individual_to_adult_mapping"
+IAG_K = "individual_to_age_mapping"
+IW_K = "individual_to_work_mapping"
+WI_K = "work_to_individual_mapping"
+HA_K = "house_to_adult_mapping"
+HS_K = "house_to_store_mapping"
+SH_K = "store_to_house_mapping"
+
+IINC_K = "individual_to_incubation_mapping"
+ICON_K = "individual_to_contagion_mapping"

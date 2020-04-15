@@ -1,7 +1,3 @@
-
-
-NB_STO_PER_HOU = 20  # Let's say we have 20 houses for each grocerie store
-PROBA_SAME_HOUSE_RATE = 10/100  # probability used to set the number of person per house
 TPE_MAX_EMPLOYEES = 3
 PME_MAX_EMPLOYEES = 15
 GE_MAX_EMPLOYEES = 50
