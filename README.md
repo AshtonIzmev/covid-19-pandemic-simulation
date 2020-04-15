@@ -1,6 +1,14 @@
 # covid-19-pandemic-simulation
 "Life simulation" of a SEIR inspired model to better understand pandemic using python.
 
+# Getting started
+```bash
+# To plot new daily cases
+python -m simulator.main new  
+# To plot infection daily states
+python -m simulator.main state  
+```
+
 # Main idea
 I wanted to recreate the SEIR model results without having to use the differentials equations like in [1]. This means going down the individual level and simulating each person life.
 
