@@ -5,7 +5,6 @@ from simulator.simulation_helper import get_environment_simulation, get_virus_si
 from simulator.dynamic_helper import update_infection_period, increment_pandemic_1_day, \
     propagate_to_houses, propagate_to_stores, propagate_to_workplaces
 from simulator.keys import *
-from simulator.parameters import HEALTHY_V, DEAD_V, IMMUNE_V, INFECTED_V
 
 H = HEALTHY_V
 F = INFECTED_V
@@ -47,7 +46,7 @@ class TestSimulation(unittest.TestCase):
         self.assertEqual(result, expected_result)
 
     def test_build_virus_dic(self):
-        result = get_virus_simulation_t0(10, 0.1)
+        result = get_virus_simulation_t0(10, 0.1, (21, 39), (2, 7))
         expected_result = TestSimulation.get_10_01_virus_dic()
         self.assertEqual(result, expected_result)
 

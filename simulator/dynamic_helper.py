@@ -2,17 +2,11 @@ from initiator.helper import flatten, get_random_choice_list
 from initiator.helper import get_infection_parameters
 from initiator.helper import get_r, get_mortalty_rate
 from simulator.keys import *
-from simulator.parameters import *
 
 
 # Assuming 0 is Monday
 def is_weekend(i):
     return ((i - 5) % 7 == 0) or ((i - 6) % 7 == 0)
-
-
-def get_default_infection_parameters():
-    return get_infection_parameters(LOWER_INFECTION_BOUND, UPPER_INFECTION_BOUND,
-                                    LOWER_CONTAGION_BOUND, UPPER_CONTAGION_BOUND)
 
 
 def update_infection_period(newly_infected_individuals_arg, virus_dic):

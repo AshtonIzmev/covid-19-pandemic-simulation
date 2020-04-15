@@ -3,9 +3,8 @@ from initiator.core import build_individual_houses_map, build_house_individual_m
     build_house_store_map, build_store_house_map, \
     build_geo_positions_house, build_geo_positions_store, build_geo_positions_workplace
 from initiator.helper import get_r
-from simulator.dynamic_helper import get_default_infection_parameters
+from simulator.dynamic_helper import get_infection_parameters
 from simulator.keys import *
-from simulator.parameters import HEALTHY_V, INFECTED_V
 
 
 def get_environment_simulation(number_of_individuals_arg, same_house_rate_arg, number_store_per_house_arg):
@@ -40,16 +39,21 @@ def get_environment_simulation(number_of_individuals_arg, same_house_rate_arg, n
 
 # TIME_TO_DECISION  : time between infection and decision (immunity/death)
 # TIME_TO_CONTAGION : time between infection and contagiosity
-def get_virus_simulation_t0(number_of_individuals_arg, infection_initialization_rate_arg):
+def get_virus_simulation_t0(number_of_individuals_arg, infection_initialization_rate_arg,
+                            infection_bound_args, contagion_bound_args):
     inn_ind_cov = dict(zip(range(number_of_individuals_arg),
                            [int(get_r() <= infection_initialization_rate_arg) for i in range(number_of_individuals_arg)]))
 
     life_state = dict(zip(range(number_of_individuals_arg), [HEALTHY_V] * number_of_individuals_arg))
 
+    def get_infection_params():
+        return get_infection_parameters(infection_bound_args[0], infection_bound_args[1],
+                                        contagion_bound_args[0], contagion_bound_args[1])
+
     time_to_decision = dict(zip(range(number_of_individuals_arg),
-                                [get_default_infection_parameters()[0] for _ in range(number_of_individuals_arg)]))
+                                [get_infection_params()[0] for _ in range(number_of_individuals_arg)]))
     time_to_contagion = dict(zip(range(number_of_individuals_arg),
-                                 [get_default_infection_parameters()[1] for _ in range(number_of_individuals_arg)]))
+                                 [get_infection_params()[1] for _ in range(number_of_individuals_arg)]))
 
     infected_individual_init = [k for k, v in inn_ind_cov.items() if v == 1]
 

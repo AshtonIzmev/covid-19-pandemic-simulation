@@ -11,3 +11,8 @@ SH_K = "store_to_house_mapping"
 DEC_K = "individual_to_incubation_mapping"
 CON_K = "individual_to_contagion_mapping"
 STA_K = "individual_to_state_mapping"
+
+HEALTHY_V = 0
+INFECTED_V = 1
+IMMUNE_V = 2
+DEAD_V = 3
