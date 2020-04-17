@@ -10,6 +10,7 @@ H = HEALTHY_V
 F = INFECTED_V
 M = IMMUNE_V
 D = DEAD_V
+P = HOSPITALIZED_V
 
 
 class TestSimulation(unittest.TestCase):
@@ -19,10 +20,20 @@ class TestSimulation(unittest.TestCase):
         random.seed(12)
 
     @staticmethod
+    def get_virus_dic():
+        return {
+            CON_K: {0: 4, 1: 4, 2: 2, 3: 5, 4: 6, 5: 6, 6: 6, 7: 4, 8: 5, 9: 2},
+            HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
+            DEA_K: {0: 21, 1: 32, 2: 24, 3: 38, 4: 24, 5: 24, 6: 21, 7: 27, 8: 21, 9: 38},
+            STA_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0}
+        }
+
+    @staticmethod
     def get_10_01_virus_dic():
         return {
             CON_K: {0:  4, 1:  3, 2:  2, 3:  2, 4:  6, 5:  4, 6:  4, 7:  2, 8:  6, 9:  5},
-            DEC_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: 22, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
+            HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9:  8},
+            DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: 22, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
             STA_K: {0:  H, 1:  H, 2:  H, 3:  H, 4:  F, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H}
         }
 
@@ -46,8 +57,8 @@ class TestSimulation(unittest.TestCase):
         self.assertEqual(result, expected_result)
 
     def test_build_virus_dic(self):
-        result = get_virus_simulation_t0(10, 0.1, (21, 39), (2, 7))
-        expected_result = TestSimulation.get_10_01_virus_dic()
+        result = get_virus_simulation_t0(10, 0.1, (2, 7), (7, 21), (21, 39))
+        expected_result = TestSimulation.get_virus_dic()
         self.assertEqual(result, expected_result)
 
     def test_update_infection_period(self):
@@ -61,38 +72,51 @@ class TestSimulation(unittest.TestCase):
         self.assertEqual(virus_dic[STA_K][9], F)
 
     def test_increment_pandemic_1_day(self):
+        random.seed(22)
         env_dic = TestSimulation.get_10_01_2_environment_dic()
         virus_dic = {
-            CON_K: {0: 4,  1: -2, 2: -5, 3:  2, 4:  6, 5: -9, 6: -3, 7:  2, 8:  6, 9:  5},
-            DEC_K: {0: 31, 1:  1, 2:  0, 3: 22, 4: 22, 5:  0, 6:  1, 7: 22, 8: 30, 9: 38},
-            STA_K: {0:  H, 1:  F, 2:  D, 3:  H, 4:  F, 5:  M, 6:  F, 7:  F, 8:  H, 9:  H}
+            CON_K: {0: 4,  1: -2, 2: -5, 3: -4, 4:  6, 5: -9, 6: -3, 7:  2, 8:  6, 9:  5},
+            HOS_K: {0: 12, 1: 12, 2: 20, 3:  1, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
+            DEA_K: {0: 31, 1:  1, 2:  0, 3: 22, 4: 22, 5:  0, 6:  1, 7: 22, 8: 30, 9: 38},
+            STA_K: {0:  H, 1:  F, 2:  D, 3:  F, 4:  F, 5:  M, 6:  F, 7:  F, 8:  H, 9:  H}
         }
+        env_dic[IAG_K][3] = 82
         increment_pandemic_1_day(env_dic, virus_dic)
         self.assertEqual(virus_dic[CON_K][0], 4)
-        self.assertEqual(virus_dic[DEC_K][0], 31)
+        self.assertEqual(virus_dic[HOS_K][0], 12)
+        self.assertEqual(virus_dic[DEA_K][0], 31)
         self.assertEqual(virus_dic[STA_K][0], H)
 
         self.assertEqual(virus_dic[CON_K][1], -3)
-        self.assertEqual(virus_dic[DEC_K][1], 0)
+        self.assertEqual(virus_dic[HOS_K][1], 11)
+        self.assertEqual(virus_dic[DEA_K][1], 0)
         self.assertEqual(virus_dic[STA_K][1], M)
 
         self.assertEqual(virus_dic[CON_K][2], -5)
-        self.assertEqual(virus_dic[DEC_K][2], 0)
+        self.assertEqual(virus_dic[HOS_K][2], 20)
+        self.assertEqual(virus_dic[DEA_K][2], 0)
         self.assertEqual(virus_dic[STA_K][2], D)
 
+        self.assertEqual(virus_dic[CON_K][3], -5)
+        self.assertEqual(virus_dic[HOS_K][3], 0)
+        self.assertEqual(virus_dic[DEA_K][3], 21)
+        self.assertEqual(virus_dic[STA_K][3], P)
+
         self.assertEqual(virus_dic[CON_K][5], -9)
-        self.assertEqual(virus_dic[DEC_K][5], 0)
+        self.assertEqual(virus_dic[DEA_K][5], 0)
         self.assertEqual(virus_dic[STA_K][5], M)
 
         self.assertEqual(virus_dic[CON_K][6], -4)
-        self.assertEqual(virus_dic[DEC_K][6], 0)
+        self.assertEqual(virus_dic[HOS_K][6], 13)
+        self.assertEqual(virus_dic[DEA_K][6], 0)
         self.assertEqual(virus_dic[STA_K][6], M)
 
     def test_propagate_to_houses_contagious_people(self):
         env_dic = TestSimulation.get_10_01_2_environment_dic()
         virus_dic = {
             CON_K: {0: -9, 1:  3, 2:  2, 3:  2, 4: -9, 5:  4, 6:  4, 7:  2, 8:  6, 9:  5},
-            DEC_K: {0: -5, 1: 23, 2: 23, 3: 22, 4: -5, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
+            HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
+            DEA_K: {0: -5, 1: 23, 2: 23, 3: 22, 4: -5, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
             STA_K: {0:  F, 1:  H, 2:  H, 3:  H, 4:  D, 5:  H, 6:  H, 7:  H, 8:  M, 9:  H}
         }
         propagate_to_houses(env_dic, virus_dic, 0.99)
@@ -115,7 +139,8 @@ class TestSimulation(unittest.TestCase):
         env_dic = TestSimulation.get_10_01_2_environment_dic()
         virus_dic = {
             CON_K: {0: 4, 1: 3, 2: 2, 3: 2, 4: 6, 5: 4, 6: 4, 7: 2, 8: 6, 9: 5},
-            DEC_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: 22, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
+            HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
+            DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: 22, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
             STA_K: {0:  F, 1:  H, 2:  H, 3:  H, 4:  D, 5:  H, 6:  H, 7:  H, 8:  M, 9:  H}
         }
         propagate_to_houses(env_dic, virus_dic, 0.99)
@@ -144,7 +169,8 @@ class TestSimulation(unittest.TestCase):
         }
         virus_dic = {
             CON_K: {0: 4,  1:  3, 2:  2, 3:  2, 4: -5, 5:  4, 6:  4, 7:  2, 8:  6, 9:  5},
-            DEC_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: -2, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
+            HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
+            DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: -2, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
             STA_K: {0:  H, 1:  H, 2:  H, 3:  F, 4:  D, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H}
         }
         propagate_to_stores(env_dic, virus_dic, 0.99)
@@ -169,7 +195,8 @@ class TestSimulation(unittest.TestCase):
         }
         virus_dic = {
             CON_K: {0: 4,  1:  3, 2:  2, 3:  2, 4: -5, 5:  4, 6:  4, 7:  2, 8:  6, 9:  5},
-            DEC_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: -2, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
+            HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
+            DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: -2, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
             STA_K: {0:  H, 1:  F, 2:  H, 3:  H, 4:  H, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H}
         }
         propagate_to_stores(env_dic, virus_dic, 0.99)
@@ -194,7 +221,8 @@ class TestSimulation(unittest.TestCase):
         }
         virus_dic = {
             CON_K: {0: 4,  1: -2, 2:  2, 3:  2, 4: -5, 5:  4, 6:  4, 7:  2, 8:  6, 9:  5},
-            DEC_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: -2, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
+            HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
+            DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: -2, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
             STA_K: {0:  H, 1:  F, 2:  H, 3:  H, 4:  H, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H}
         }
         propagate_to_stores(env_dic, virus_dic, 0.99)
@@ -219,7 +247,8 @@ class TestSimulation(unittest.TestCase):
         }
         virus_dic = {
             CON_K: {0: 4,  1: -2, 2: 2,  3:  2, 4: -5, 5:  4, 6:  4, 7:  2, 8:  6, 9:  5},
-            DEC_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: -2, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
+            HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
+            DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: -2, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
             STA_K: {0:  H, 1:  H, 2:  H, 3:  H, 4:  F, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H}
         }
         propagate_to_workplaces(env_dic, virus_dic, 0.99)
@@ -242,7 +271,8 @@ class TestSimulation(unittest.TestCase):
         }
         virus_dic = {
             CON_K: {0: 4,  1: -2, 2: 2,  3:  2, 4:  1, 5:  4, 6:  4, 7:  2, 8:  6, 9:  5},
-            DEC_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: 17, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
+            HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
+            DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: 17, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
             STA_K: {0:  H, 1:  H, 2:  H, 3:  H, 4:  F, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H}
         }
         propagate_to_workplaces(env_dic, virus_dic, 0.99)
@@ -265,7 +295,8 @@ class TestSimulation(unittest.TestCase):
         }
         virus_dic = {
             CON_K: {0: -2, 1: -2, 2: -2, 3: -2, 4:  1, 5:  4, 6: -2, 7:  2, 8:  6, 9:  5},
-            DEC_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: 17, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
+            HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
+            DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: 17, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
             STA_K: {0:  F, 1:  H, 2:  F, 3:  F, 4:  H, 5:  H, 6:  F, 7:  H, 8:  H, 9:  H}
         }
         propagate_to_workplaces(env_dic, virus_dic, 0.99)

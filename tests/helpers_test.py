@@ -1,7 +1,8 @@
 import random
 import unittest
 
-from initiator.helper import invert_map, flatten, get_random_choice_list, get_infection_parameters
+from initiator.helper import invert_map, flatten, get_random_choice_list, get_infection_parameters, \
+    get_mortalty_rate, get_hospitalization_rate
 
 
 class TestHelpers(unittest.TestCase):
@@ -30,9 +31,18 @@ class TestHelpers(unittest.TestCase):
         self.assertEqual(result, [2, 0, 3])
 
     def test_get_infection_parameters(self):
-        result = get_infection_parameters(2, 7, 21, 39)
+        result = get_infection_parameters(2, 7, 7, 21, 21, 39)
         self.assertEqual(result[0], 4)
-        self.assertEqual(result[1], 32)
+        self.assertEqual(result[1], 16)
+        self.assertEqual(result[2], 32)
+
+    def test_get_mortalty_rate(self):
+        self.assertEqual(get_mortalty_rate(62), 0.036)
+        self.assertEqual(get_mortalty_rate(31), 0.02)
+
+    def test_get_mortalty_rate2(self):
+        self.assertEqual(get_hospitalization_rate(44), 0.025)
+        self.assertEqual(get_hospitalization_rate(19), 0.01)
 
 
 if __name__ == '__main__':

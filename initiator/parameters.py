@@ -15,6 +15,18 @@ covid_mortality_rate = {
     0: 0
 }
 
+covid_hospitalization_rate = {
+    8: 0.172,
+    7: 0.158,
+    6: 0.122,
+    5: 0.074,
+    4: 0.025,
+    3: 0.025,
+    2: 0.025,
+    1: 0.01,
+    0: 0.03
+}
+
 # Source https://www.populationpyramid.net/world/2019/
 world_age_distribution = [
     ["0-4", 349247348, 328119059],

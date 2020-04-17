@@ -8,11 +8,14 @@ HA_K = "house_to_adult_mapping"
 HS_K = "house_to_store_mapping"
 SH_K = "store_to_house_mapping"
 
-DEC_K = "individual_to_incubation_mapping"
 CON_K = "individual_to_contagion_mapping"
+HOS_K = "individual_to_hospital_mapping"
+DEA_K = "individual_to_death_mapping"
 STA_K = "individual_to_state_mapping"
 
 HEALTHY_V = 0
 INFECTED_V = 1
 IMMUNE_V = 2
 DEAD_V = 3
+
+HOSPITALIZED_V = 4

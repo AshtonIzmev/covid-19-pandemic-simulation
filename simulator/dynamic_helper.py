@@ -1,6 +1,5 @@
 from initiator.helper import flatten, get_random_choice_list
-from initiator.helper import get_infection_parameters
-from initiator.helper import get_r, get_mortalty_rate
+from initiator.helper import get_r, get_mortalty_rate, get_hospitalization_rate
 from simulator.keys import *
 
 
@@ -19,17 +18,24 @@ def increment_pandemic_1_day(env_dic, virus_dic):
     for i in get_infected_people(virus_dic):
         # Contagion and decision periods are decremented
         virus_dic[CON_K][i] = virus_dic[CON_K][i] - 1
-        virus_dic[DEC_K][i] = virus_dic[DEC_K][i] - 1
+        virus_dic[HOS_K][i] = virus_dic[HOS_K][i] - 1
+        virus_dic[DEA_K][i] = virus_dic[DEA_K][i] - 1
+        if virus_dic[HOS_K][i] == 0 and get_r() < get_hospitalization_rate(env_dic[IAG_K][i]):
+            virus_dic[STA_K][i] = HOSPITALIZED_V
         # Decide over life
-        if virus_dic[DEC_K][i] == 0:
+        if virus_dic[DEA_K][i] == 0:
             if get_r() < get_mortalty_rate(env_dic[IAG_K][i]):
                 virus_dic[STA_K][i] = DEAD_V
             else:
                 virus_dic[STA_K][i] = IMMUNE_V
 
 
+def get_hospitalized_people(virus_dic):
+    return [k for k, v in virus_dic[STA_K].items() if v == HOSPITALIZED_V]
+
+
 def get_infected_people(virus_dic):
-    return [k for k, v in virus_dic[STA_K].items() if v == INFECTED_V]
+    return [k for k, v in virus_dic[STA_K].items() if v in [INFECTED_V, HOSPITALIZED_V]]
 
 
 def get_deadpeople(virus_dic):
@@ -46,7 +52,8 @@ def get_immune_people(virus_dic):
 
 def get_pandemic_statistics(virus_dic):
     return (len(get_healthy_people(virus_dic)), len(get_infected_people(virus_dic)),
-            len(get_deadpeople(virus_dic)), len(get_immune_people(virus_dic)))
+            len(get_hospitalized_people(virus_dic)), len(get_deadpeople(virus_dic)),
+            len(get_immune_people(virus_dic)))
 
 
 def is_contagious(individual_arg, virus_dic):

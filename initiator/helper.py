@@ -2,7 +2,7 @@ import random
 
 import pandas as pd
 
-from initiator.parameters import covid_mortality_rate, world_age_distribution, \
+from initiator.parameters import covid_mortality_rate, covid_hospitalization_rate, world_age_distribution, \
     TPE_MAX_EMPLOYEES, PME_MAX_EMPLOYEES, GE_MAX_EMPLOYEES
 
 
@@ -18,16 +18,23 @@ def get_random_choice_list(list_of_list_arg):
     return result
 
 
-def get_infection_parameters(lower_infection_bound, upper_infection_bound,
-                             lower_contagion_bound, upper_contagion_bound):
+def get_infection_parameters(lower_contagion_bound, upper_contagion_bound,
+                             lower_hospitalization_bound, upper_hospitalization_bound,
+                             lower_infection_bound, upper_infection_bound):
     # Time to death/immunity , Time to contagiosity
-    return int(lower_infection_bound + (upper_infection_bound - lower_infection_bound) * get_r()), \
-           int(lower_contagion_bound + (upper_contagion_bound - lower_contagion_bound) * get_r())
+    return int(lower_contagion_bound + (upper_contagion_bound - lower_contagion_bound) * get_r()), \
+           int(lower_hospitalization_bound + (upper_hospitalization_bound - lower_hospitalization_bound) * get_r()), \
+           int(lower_infection_bound + (upper_infection_bound - lower_infection_bound) * get_r())
 
 
 def get_mortalty_rate(age):
     i = next(x for x in enumerate(list(covid_mortality_rate.keys())) if x[1] <= age / 10)
     return covid_mortality_rate[i[1]]
+
+
+def get_hospitalization_rate(age):
+    i = next(x for x in enumerate(list(covid_hospitalization_rate.keys())) if x[1] <= age / 10)
+    return covid_hospitalization_rate[i[1]]
 
 
 def flatten(list_arg):
