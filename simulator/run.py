@@ -2,7 +2,7 @@ from simulator.dynamic_helper import propagate_to_stores, propagate_to_houses, p
     increment_pandemic_1_day, is_weekend, get_pandemic_statistics
 from simulator.parameters import *
 from simulator.plot_helper import draw_new_daily_cases, draw_population_state_daily, print_progress_bar, \
-    draw_specific_population_state_daily
+    draw_specific_population_state_daily, draw_summary
 from simulator.run_helper import get_parser
 from simulator.simulation_helper import get_environment_simulation, get_virus_simulation_t0
 
@@ -39,8 +39,6 @@ if __name__ == '__main__':
         if arg in params and v is not None:
             params[arg] = v
 
-    print(params)
-
     stats_result = launch_run()
     if args.new_cases:
         draw_new_daily_cases(stats_result, params[nrun_key], params[nday_key], params[nindividual_key])
@@ -48,4 +46,6 @@ if __name__ == '__main__':
         draw_specific_population_state_daily(stats_result, params[nrun_key], params[nday_key], params[nindividual_key])
     if args.population_state:
         draw_population_state_daily(stats_result, params[nrun_key], params[nday_key], params[nindividual_key])
+    if args.summary:
+        draw_summary(stats_result, params[nrun_key], params[nday_key], params[nindividual_key])
 

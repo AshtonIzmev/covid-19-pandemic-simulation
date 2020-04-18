@@ -18,6 +18,9 @@ python -m simulator.run --population-state --nday 150
 
 ### To plot hospitalization state with 5000 individuals
 python -m simulator.run --hospitalized-cases --nday 200 --nind 5000
+
+### To plot a summary of the pandemic (with short immunity time)
+python -m simulator.run  --nday 500 --nind 5000 --summary --immunity-bounds 120 150
 ```
 
 # Usage
@@ -98,6 +101,13 @@ Check the long tail, new cases can emerge days after been to 0
 With a temporary immunity, we see waves slowly eaten by dead people :
 ![Temporary immunity waves](/images/vague.png)
 Temporary immunity of 60 to 90 days can prevent the pandemic from dying
+
+With a summary of a strange non-wave pandemic evolution using :
+```bash
+python -m simulator.run  --nday 500 --nind 5000 --summary --immunity-bounds 120 150
+```
+![Temporary immunity waves](/images/summary.png)
+The lockdown beats the immunity decreasing. I had to launch the simulation with those models many times to get it.
 
 # Backlog
 - [x]  Work is only on week days, weekend need to be removed

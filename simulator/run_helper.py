@@ -29,5 +29,6 @@ def get_parser():
     parser.add_argument('--population-state', help='Draw population state graph', action='store_true')
     parser.add_argument('--hospitalized-cases', help='Draw hospitalized cases graph', action='store_true')
     parser.add_argument('--new-cases', help='Draw new cases graph', action='store_true')
+    parser.add_argument('--summary', help='Draw a pandemic summary', action='store_true')
 
     return parser
