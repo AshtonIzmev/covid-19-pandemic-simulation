@@ -10,7 +10,7 @@ from simulator.simulation_helper import get_environment_simulation, get_virus_si
 def launch_run():
     print('Preparing environment...')
     env_dic = get_environment_simulation(params[nindividual_key], params[same_house_p_key],
-                                         params[store_per_house_key])
+                                         params[store_per_house_key], params[store_preference_key])
     print('Preparing virus conditions...')
     virus_dic = get_virus_simulation_t0(params[nindividual_key], params[innoculation_pct_key],
                                         params[contagion_bounds_key], params[hospitalization_bounds_key],
@@ -18,7 +18,7 @@ def launch_run():
 
     stats = []
     print_progress_bar(0, params[nday_key], prefix='Progress:', suffix='Complete', length=50)
-    for r in range(params[nrun_key]):
+    for r in range(1): #params[nrun_key]):
         for i in range(params[nday_key]):
             print_progress_bar(i + 1, params[nday_key] * params[nrun_key], prefix='Progress:', suffix='Complete', length=50)
             propagate_to_houses(env_dic, virus_dic, params[house_infect_key])
