@@ -24,7 +24,7 @@ def get_parser():
     parser.add_argument('--hospitalization-bounds', type=int, nargs=2, help='Hospitalization bounds',
                         dest=hospitalization_bounds_key)
     parser.add_argument('--death-bounds', type=int, nargs=2, help='Death bounds', dest=death_bounds_key)
-    parser.add_argument('--imunity-bounds', type=int, nargs=2, help='Immunity bounds', dest=immunity_bounds_key)
+    parser.add_argument('--immunity-bounds', type=int, nargs=2, help='Immunity bounds', dest=immunity_bounds_key)
 
     parser.add_argument('--population-state', help='Draw population state graph', action='store_true')
     parser.add_argument('--hospitalized-cases', help='Draw hospitalized cases graph', action='store_true')

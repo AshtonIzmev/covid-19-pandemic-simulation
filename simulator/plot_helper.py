@@ -92,8 +92,8 @@ def draw_specific_population_state_daily(stats_arg, n_run_arg, n_day_arg, n_indi
     plt.xlabel('Days since innoculation')
     plt.title('Pandemic evolution')
 
-    plt.xticks(np.arange(0, n_day_arg, x_tick), tuple([(str(int(i * n_day_arg / x_tick)))
-                                                       for i in range(x_tick)]))
+    plt.xticks(np.arange(0, n_day_arg, int(n_day_arg / x_tick)), tuple([(str(int(i * n_day_arg / x_tick)))
+                                                                        for i in range(x_tick)]))
     plt.yticks(np.arange(0, int(max(serie)*1.1), 1+int(max(serie)/10)))
     plt.legend((p[0],), (name_state, ))
 
