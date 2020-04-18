@@ -51,6 +51,15 @@ def invert_map(dic_arg):
     return inverted_dic_arg
 
 
+def invert_map_list(dic_arg):
+    inverted_dic_arg = {}
+    for k, v in dic_arg.items():
+        for el in v:
+            inverted_dic_arg[el] = inverted_dic_arg.get(el, [])
+            inverted_dic_arg[el].append(k)
+    return inverted_dic_arg
+
+
 def get_age_distribution():
     # Source https://www.populationpyramid.net/world/2019/
     age_distribution = pd.DataFrame(world_age_distribution, columns=['age', 'nb_men', 'nb_women'])
@@ -101,3 +110,20 @@ def pick_random_company_size():
     else:
         # We picked a PME
         return int(PME_MAX_EMPLOYEES + (GE_MAX_EMPLOYEES - PME_MAX_EMPLOYEES) * get_r())
+
+
+def rec_get_manhattan_walk(result, p1, p2):
+    i, j = p1
+    k, l = p2
+    if i == k and j == l:
+        return result
+    if j == l:
+        if i < k:
+            return rec_get_manhattan_walk(result + [p1, p2], (k, l), (i + 1, j))
+        else:
+            return rec_get_manhattan_walk(result + [p1, p2], (k + 1, l), (i, j))
+    else:
+        if j < l:
+            return rec_get_manhattan_walk(result + [p1, p2], (i, j + 1), (k, l))
+        else:
+            return rec_get_manhattan_walk(result + [p1, p2], (k, l + 1), (i, j))

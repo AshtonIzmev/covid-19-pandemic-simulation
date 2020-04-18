@@ -1,38 +1,49 @@
 from initiator.core import build_individual_houses_map, build_house_individual_map, build_individual_work_map, \
     build_individual_adult_map, build_workplace_individual_map, build_individual_age_map, build_house_adult_map, \
     build_house_store_map, build_store_house_map, \
-    build_geo_positions_house, build_geo_positions_store, build_geo_positions_workplace
+    build_geo_positions_house, build_geo_positions_store, build_geo_positions_workplace, build_block_assignment, \
+    build_individual_workblock_map, build_workblock_individual_map, build_individual_individual_transport_map
 from initiator.helper import get_r, get_infection_parameters
 from simulator.keys import *
 
 
-def get_environment_simulation(number_of_individuals_arg, same_house_rate_arg, number_store_per_house_arg,preference_store_arg):
-    all_ind_hou = build_individual_houses_map(number_of_individuals_arg, same_house_rate_arg)
-    all_hou_ind = build_house_individual_map(all_ind_hou)
-    all_ind_adu = build_individual_adult_map(all_ind_hou)
-    all_ind_age = build_individual_age_map(all_ind_hou)
+def get_environment_simulation(number_of_individuals_arg, same_house_rate_arg, number_store_per_house_arg,
+                               preference_store_arg, nb_block_arg, probability_remote_work_arg):
+    indiv_house = build_individual_houses_map(number_of_individuals_arg, same_house_rate_arg)
+    house_indiv = build_house_individual_map(indiv_house)
+    indiv_adult = build_individual_adult_map(indiv_house)
+    indiv_age = build_individual_age_map(indiv_house)
 
-    all_ind_wor = build_individual_work_map(all_ind_adu)
-    all_wor_ind = build_workplace_individual_map(all_ind_wor)
-    all_hou_adu = build_house_adult_map(all_ind_hou, all_ind_adu)
+    indiv_workplace = build_individual_work_map(indiv_adult, probability_remote_work_arg)
+    workplace_indiv = build_workplace_individual_map(indiv_workplace)
+    house_adult = build_house_adult_map(indiv_house, indiv_adult)
 
-    geo_hou = build_geo_positions_house(len(all_hou_ind))
-    geo_wor = build_geo_positions_workplace(len(all_wor_ind))
-    geo_sto = build_geo_positions_store(int(len(all_hou_ind) / number_store_per_house_arg))
+    geo_house = build_geo_positions_house(len(house_indiv))
+    geo_workplace = build_geo_positions_workplace(len(workplace_indiv))
+    geo_store = build_geo_positions_store(int(len(house_indiv) / number_store_per_house_arg))
 
-    all_hou_sto = build_house_store_map(geo_sto, geo_hou,preference_store_arg)
-    all_sto_hou = build_store_house_map(all_hou_sto)
+    house_store = build_house_store_map(geo_store, geo_house, preference_store_arg)
+    store_house = build_store_house_map(house_store)
+
+    house_block = build_block_assignment(geo_house, nb_block_arg)
+    workplace_block = build_block_assignment(geo_workplace, nb_block_arg)
+
+    indiv_transport_block = build_individual_workblock_map(indiv_house, indiv_workplace, house_block, workplace_block)
+    transport_block_indiv = build_workblock_individual_map(indiv_transport_block)
+
+    indiv_transport_indiv = build_individual_individual_transport_map(indiv_transport_block, transport_block_indiv)
 
     return {
-        IH_K: all_ind_hou,
-        HI_K: all_hou_ind,
-        IAD_K: all_ind_adu,
-        IAG_K: all_ind_age,
-        IW_K: all_ind_wor,
-        WI_K: all_wor_ind,
-        HA_K: all_hou_adu,
-        HS_K: all_hou_sto,
-        SH_K: all_sto_hou
+        IH_K: indiv_house,
+        HI_K: house_indiv,
+        IAD_K: indiv_adult,
+        IAG_K: indiv_age,
+        IW_K: indiv_workplace,
+        WI_K: workplace_indiv,
+        HA_K: house_adult,
+        HS_K: house_store,
+        SH_K: store_house,
+        ITI_K: indiv_transport_indiv,
     }
 
 

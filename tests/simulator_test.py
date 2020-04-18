@@ -52,11 +52,12 @@ class TestSimulation(unittest.TestCase):
             IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2},
             IW_K: {1: 1, 4: 1, 5: 0},
             SH_K: {0: [0, 1, 2]},
-            WI_K: {0: [5], 1: [4, 1]}
+            WI_K: {0: [5], 1: [4, 1]},
+            ITI_K: {1: {1, 4, 5}, 4: {1, 4, 5}, 5: {1, 4, 5}}
         }
 
     def test_build_environment_dic(self):
-        result = get_environment_simulation(10, 0.1, 2,1)
+        result = get_environment_simulation(10, 0.1, 2, 1, 5, 0.5)
         expected_result = TestSimulation.get_10_01_2_environment_dic()
         self.assertEqual(result, expected_result)
 

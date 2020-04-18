@@ -2,7 +2,8 @@ import random
 
 from scipy import spatial
 
-from initiator.helper import get_r, invert_map, pick_age, get_center_squized_random, pick_random_company_size
+from initiator.helper import get_r, invert_map, pick_age, get_center_squized_random, pick_random_company_size, \
+    rec_get_manhattan_walk, invert_map_list
 
 
 def build_individual_houses_map(number_individual_arg, proba_same_house_rate):
@@ -82,6 +83,10 @@ def build_geo_positions_house(number_house_arg):
     return [(get_r(), get_r()) for i in range(number_house_arg)]
 
 
+def build_block_assignment(geo_arg, nb_blocks_arg):
+    return [(int(h[0] * nb_blocks_arg), int(h[1] * nb_blocks_arg)) for h in geo_arg]
+
+
 def build_geo_positions_store(number_store_arg):
     return [(get_r(), get_r()) for i in range(number_store_arg)]
 
@@ -91,11 +96,11 @@ def build_geo_positions_workplace(number_workpolace_arg):
 
 
 def get_store_index(indexes, prob_preference_store):
-    return [index[0] if get_r()<prob_preference_store else index[1]  for index in indexes]
+    return [index[0] if get_r() < prob_preference_store else index[1] for index in indexes]
 
 
 def build_house_store_map(geo_position_store_arg, geo_position_house_arg,prob_preference_store):
-    distance, indexes = spatial.KDTree(geo_position_store_arg).query(geo_position_house_arg,k=2)
+    distance, indexes = spatial.KDTree(geo_position_store_arg).query(geo_position_house_arg, k=2)
     all_hou_sto = dict(zip(range(len(geo_position_house_arg)), get_store_index(indexes, prob_preference_store)))
     return all_hou_sto
 
@@ -105,10 +110,10 @@ def build_store_house_map(house_store_map_arg):
     return invert_map(house_store_map_arg)
 
 
-def build_individual_work_map(individual_adult_map_arg):
+def build_individual_work_map(individual_adult_map_arg, probability_remote_work_arg):
     # Only adults work, and only half of them
-    workers = list([i for i in range(len(individual_adult_map_arg)) if get_r() < 0.5
-                    and individual_adult_map_arg[i] == 1])
+    workers = list([ind for ind, age in individual_adult_map_arg.items()
+                    if get_r() < probability_remote_work_arg and age == 1])
     random.shuffle(workers)
     all_ind_wor = {}
     i_wor = 0
@@ -125,3 +130,28 @@ def build_individual_work_map(individual_adult_map_arg):
 def build_workplace_individual_map(individual_workplace_map_arg):
     # workplace -> Individuals
     return invert_map(individual_workplace_map_arg)
+
+
+def build_individual_workblock_map(individual_house_map_arg, individual_workplace_map_arg,
+                                   house_block_map_arg, workplace_block_map_arg):
+    # Individual to blocks durint public transport
+    intermediate_blocks = {}
+    for ind, work in individual_workplace_map_arg.items():
+        house_block = house_block_map_arg[individual_house_map_arg[ind]]
+        workplace_block = workplace_block_map_arg[individual_workplace_map_arg[ind]]
+        intermediate_blocks[ind] = list(set(rec_get_manhattan_walk([], house_block, workplace_block)))
+    return intermediate_blocks
+
+
+def build_workblock_individual_map(individual_workblock_map_arg):
+    # Blocks to individuals
+    return invert_map_list(individual_workblock_map_arg)
+
+
+def build_individual_individual_transport_map(individual_transport_block_map_arg, transport_block_individual_map_arg):
+    individual_individual_transport_dic = {}
+    for ind, blocks in individual_transport_block_map_arg.items():
+        for block in blocks:
+            individual_individual_transport_dic[ind] = individual_individual_transport_dic.get(ind, set())
+            individual_individual_transport_dic[ind].update(set(transport_block_individual_map_arg[block]))
+    return individual_individual_transport_dic

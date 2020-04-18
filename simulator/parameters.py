@@ -4,6 +4,7 @@ nrun_key = "NRUN"
 nindividual_key = "N_INDIVIDUALS"
 nday_key = "N_DAYS"
 store_per_house_key = "NB_STORE_PER_HOUSE"
+remote_work_key = "REMOTE_WORK_PERCENT"
 same_house_p_key = "PROBA_SAME_HOUSE_RATE"
 innoculation_pct_key = "INITIAL_INNOCULATION_PCT"
 house_infect_key = "PROB_HOUSE_INFECTION"
@@ -20,6 +21,7 @@ params = {
     nindividual_key: 1000,  # Number of people
     nday_key: 180,  # Number of simulated days
     store_per_house_key: 20,  # Let's say we have 20 houses for each grocerie store
+    remote_work_key: 0.5,  # Percentage of people doing remote work
     store_preference_key: 0.7,  # Probality of going to the nearest store
     same_house_p_key: 0.1,  # probability used to set the number of person per house
     innoculation_pct_key: 0.005,  # Proportion of people innoculated at day 0
