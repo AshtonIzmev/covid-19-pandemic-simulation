@@ -6,7 +6,7 @@ from initiator.helper import get_r, get_infection_parameters
 from simulator.keys import *
 
 
-def get_environment_simulation(number_of_individuals_arg, same_house_rate_arg, number_store_per_house_arg):
+def get_environment_simulation(number_of_individuals_arg, same_house_rate_arg, number_store_per_house_arg,preference_store_arg):
     all_ind_hou = build_individual_houses_map(number_of_individuals_arg, same_house_rate_arg)
     all_hou_ind = build_house_individual_map(all_ind_hou)
     all_ind_adu = build_individual_adult_map(all_ind_hou)
@@ -20,7 +20,7 @@ def get_environment_simulation(number_of_individuals_arg, same_house_rate_arg, n
     geo_wor = build_geo_positions_workplace(len(all_wor_ind))
     geo_sto = build_geo_positions_store(int(len(all_hou_ind) / number_store_per_house_arg))
 
-    all_hou_sto = build_house_store_map(geo_sto, geo_hou)
+    all_hou_sto = build_house_store_map(geo_sto, geo_hou,preference_store_arg)
     all_sto_hou = build_store_house_map(all_hou_sto)
 
     return {

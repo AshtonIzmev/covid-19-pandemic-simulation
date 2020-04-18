@@ -11,6 +11,7 @@ def get_parser():
     parser.add_argument('--nday', type=int, help='Number of days', dest=nday_key)
 
     parser.add_argument('--sto-house', type=float, help='Number of store per house', dest=store_per_house_key)
+    parser.add_argument('--sto-pref', type=float, help='Probability going to nearest store', dest=store_preference_key)
     parser.add_argument('--p-same-house', type=float, help='"Probability" for individuals for living in the same house'
                         , dest=same_house_p_key)
     parser.add_argument('--inn-infec', type=float, help='Initial innoculation percentage',

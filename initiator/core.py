@@ -89,10 +89,13 @@ def build_geo_positions_store(number_store_arg):
 def build_geo_positions_workplace(number_workpolace_arg):
     return [(get_center_squized_random(), get_center_squized_random()) for i in range(number_workpolace_arg)]
 
+def get_store_index(indexes, prob_preference_store):
+    return [index[0] if get_r()<prob_preference_store else index[1]  for index in indexes]
 
-def build_house_store_map(geo_position_store_arg, geo_position_house_arg):
-    distance, indexes = spatial.KDTree(geo_position_store_arg).query(geo_position_house_arg)
-    all_hou_sto = dict(zip(range(len(geo_position_house_arg)), indexes))
+
+def build_house_store_map(geo_position_store_arg, geo_position_house_arg,prob_preference_store):
+    distance, indexes = spatial.KDTree(geo_position_store_arg).query(geo_position_house_arg,k=2)
+    all_hou_sto = dict(zip(range(len(geo_position_house_arg)), get_store_index(indexes, prob_preference_store)))
     return all_hou_sto
 
 
@@ -121,4 +124,3 @@ def build_individual_work_map(individual_adult_map_arg):
 def build_workplace_individual_map(individual_workplace_map_arg):
     # workplace -> Individuals
     return invert_map(individual_workplace_map_arg)
-
