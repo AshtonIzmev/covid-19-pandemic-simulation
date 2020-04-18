@@ -14,13 +14,14 @@ INITIAL_INNOCULATION_PCT = 0.005  # Proportion of people innoculated at day 0
 PROB_HOUSE_INFECTION = 0.5  # Probabilty of infecting a random family member (same house)
 PROB_WORK_INFECTION = 0.1  # Probabilty of infecting a random co-worker
 PROB_STORE_INFECTION = 0.05  # Probabilty of infecting someone who goes to the same store
+PROB_PREFERENCE_STORE=0.7 # Probality of goieng to the nearest store => (1-PROB_PREFERENCE_STORE) the probability of the goeing to the second nearest store
 INFECTION_BOUNDS = (21, 39)
 CONTAGION_BOUNDS = (2, 7)
 
 
 def run_simulation():
     print('Preparing environment...')
-    env_dic = get_environment_simulation(N_INDIVIDUALS, PROBA_SAME_HOUSE_RATE, NB_STORE_PER_HOUSE)
+    env_dic = get_environment_simulation(N_INDIVIDUALS, PROBA_SAME_HOUSE_RATE, NB_STORE_PER_HOUSE,PROB_PREFERENCE_STORE)
     print('Preparing virus conditions...')
     virus_dic = get_virus_simulation_t0(N_INDIVIDUALS, INITIAL_INNOCULATION_PCT, INFECTION_BOUNDS, CONTAGION_BOUNDS)
 

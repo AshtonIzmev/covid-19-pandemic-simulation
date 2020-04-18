@@ -41,7 +41,7 @@ class TestSimulation(unittest.TestCase):
         }
 
     def test_build_environment_dic(self):
-        result = get_environment_simulation(10, 0.1, 2)
+        result = get_environment_simulation(10, 0.1, 2,1)
         expected_result = TestSimulation.get_10_01_2_environment_dic()
         self.assertEqual(result, expected_result)
 
@@ -277,4 +277,3 @@ class TestSimulation(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-

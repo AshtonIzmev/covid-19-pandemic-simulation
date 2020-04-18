@@ -36,8 +36,8 @@ So what is "life" in a pandemic lockdown situation (where almost all nations are
 * PROB_HOUSE_INFECTION : probability of getting infected if an infected individual lives in the same house (defaut 0.5)
 * PROB_WORK_INFECTION : probability of getting infected if an infected individual works in the same place (default 0.1)
 * PROB_STORE_INFECTION : probability of getting infected if an infected individual shops at the same store (default 0.05 since we tend to spend less time in a store)
-* [ LOWER_INFECTION_BOUND, UPPER_INFECTION_BOUND ] : random number range to generate time to decision (death/immunity) 
-* [ LOWER_CONTAGION_BOUND, UPPER_CONTAGION_BOUND ] : random number range to generate time to becoming conatigous (death/immunity) 
+* [ LOWER_INFECTION_BOUND, UPPER_INFECTION_BOUND ] : random number range to generate time to decision (death/immunity)
+* [ LOWER_CONTAGION_BOUND, UPPER_CONTAGION_BOUND ] : random number range to generate time to becoming conatigous (death/immunity)
 
 
 All those parameters can be discussed and will be enriched as I keep enhancing this simulation model.
@@ -58,7 +58,7 @@ it definitely does not look like a Gaussian distribution but more like a Poisson
 
 # Backlog
 - [x]  Work is only on week days, weekend need to be removed
-- [ ] You may go to the second nearest grocerie store instead of the closest one (as implemented)
+- [x] You may go to the second nearest grocerie store instead of the closest one (as implemented)
 - [ ]  You probably won't go to the grocerie store every day, but probably twice in week day and once on the weekend (that could be a random variable)
 - [ ]  Infection can and often occurs on public transportation. We need to build a basic transport model with infection probabilities
 - [ ]  Inject the famous covid-19 2.3 R0 into the code somewhere to get realistic results
