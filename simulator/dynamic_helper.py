@@ -16,7 +16,7 @@ def update_infection_period(newly_infected_individuals_arg, virus_dic):
 
 
 def increment_pandemic_1_day(env_dic, virus_dic):
-    for i in get_infected_people(virus_dic):
+    for i in get_infected_people(virus_dic) + get_hospitalized_people(virus_dic):
         # Contagion and decision periods are decremented
         virus_dic[CON_K][i] = virus_dic[CON_K][i] - 1
         virus_dic[HOS_K][i] = virus_dic[HOS_K][i] - 1
@@ -34,7 +34,7 @@ def increment_pandemic_1_day(env_dic, virus_dic):
         virus_dic[IMM_K][i] = virus_dic[IMM_K][i] - 1
         if virus_dic[IMM_K][i] == 0:
             virus_dic[STA_K][i] = HEALTHY_V
-            # I am not proud of this hack, otherwise it mean changing too many APIs
+            # I am not proud of this hack, otherwise it meant changing too many APIs
             con, hos, dea, imm = virus_dic[FN_K]()
             virus_dic[CON_K][i] = con
             virus_dic[HOS_K][i] = hos
@@ -47,7 +47,7 @@ def get_hospitalized_people(virus_dic):
 
 
 def get_infected_people(virus_dic):
-    return [k for k, v in virus_dic[STA_K].items() if v in [INFECTED_V, HOSPITALIZED_V]]
+    return [k for k, v in virus_dic[STA_K].items() if v == INFECTED_V]
 
 
 def get_deadpeople(virus_dic):

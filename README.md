@@ -139,7 +139,10 @@ The lockdown beats the immunity decreasing. I had to launch the simulation with 
 - [ ]  Make contagion probability slowly raises as I assume people will get tired of the lockdown and start to be lazy at wearing masks and staying home ...
 - [ ]  Use a contagion probability model for each individual (e.g. probability of contagion is obtained with a model)
 - [x]  Add a model for hospitalized people (since hospitals can be saturated)
+- [x]  Handle multiple runs and add error bars to result plots
 
+## Articles explaining the approach
+https://issam.ma/jekyll/update/2020/04/11/covid-pandemic-simulation.html
 
 # Links
 [1] https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology#The_SEIR_model
