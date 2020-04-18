@@ -112,11 +112,12 @@ def pick_random_company_size():
         return int(PME_MAX_EMPLOYEES + (GE_MAX_EMPLOYEES - PME_MAX_EMPLOYEES) * get_r())
 
 
+# Recursive Manhattan walk
 def rec_get_manhattan_walk(result, p1, p2):
     i, j = p1
     k, l = p2
     if i == k and j == l:
-        return result
+        return result + [p1]
     if j == l:
         if i < k:
             return rec_get_manhattan_walk(result + [p1, p2], (k, l), (i + 1, j))

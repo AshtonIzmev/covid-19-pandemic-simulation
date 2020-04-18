@@ -1,7 +1,7 @@
 import numpy as np
 
 from simulator.dynamic_helper import propagate_to_stores, propagate_to_houses, propagate_to_workplaces, \
-    increment_pandemic_1_day, is_weekend, get_pandemic_statistics
+    increment_pandemic_1_day, is_weekend, get_pandemic_statistics, propagate_to_transportation
 from simulator.parameters import *
 from simulator.plot_helper import draw_new_daily_cases, draw_population_state_daily, print_progress_bar, \
     draw_specific_population_state_daily, draw_summary
@@ -13,7 +13,7 @@ def launch_run():
     print('Preparing environment...')
     env_dic = get_environment_simulation(params[nindividual_key], params[same_house_p_key],
                                          params[store_per_house_key], params[store_preference_key],
-                                         params[remote_work_key], params[remote_work_key])
+                                         params[nb_block_key], params[remote_work_key])
 
     stats = np.zeros((params[nrun_key], params[nday_key], 6))
     print_progress_bar(0, params[nrun_key] * params[nday_key], prefix='Progress:', suffix='Complete', length=50)
@@ -26,6 +26,7 @@ def launch_run():
                                prefix='Progress:', suffix='Complete', length=50)
             propagate_to_houses(env_dic, virus_dic, params[house_infect_key])
             if not is_weekend(i):
+                propagate_to_transportation(env_dic, virus_dic, params[transport_infection_key])
                 propagate_to_workplaces(env_dic, virus_dic, params[work_infection_key])
             if is_weekend(i):
                 propagate_to_stores(env_dic, virus_dic, params[store_infection_key])

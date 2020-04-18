@@ -55,7 +55,11 @@ class TestHelpers(unittest.TestCase):
 
     def test_rec_get_manhattan_walk(self):
         result = rec_get_manhattan_walk([], (1, 1), (3, 3))
-        self.assertEqual(result, [(1, 1), (3, 3), (1, 2), (3, 3), (1, 3), (3, 3), (3, 3), (2, 3)])
+        self.assertEqual(result, [(1, 1), (3, 3), (1, 2), (3, 3), (1, 3), (3, 3), (3, 3), (2, 3), (3, 3)])
+
+    def test_rec_get_manhattan_walk_same_block(self):
+        result = rec_get_manhattan_walk([], (1, 1), (1, 1))
+        self.assertEqual(result, [(1, 1)])
 
 
 if __name__ == '__main__':

@@ -117,6 +117,17 @@ class TestInitiation(unittest.TestCase):
         result = build_individual_individual_transport_map(ind_workblock, workblock_ind)
         self.assertEqual(result, {0: {0, 1, 2}, 1: {0, 1}, 2: {0, 2}, 3: {3}})
 
+    def test_build_individual_individual_transport_with_empty_bin_map(self):
+        ind_workblock = {
+            0: [(1, 1), (1, 2), (1, 3), (2, 3)],
+            1: [(0, 3), (1, 3), (1, 4), (1, 5)],
+            2: [(0, 1), (0, 2), (1, 2), (2, 2)],
+            3: [(8, 8), (8, 7), (7, 7)]
+        }
+        workblock_ind = invert_map_list(ind_workblock)
+        result = build_individual_individual_transport_map(ind_workblock, workblock_ind)
+        self.assertEqual(result, {0: {0, 1, 2}, 1: {0, 1}, 2: {0, 2}, 3: {3}})
+
 
 if __name__ == '__main__':
     unittest.main()

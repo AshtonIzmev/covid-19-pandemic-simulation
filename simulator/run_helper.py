@@ -12,6 +12,8 @@ def get_parser():
     parser.add_argument('--nday', type=int, help='Number of days', dest=nday_key)
 
     parser.add_argument('--sto-house', type=int, help='Number of store per house', dest=store_per_house_key)
+    parser.add_argument('--nblock', type=int, help='Number of blocks in the grid', dest=nb_block_key)
+
     parser.add_argument('--remote-work', type=float, help='Percentage of people remote working', dest=remote_work_key)
 
     parser.add_argument('--sto-pref', type=float, help='Probability going to nearest store', dest=store_preference_key)

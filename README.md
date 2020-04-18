@@ -26,7 +26,9 @@ python -m simulator.run  --nday 500 --nind 5000 --summary --immunity-bounds 120 
 # Usage
 ```bash
 usage: run.py [-h] [--nrun NRUN] [--nind N_INDIVIDUALS] [--nday N_DAYS]
-              [--sto-house NB_STORE_PER_HOUSE]
+              [--sto-house NB_STORE_PER_HOUSE] [--nblock NB_GRID_BLOCK]
+              [--remote-work REMOTE_WORK_PERCENT]
+              [--sto-pref PROB_PREFERENCE_STORE]
               [--p-same-house PROBA_SAME_HOUSE_RATE]
               [--inn-infec INITIAL_INNOCULATION_PCT]
               [--p-house PROB_HOUSE_INFECTION]
@@ -34,8 +36,9 @@ usage: run.py [-h] [--nrun NRUN] [--nind N_INDIVIDUALS] [--nday N_DAYS]
               [--contagion-bounds CONTAGION_BOUNDS CONTAGION_BOUNDS]
               [--hospitalization-bounds HOSPITALIZATION_BOUNDS HOSPITALIZATION_BOUNDS]
               [--death-bounds DEATH_BOUNDS DEATH_BOUNDS]
-              [--imunity-bounds IMMUNITY_BOUNDS IMMUNITY_BOUNDS]
+              [--immunity-bounds IMMUNITY_BOUNDS IMMUNITY_BOUNDS]
               [--population-state] [--hospitalized-cases] [--new-cases]
+              [--summary]
 
 Please feed model parameters
 
@@ -46,9 +49,14 @@ optional arguments:
   --nday N_DAYS         Number of days
   --sto-house NB_STORE_PER_HOUSE
                         Number of store per house
+  --nblock NB_GRID_BLOCK
+                        Number of blocks in the grid
+  --remote-work REMOTE_WORK_PERCENT
+                        Percentage of people remote working
+  --sto-pref PROB_PREFERENCE_STORE
+                        Probability going to nearest store
   --p-same-house PROBA_SAME_HOUSE_RATE
-                        "Probability" for individuals for living in the same
-                        house
+                        "Probability" for individuals for living in the same house
   --inn-infec INITIAL_INNOCULATION_PCT
                         Initial innoculation percentage
   --p-house PROB_HOUSE_INFECTION
@@ -63,11 +71,14 @@ optional arguments:
                         Hospitalization bounds
   --death-bounds DEATH_BOUNDS DEATH_BOUNDS
                         Death bounds
-  --imunity-bounds IMMUNITY_BOUNDS IMMUNITY_BOUNDS
+  --immunity-bounds IMMUNITY_BOUNDS IMMUNITY_BOUNDS
                         Immunity bounds
-  --population-state    Draw population state graph
-  --hospitalized-cases  Draw hospitalized cases graph
-  --new-cases           Draw new cases graph
+  --population-state, --pop
+                        Draw population state graph
+  --hospitalized-cases, --hos
+                        Draw hospitalized cases graph
+  --new-cases, --new    Draw new cases graph
+  --summary, --sum      Draw a pandemic summary
 ```
 
 # Main idea
@@ -79,24 +90,31 @@ So what is "life" in a pandemic lockdown situation (where almost all nations are
 2. You have a house where you live along family members, probably with children
 3. If you haven't been authorized to do remote work, you will have to go to your workplace every day
 4. You or one of the adults living in your house has to go to the grocerie store every day
-5. In every place (house, store, work), you get to interact with other individuals who can be infected. So there is a probability you will get infected too
+5. In every place (house, store, work or transport), you get to interact with other individuals who can be infected. So there is a probability you will get infected too
 6. If you are infected, you become contagious after few days and start to spread the disease
 7. If you are infected, you will die or recover from the disease after a period of time, based on your age (and health issues but let's forget about those for now)
 8. Death or immunity will not make you anymore contagious for other individual, obviously
 
+# Public transportation model
+Each house and workplace is being assigned a geolocation in a grid. This grid can be cut into blocks (defined by a parameter). 
+When a worker goes from his house to his workplace, he goes through blocks that are shared by other workers. 
+We maintain a dictionnary of this transportation relationship between workers to propagate the pandemic.
 
 # Input parameters
 * N_INDIVIDUALS : number of person involved in this simulation (default 5000)
 * N_DAYS : number of days for the simulation (default 120)
 * NB_STO_PER_HOU : number of house for each store (default 20)
 * PROBA_SAME_HOUSE_RATE : probability used to define the number of individuals in a house (default 0.1 builds 3.57 average people per house)
+* PROB_PREFERENCE_STORE : probability to go to the nearest store (otherwise it will be the second nearest ...)
+* REMOTE_WORK_PERCENT : percentage of people doing remote work (thus not going to workplaces)
 * INITIAL_INNOCULATION_PCT : Percentage of people who get the virus at day 0
 * PROB_HOUSE_INFECTION : probability of getting infected if an infected individual lives in the same house (defaut 0.5)
 * PROB_WORK_INFECTION : probability of getting infected if an infected individual works in the same place (default 0.1)
 * PROB_STORE_INFECTION : probability of getting infected if an infected individual shops at the same store (default 0.05 since we tend to spend less time in a store)
-* [ LOWER_INFECTION_BOUND, UPPER_INFECTION_BOUND ] : random number range to generate time to decision (death/immunity)
-* [ LOWER_CONTAGION_BOUND, UPPER_CONTAGION_BOUND ] : random number range to generate time to becoming conatigous (death/immunity)
-
+* PROB_TRANSPORT_INFECTION : probability of getting infected in public transportation
+* [ LOWER_CONTAGION_BOUND, UPPER_CONTAGION_BOUND ] : random number range to generate time to becoming contagious
+* [ LOWER_DECISION_BOUND, UPPER_DECISION_BOUND ] : random number range to generate time to decision (death/immunity)
+* [ LOWER_IMMUNITY_BOUND, UPPER_IMMUNITY_BOUND ] : random number range to generate time to loosing immunity
 
 All those parameters can be discussed and will be enriched as I keep enhancing this simulation model.
 

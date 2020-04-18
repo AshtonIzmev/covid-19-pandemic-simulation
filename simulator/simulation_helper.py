@@ -33,6 +33,7 @@ def get_environment_simulation(number_of_individuals_arg, same_house_rate_arg, n
 
     indiv_transport_indiv = build_individual_individual_transport_map(indiv_transport_block, transport_block_indiv)
 
+    a = 1
     return {
         IH_K: indiv_house,
         HI_K: house_indiv,

@@ -3,7 +3,7 @@ import unittest
 
 from initiator.helper import get_infection_parameters
 from simulator.dynamic_helper import update_infection_period, increment_pandemic_1_day, \
-    propagate_to_houses, propagate_to_stores, propagate_to_workplaces
+    propagate_to_houses, propagate_to_stores, propagate_to_workplaces, propagate_to_transportation
 from simulator.keys import *
 from simulator.simulation_helper import get_environment_simulation, get_virus_simulation_t0
 
@@ -341,6 +341,31 @@ class TestSimulation(unittest.TestCase):
         self.assertEqual(virus_dic[STA_K][1], H)
         self.assertEqual(virus_dic[STA_K][4], H)
         self.assertEqual(virus_dic[STA_K][5], H)
+
+    def test_propagate_to_transportation(self):
+        env_dic = {
+            HA_K: {0: [0, 1], 1: [4, 5], 2: [8, 9]},
+            HI_K: {0: [0, 1, 2, 3], 1: [4, 5, 6, 7], 2: [8, 9]},
+            HS_K: {0: 0, 1: 0, 2: 0},
+            IAD_K: {0: 1, 1: 1, 2: 0, 3: 0, 4: 1, 5: 1, 6: 0, 7: 0, 8: 1, 9: 1},
+            IAG_K: {0: 26, 1: 51, 2: 13, 3: 2, 4: 35, 5: 33, 6: 6, 7: 1, 8: 27, 9: 20},
+            IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2},
+            IW_K: {0: 1, 1: 1, 4: 1, 5: 0},
+            SH_K: {0: [0, 1, 2]},
+            WI_K: {0: [5], 1: [4, 1]},
+            ITI_K: {0: {0, 5}, 4: {4}, 5: {0, 5}}
+        }
+        virus_dic = {
+            CON_K: {0: -2, 1: -2, 2: -2, 3: -2, 4: 1, 5: 4, 6: -2, 7: 2, 8: 6, 9: 5},
+            HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
+            DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: 17, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
+            IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 46, 9: 55},
+            STA_K: {0: F, 1: H, 2: F, 3: F, 4: H, 5: H, 6: F, 7: H, 8: H, 9: H},
+            NC_K: 0
+        }
+        propagate_to_transportation(env_dic, virus_dic, 1)
+        self.assertEqual(virus_dic[STA_K][4], H)
+        self.assertEqual(virus_dic[STA_K][5], F)
 
 
 if __name__ == '__main__':
