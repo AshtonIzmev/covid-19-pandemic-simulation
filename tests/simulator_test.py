@@ -27,7 +27,8 @@ class TestSimulation(unittest.TestCase):
             DEA_K: {0: 34, 1: 21, 2: 30, 3: 35, 4: 29, 5: 37, 6: 26, 7: 33, 8: 33, 9: 28},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 46, 9: 55},
             HOS_K: {0: 12, 1: 10, 2: 14, 3: 14, 4: 17, 5: 16, 6: 15, 7: 10, 8: 20, 9: 9},
-            STA_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0}
+            STA_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0},
+            NC_K: 0
         }
 
     @staticmethod
@@ -36,7 +37,8 @@ class TestSimulation(unittest.TestCase):
             CON_K: {0:  4, 1:  3, 2:  2, 3:  2, 4:  6, 5:  4, 6:  4, 7:  2, 8:  6, 9:  5},
             HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9:  8},
             DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: 22, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
-            STA_K: {0:  H, 1:  H, 2:  H, 3:  H, 4:  F, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H}
+            STA_K: {0:  H, 1:  H, 2:  H, 3:  H, 4:  F, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H},
+            NC_K: 0
         }
 
     @staticmethod
@@ -136,7 +138,8 @@ class TestSimulation(unittest.TestCase):
             HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
             DEA_K: {0: -5, 1: 23, 2: 23, 3: 22, 4: -5, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 46, 9: 55},
-            STA_K: {0:  F, 1:  H, 2:  H, 3:  H, 4:  D, 5:  H, 6:  H, 7:  H, 8:  M, 9:  H}
+            STA_K: {0:  F, 1:  H, 2:  H, 3:  H, 4:  D, 5:  H, 6:  H, 7:  H, 8:  M, 9:  H},
+            NC_K: 0
         }
         propagate_to_houses(env_dic, virus_dic, 0.99)
 
@@ -161,7 +164,8 @@ class TestSimulation(unittest.TestCase):
             HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
             DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: 22, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 46, 9: 55},
-            STA_K: {0:  F, 1:  H, 2:  H, 3:  H, 4:  D, 5:  H, 6:  H, 7:  H, 8:  M, 9:  H}
+            STA_K: {0:  F, 1:  H, 2:  H, 3:  H, 4:  D, 5:  H, 6:  H, 7:  H, 8:  M, 9:  H},
+            NC_K: 0
         }
         propagate_to_houses(env_dic, virus_dic, 0.99)
 
@@ -192,7 +196,8 @@ class TestSimulation(unittest.TestCase):
             HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
             DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: -2, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 46, 9: 55},
-            STA_K: {0:  H, 1:  H, 2:  H, 3:  F, 4:  D, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H}
+            STA_K: {0:  H, 1:  H, 2:  H, 3:  F, 4:  D, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H},
+            NC_K: 0
         }
         propagate_to_stores(env_dic, virus_dic, 0.99)
         # children do not go to stores
@@ -219,7 +224,8 @@ class TestSimulation(unittest.TestCase):
             HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
             DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: -2, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 46, 9: 55},
-            STA_K: {0:  H, 1:  F, 2:  H, 3:  H, 4:  H, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H}
+            STA_K: {0:  H, 1:  F, 2:  H, 3:  H, 4:  H, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H},
+            NC_K: 0
         }
         propagate_to_stores(env_dic, virus_dic, 0.99)
         # adults who go to the store propagate the virus
@@ -246,7 +252,8 @@ class TestSimulation(unittest.TestCase):
             HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
             DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: -2, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 46, 9: 55},
-            STA_K: {0:  H, 1:  F, 2:  H, 3:  H, 4:  H, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H}
+            STA_K: {0:  H, 1:  F, 2:  H, 3:  H, 4:  H, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H},
+            NC_K: 0
         }
         propagate_to_stores(env_dic, virus_dic, 0.99)
         # adults who go to the store propagate the virus
@@ -273,7 +280,8 @@ class TestSimulation(unittest.TestCase):
             HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
             DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: -2, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 46, 9: 55},
-            STA_K: {0:  H, 1:  H, 2:  H, 3:  H, 4:  F, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H}
+            STA_K: {0:  H, 1:  H, 2:  H, 3:  H, 4:  F, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H},
+            NC_K: 0
         }
         propagate_to_workplaces(env_dic, virus_dic, 0.99)
         # adults who go to the store propagate the virus
@@ -298,7 +306,8 @@ class TestSimulation(unittest.TestCase):
             HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
             DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: 17, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 46, 9: 55},
-            STA_K: {0:  H, 1:  H, 2:  H, 3:  H, 4:  F, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H}
+            STA_K: {0:  H, 1:  H, 2:  H, 3:  H, 4:  F, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H},
+            NC_K: 0
         }
         propagate_to_workplaces(env_dic, virus_dic, 0.99)
         # adults who go to the store propagate the virus
@@ -323,7 +332,8 @@ class TestSimulation(unittest.TestCase):
             HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
             DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: 17, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 46, 9: 55},
-            STA_K: {0:  F, 1:  H, 2:  F, 3:  F, 4:  H, 5:  H, 6:  F, 7:  H, 8:  H, 9:  H}
+            STA_K: {0:  F, 1:  H, 2:  F, 3:  F, 4:  H, 5:  H, 6:  F, 7:  H, 8:  H, 9:  H},
+            NC_K: 0
         }
         propagate_to_workplaces(env_dic, virus_dic, 0.99)
         # adults who go to the store propagate the virus
