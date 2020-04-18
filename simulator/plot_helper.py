@@ -60,24 +60,28 @@ def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, lengt
 def set_ax_population_state_daily(ax, stats_arg, x_tick=10):
     n_day_arg = stats_arg.shape[1]
     n_individual_arg = 1.1*np.max(stats_arg)
-    stats_mean_arg = stats_arg[0]  # np.mean(stats_arg, axis=0)  # First run
-    healthy_serie = [stats_mean_arg[i][0] for i in range(n_day_arg)]
-    infected_serie = [stats_mean_arg[i][1] for i in range(n_day_arg)]
-    hospital_serie = [stats_mean_arg[i][2] for i in range(n_day_arg)]
-    hospital_serie_stacked = [stats_mean_arg[i][0] + stats_mean_arg[i][1] for i in range(n_day_arg)]
+    stats_mean_arg = np.mean(stats_arg, axis=0)
     dead_serie = [stats_mean_arg[i][3] for i in range(n_day_arg)]
-    dead_serie_stacked = [stats_mean_arg[i][0] + stats_mean_arg[i][1] + stats_mean_arg[i][2] for i in range(n_day_arg)]
+
+    healthy_serie = [stats_mean_arg[i][0] for i in range(n_day_arg)]
+
+    infected_serie = [stats_mean_arg[i][1] for i in range(n_day_arg)]
+    infected_serie_stacked = [stats_mean_arg[i][0] + stats_mean_arg[i][3] for i in range(n_day_arg)]
+
+    hospital_serie = [stats_mean_arg[i][2] for i in range(n_day_arg)]
+    hospital_serie_stacked = [stats_mean_arg[i][0] + stats_mean_arg[i][1] + stats_mean_arg[i][3] for i in range(n_day_arg)]
+
     immune_serie = [stats_mean_arg[i][4] for i in range(n_day_arg)]
     immune_serie_stacked = [stats_mean_arg[i][0] + stats_mean_arg[i][1] + stats_mean_arg[i][2] + stats_mean_arg[i][3]
                             for i in range(n_day_arg)]
 
     indices = np.arange(n_day_arg)
-    width = 0.6
+    width = 0.7
 
-    p1 = ax.bar(indices, healthy_serie, width, color="#3F88C5")
-    p2 = ax.bar(indices, infected_serie, width, bottom=healthy_serie, color="#A63D40")
-    p3 = ax.bar(indices, hospital_serie, width, bottom=hospital_serie_stacked, color="#5000FA")
-    p4 = ax.bar(indices, dead_serie, width, bottom=dead_serie_stacked, color="#151515")
+    p1 = ax.bar(indices, dead_serie, width, color="#151515")
+    p2 = ax.bar(indices, healthy_serie, width, bottom=dead_serie, color="#3F88C5")
+    p3 = ax.bar(indices, infected_serie, width, bottom=infected_serie_stacked, color="#A63D40")
+    p4 = ax.bar(indices, hospital_serie, width, bottom=hospital_serie_stacked, color="#5000FA")
     p5 = ax.bar(indices, immune_serie, width, bottom=immune_serie_stacked, color="#90A959")
 
     ax.set_ylabel('Total population')
@@ -86,7 +90,7 @@ def set_ax_population_state_daily(ax, stats_arg, x_tick=10):
     ax.set_xticks(np.arange(0, n_day_arg, int(n_day_arg / x_tick)), tuple([(str(int(i * n_day_arg / x_tick)))
                                                                            for i in range(x_tick)]))
     ax.set_yticks(np.arange(0, n_individual_arg, (n_individual_arg/15)))
-    ax.legend((p1[0], p2[0], p3[0], p4[0], p5[0]), ('Healthy', 'Infected', 'Hospitalized', 'Dead', 'Immune'))
+    ax.legend((p1[0], p2[0], p3[0], p4[0], p5[0]), ('Dead', 'Healthy', 'Infected', 'Hospitalized', 'Immune'))
 
 
 def set_ax_specific_population_state_daily(ax, stats_arg, x_tick=10, style="P"):
@@ -112,7 +116,7 @@ def set_ax_specific_population_state_daily(ax, stats_arg, x_tick=10, style="P"):
         name_state = "Immune"
 
     stats_mean_arg = np.mean(stats_arg, axis=0)
-    stats_err_arg = stats.sem(stats_arg, axis=0, ddof=0)
+    stats_err_arg = stats.sem(stats_arg, axis=0)
     serie = [stats_mean_arg[i][type_state] for i in range(n_day_arg)]
     err = [stats_err_arg[i][type_state] for i in range(n_day_arg)]
     indices = np.arange(n_day_arg)
@@ -126,14 +130,14 @@ def set_ax_specific_population_state_daily(ax, stats_arg, x_tick=10, style="P"):
 
     ax.set_xticks(np.arange(0, n_day_arg, int(n_day_arg / x_tick)), tuple([(str(int(i * n_day_arg / x_tick)))
                                                                            for i in range(x_tick)]))
-    ax.set_yticks(np.arange(0, int(max(serie)*1.1), int(max(serie)/10)))
+    ax.set_yticks(np.arange(0, int(max(serie)*1.1), int(1+max(serie)/10)))
     ax.legend((p[0],), (name_state, ))
 
 
 def set_ax_new_daily_cases(ax, stats_arg, x_tick=10):
     n_day_arg = stats_arg.shape[1]
     stats_mean_arg = np.mean(stats_arg, axis=0)
-    stats_err_arg = stats.sem(stats_arg, axis=0, ddof=0)
+    stats_err_arg = stats.sem(stats_arg, axis=0)
     new_cases_serie = [stats_mean_arg[i][5] for i in range(n_day_arg)]
     err = [stats_err_arg[i][5] for i in range(n_day_arg)]
 

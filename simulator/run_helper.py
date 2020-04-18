@@ -28,9 +28,9 @@ def get_parser():
     parser.add_argument('--death-bounds', type=int, nargs=2, help='Death bounds', dest=death_bounds_key)
     parser.add_argument('--immunity-bounds', type=int, nargs=2, help='Immunity bounds', dest=immunity_bounds_key)
 
-    parser.add_argument('--population-state', help='Draw population state graph', action='store_true')
-    parser.add_argument('--hospitalized-cases', help='Draw hospitalized cases graph', action='store_true')
-    parser.add_argument('--new-cases', help='Draw new cases graph', action='store_true')
-    parser.add_argument('--summary', help='Draw a pandemic summary', action='store_true')
+    parser.add_argument('--population-state', '--pop', help='Draw population state graph', action='store_true')
+    parser.add_argument('--hospitalized-cases', '--hos', help='Draw hospitalized cases graph', action='store_true')
+    parser.add_argument('--new-cases', '--new', help='Draw new cases graph', action='store_true')
+    parser.add_argument('--summary', '--sum', help='Draw a pandemic summary', action='store_true')
 
     return parser

@@ -126,18 +126,18 @@ python -m simulator.run  --nday 500 --nind 5000 --summary --immunity-bounds 120 
 The lockdown beats the immunity decreasing. I had to launch the simulation with those models many times to get it.
 
 # Backlog
-- [x]  Work is only on week days, weekend need to be removed
-- [x] You may go to the second nearest grocerie store instead of the closest one (as implemented)
-- [x]  You probably won't go to the grocerie store every day, but probably twice in week day and once on the weekend (that could be a random variable)
-- [x] You may go to the second nearest grocerie store instead of the closest one (as implemented)
-- [ ]  You probably won't go to the grocerie store every day, but probably twice in week day and once on the weekend (that could be a random variable)
+- [ ]  Switch from dictionaries and list to numpy array (may be way more efficient, probably enabling some nice vectorization)
 - [ ]  Infection can and often occurs on public transportation. We need to build a basic transport model with infection probabilities
-- [ ]  Inject the famous covid-19 2.3 R0 into the code somewhere to get realistic results
-- [x]  Extract more parameters from the code
-- [x]  Model temporary immunity
 - [ ]  Contagion parameters depend on geographic zones
 - [ ]  Make contagion probability slowly raises as I assume people will get tired of the lockdown and start to be lazy at wearing masks and staying home ...
 - [ ]  Use a contagion probability model for each individual (e.g. probability of contagion is obtained with a model)
+- [x]  You probably won't go to the grocerie store every day, but probably twice in week day and once on the weekend (that could be a random variable)
+- [x]  Extract more parameters from the code
+- [x]  Model temporary immunity
+- [x]  Handle multiple runs and add error bars to result plots
+- [x]  Work is only on week days, weekend need to be removed
+- [x]  You may go to the second nearest grocerie store instead of the closest one (as implemented)
+- [x]  You probably won't go to the grocerie store every day, but probably twice in week day and once on the weekend (that could be a random variable)
 - [x]  Add a model for hospitalized people (since hospitals can be saturated)
 - [x]  Handle multiple runs and add error bars to result plots
 
