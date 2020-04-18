@@ -3,3 +3,4 @@ matplotlib
 seaborn
 scipy
 numpy
+argparse
