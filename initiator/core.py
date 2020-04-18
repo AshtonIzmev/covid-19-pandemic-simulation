@@ -89,6 +89,7 @@ def build_geo_positions_store(number_store_arg):
 def build_geo_positions_workplace(number_workpolace_arg):
     return [(get_center_squized_random(), get_center_squized_random()) for i in range(number_workpolace_arg)]
 
+
 def get_store_index(indexes, prob_preference_store):
     return [index[0] if get_r()<prob_preference_store else index[1]  for index in indexes]
 

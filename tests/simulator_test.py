@@ -1,11 +1,11 @@
 import random
 import unittest
 
-from simulator.simulation_helper import get_environment_simulation, get_virus_simulation_t0
+from initiator.helper import get_infection_parameters
 from simulator.dynamic_helper import update_infection_period, increment_pandemic_1_day, \
     propagate_to_houses, propagate_to_stores, propagate_to_workplaces
 from simulator.keys import *
-from initiator.helper import get_infection_parameters
+from simulator.simulation_helper import get_environment_simulation, get_virus_simulation_t0
 
 H = HEALTHY_V
 F = INFECTED_V

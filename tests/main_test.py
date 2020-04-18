@@ -4,7 +4,6 @@ from tests import helpers_test
 from tests import initiator_test
 from tests import simulator_test
 
-
 if __name__ == '__main__':
     loader = unittest.TestLoader()
     suite = unittest.TestSuite()
