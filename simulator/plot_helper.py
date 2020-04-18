@@ -67,7 +67,7 @@ def draw_specific_population_state_daily(stats_arg, n_days_arg, n_individuals_ar
         type_state = 1
         plot_color = "#A63D40"
         name_state = "Infected"
-    if style == 'H':
+    if style == 'P':
         type_state = 2
         plot_color = "#5000FA"
         name_state = "Hospitalized"
@@ -100,19 +100,17 @@ def draw_specific_population_state_daily(stats_arg, n_days_arg, n_individuals_ar
 def draw_new_daily_cases(stats_arg, n_days_arg):
     fig, ax = plt.subplots(figsize=(15, 10))
 
-    healthy_serie = [stats_arg[i][0] for i in range(n_days_arg)]
-    new_cases_serie = list([j-i for (i, j) in zip(healthy_serie[1:], healthy_serie[:-1] )])
+    new_cases_serie = [stats_arg[i][5] for i in range(n_days_arg)]
 
-    indices = np.arange(n_days_arg-1)
+    indices = np.arange(n_days_arg)
     width = 0.6
 
     p1 = plt.bar(indices, new_cases_serie, width, color="#44A1A0")
 
     plt.ylabel('Population')
     plt.title('New infected cases evolution')
-    plt.xticks(np.arange(0, n_days_arg-1, int(n_days_arg/10)), tuple([('Day ' + str(10*i))
-                                                                      for i in range(int(n_days_arg/10))]))
+    plt.xticks(np.arange(0, n_days_arg, int(n_days_arg/10)), tuple([('Day ' + str(10*i))
+                                                                    for i in range(int(n_days_arg/10))]))
     plt.yticks(np.arange(0, int(max(new_cases_serie)*1.1), int(max(new_cases_serie)/10)))
     plt.legend((p1[0],), ('New cases',))
     plt.show()
-

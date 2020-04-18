@@ -8,16 +8,17 @@ from simulator.simulation_helper import get_environment_simulation, get_virus_si
 
 # Main parameters
 N_INDIVIDUALS = 1000  # number of people
-N_DAYS = 120  # Number of simulated days
+N_DAYS = 840  # Number of simulated days
 NB_STORE_PER_HOUSE = 20  # Let's say we have 20 houses for each grocerie store
 PROBA_SAME_HOUSE_RATE = 0.1  # probability used to set the number of person per house
 INITIAL_INNOCULATION_PCT = 0.005  # Proportion of people innoculated at day 0
 PROB_HOUSE_INFECTION = 0.5  # Probabilty of infecting a random family member (same house)
 PROB_WORK_INFECTION = 0.1  # Probabilty of infecting a random co-worker
 PROB_STORE_INFECTION = 0.05  # Probabilty of infecting someone who goes to the same store
-CONTAGION_BOUNDS = (2, 7)
-HOSPITALIZATION_BOUNDS = (14, 20)
-DEATH_BOUNDS = (21, 39)
+CONTAGION_BOUNDS = (2, 7)  # Bounds defining a draw for contagion period
+HOSPITALIZATION_BOUNDS = (14, 20)  # Bounds defining a draw for hospitalization period
+DEATH_BOUNDS = (21, 39)  # Bounds defining a draw for time to death/immunity
+IMMUNITY_BOUNDS = (60, 90)  # Bounds defining a draw for immunity period
 
 
 def run_simulation():
@@ -25,7 +26,7 @@ def run_simulation():
     env_dic = get_environment_simulation(N_INDIVIDUALS, PROBA_SAME_HOUSE_RATE, NB_STORE_PER_HOUSE)
     print('Preparing virus conditions...')
     virus_dic = get_virus_simulation_t0(N_INDIVIDUALS, INITIAL_INNOCULATION_PCT,
-                                        CONTAGION_BOUNDS, HOSPITALIZATION_BOUNDS, DEATH_BOUNDS)
+                                        CONTAGION_BOUNDS, HOSPITALIZATION_BOUNDS, DEATH_BOUNDS, IMMUNITY_BOUNDS)
 
     stats = []
     print_progress_bar(0, N_DAYS, prefix='Progress:', suffix='Complete', length=50)
@@ -49,7 +50,7 @@ if __name__ == '__main__':
         elif sys.argv[1] == "state":
             draw_population_state_daily(stats_result, N_DAYS, N_INDIVIDUALS)
         elif sys.argv[1] == "spec":
-            draw_specific_population_state_daily(stats_result, N_DAYS, N_INDIVIDUALS, "H")
+            draw_specific_population_state_daily(stats_result, N_DAYS, N_INDIVIDUALS, "P")
     else:
         stats_result = run_simulation()
-        draw_specific_population_state_daily(stats_result, N_DAYS, N_INDIVIDUALS, "H")
+        draw_new_daily_cases(stats_result, N_DAYS)

@@ -37,7 +37,7 @@ def get_environment_simulation(number_of_individuals_arg, same_house_rate_arg, n
 
 
 def get_virus_simulation_t0(number_of_individuals_arg, infection_initialization_rate_arg,
-                            contagion_bound_args, hospitalization_args, death_bound_args):
+                            contagion_bound_args, hospitalization_args, death_bound_args, immunity_bound_args):
     inn_ind_cov = dict(zip(range(number_of_individuals_arg),
                            [int(get_r() <= infection_initialization_rate_arg) for i in range(number_of_individuals_arg)]))
 
@@ -46,14 +46,17 @@ def get_virus_simulation_t0(number_of_individuals_arg, infection_initialization_
     def get_infection_params():
         return get_infection_parameters(contagion_bound_args[0], contagion_bound_args[1],
                                         hospitalization_args[0], hospitalization_args[1],
-                                        death_bound_args[0], death_bound_args[1])
+                                        death_bound_args[0], death_bound_args[1],
+                                        immunity_bound_args[0], immunity_bound_args[1])
 
     time_to_contagion = dict(zip(range(number_of_individuals_arg),
                                  [get_infection_params()[0] for _ in range(number_of_individuals_arg)]))
     time_to_hospital = dict(zip(range(number_of_individuals_arg),
                                 [get_infection_params()[1] for _ in range(number_of_individuals_arg)]))
     time_to_death = dict(zip(range(number_of_individuals_arg),
-                                [get_infection_params()[2] for _ in range(number_of_individuals_arg)]))
+                             [get_infection_params()[2] for _ in range(number_of_individuals_arg)]))
+    time_to_end_immunity = dict(zip(range(number_of_individuals_arg),
+                                    [get_infection_params()[3] for _ in range(number_of_individuals_arg)]))
 
     infected_individual_init = [k for k, v in inn_ind_cov.items() if v == 1]
 
@@ -64,5 +67,8 @@ def get_virus_simulation_t0(number_of_individuals_arg, infection_initialization_
         CON_K: time_to_contagion,
         HOS_K: time_to_hospital,
         DEA_K: time_to_death,
-        STA_K: life_state
+        IMM_K: time_to_end_immunity,
+        STA_K: life_state,
+        FN_K: get_infection_params,
+        NC_K: 0
     }

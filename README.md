@@ -50,11 +50,15 @@ Placement of houses, stores and workplaces in a grid :
 
 Evolution of the number of healthy, infected, dead and immune people :
 ![Population infection state](/images/propagation.png)
-it is nice to see the famous 70% herd immunity
+It is nice to see the famous 70% herd immunity
 
 Evolution of the number of new cases :
-![Population infection state](/images/newcases.png)
-it definitely does not look like a Gaussian distribution but more like a Poisson distribution. Check the end tail :)
+![New cases](/images/newcases.png)
+Check the long tail, new cases can emerge days after been to 0
+
+With a temporary immunity, we see waves slowly eaten by dead people :
+![Temporary immunity waves](/images/vague.png)
+Temporary immunity of 60 to 90 days can prevent the pandemic from dying
 
 # Backlog
 - [x]  Work is only on week days, weekend need to be removed
@@ -63,7 +67,7 @@ it definitely does not look like a Gaussian distribution but more like a Poisson
 - [ ]  Infection can and often occurs on public transportation. We need to build a basic transport model with infection probabilities
 - [ ]  Inject the famous covid-19 2.3 R0 into the code somewhere to get realistic results
 - [x]  Extract more parameters from the code
-- [ ]  Model temporary immunity
+- [x]  Model temporary immunity
 - [ ]  Contagion parameters depend on geographic zones
 - [ ]  Make contagion probability slowly raises as I assume people will get tired of the lockdown and start to be lazy at wearing masks and staying home ...
 - [ ]  Use a contagion probability model for each individual (e.g. probability of contagion is obtained with a model)

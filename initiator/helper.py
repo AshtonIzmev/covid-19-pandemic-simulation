@@ -20,11 +20,13 @@ def get_random_choice_list(list_of_list_arg):
 
 def get_infection_parameters(lower_contagion_bound, upper_contagion_bound,
                              lower_hospitalization_bound, upper_hospitalization_bound,
-                             lower_infection_bound, upper_infection_bound):
+                             lower_death_bound, upper_death_bound,
+                             lower_immunity_bound, upper_immunity_bound):
     # Time to death/immunity , Time to contagiosity
     return int(lower_contagion_bound + (upper_contagion_bound - lower_contagion_bound) * get_r()), \
            int(lower_hospitalization_bound + (upper_hospitalization_bound - lower_hospitalization_bound) * get_r()), \
-           int(lower_infection_bound + (upper_infection_bound - lower_infection_bound) * get_r())
+           int(lower_death_bound + (upper_death_bound - lower_death_bound) * get_r()), \
+           int(lower_immunity_bound + (upper_immunity_bound - lower_immunity_bound) * get_r())
 
 
 def get_mortalty_rate(age):

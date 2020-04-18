@@ -12,6 +12,7 @@ def update_infection_period(newly_infected_individuals_arg, virus_dic):
     for i in newly_infected_individuals_arg:
         if virus_dic[STA_K][i] == HEALTHY_V:
             virus_dic[STA_K][i] = INFECTED_V
+            virus_dic[NC_K] = virus_dic[NC_K] + 1
 
 
 def increment_pandemic_1_day(env_dic, virus_dic):
@@ -28,6 +29,17 @@ def increment_pandemic_1_day(env_dic, virus_dic):
                 virus_dic[STA_K][i] = DEAD_V
             else:
                 virus_dic[STA_K][i] = IMMUNE_V
+    for i in get_immune_people(virus_dic):
+        # Losing immunity
+        virus_dic[IMM_K][i] = virus_dic[IMM_K][i] - 1
+        if virus_dic[IMM_K][i] == 0:
+            virus_dic[STA_K][i] = HEALTHY_V
+            # I am not proud of this hack, otherwise it mean changing too many APIs
+            con, hos, dea, imm = virus_dic[FN_K]()
+            virus_dic[CON_K][i] = con
+            virus_dic[HOS_K][i] = hos
+            virus_dic[DEA_K][i] = dea
+            virus_dic[IMM_K][i] = imm
 
 
 def get_hospitalized_people(virus_dic):
@@ -51,9 +63,12 @@ def get_immune_people(virus_dic):
 
 
 def get_pandemic_statistics(virus_dic):
-    return (len(get_healthy_people(virus_dic)), len(get_infected_people(virus_dic)),
-            len(get_hospitalized_people(virus_dic)), len(get_deadpeople(virus_dic)),
-            len(get_immune_people(virus_dic)))
+    results = (len(get_healthy_people(virus_dic)), len(get_infected_people(virus_dic)),
+               len(get_hospitalized_people(virus_dic)), len(get_deadpeople(virus_dic)),
+               len(get_immune_people(virus_dic)), virus_dic[NC_K])
+    # Reset new cases counter
+    virus_dic[NC_K] = 0
+    return results
 
 
 def is_contagious(individual_arg, virus_dic):

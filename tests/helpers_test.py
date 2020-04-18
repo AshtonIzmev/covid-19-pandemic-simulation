@@ -31,10 +31,11 @@ class TestHelpers(unittest.TestCase):
         self.assertEqual(result, [2, 0, 3])
 
     def test_get_infection_parameters(self):
-        result = get_infection_parameters(2, 7, 7, 21, 21, 39)
+        result = get_infection_parameters(2, 7, 7, 21, 21, 39, 30, 60)
         self.assertEqual(result[0], 4)
         self.assertEqual(result[1], 16)
         self.assertEqual(result[2], 32)
+        self.assertEqual(result[3], 34)
 
     def test_get_mortalty_rate(self):
         self.assertEqual(get_mortalty_rate(62), 0.036)

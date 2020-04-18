@@ -11,11 +11,13 @@ SH_K = "store_to_house_mapping"
 CON_K = "individual_to_contagion_mapping"
 HOS_K = "individual_to_hospital_mapping"
 DEA_K = "individual_to_death_mapping"
+IMM_K = "individual_to_end_immunity_mapping"
 STA_K = "individual_to_state_mapping"
+FN_K = "function_get_infection_params"
+NC_K = "new_cases"
 
 HEALTHY_V = 0
 INFECTED_V = 1
 IMMUNE_V = 2
 DEAD_V = 3
-
 HOSPITALIZED_V = 4
