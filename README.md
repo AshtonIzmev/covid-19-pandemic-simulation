@@ -145,10 +145,10 @@ The lockdown beats the immunity decreasing. I had to launch the simulation with 
 
 # Backlog
 - [ ]  Switch from dictionaries and list to numpy array (may be way more efficient, probably enabling some nice vectorization)
-- [ ]  Infection can and often occurs on public transportation. We need to build a basic transport model with infection probabilities
-- [ ]  Contagion parameters depend on geographic zones
+- [ ]  Contagion parameters depend on geographic blocks
 - [ ]  Make contagion probability slowly raises as I assume people will get tired of the lockdown and start to be lazy at wearing masks and staying home ...
 - [ ]  Use a contagion probability model for each individual (e.g. probability of contagion is obtained with a model)
+- [x]  Infection can and often occurs on public transportation. We need to build a basic transport model with infection probabilities
 - [x]  You probably won't go to the grocerie store every day, but probably twice in week day and once on the weekend (that could be a random variable)
 - [x]  Extract more parameters from the code
 - [x]  Model temporary immunity
