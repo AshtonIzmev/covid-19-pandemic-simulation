@@ -1,5 +1,4 @@
 import math
-
 import numpy as np
 
 from simulator.dynamic_helper import propagate_to_stores, propagate_to_houses, propagate_to_workplaces, \
@@ -7,8 +6,7 @@ from simulator.dynamic_helper import propagate_to_stores, propagate_to_houses, p
 from simulator.parameters import *
 from simulator.plot_helper import print_progress_bar
 from simulator.simulation_helper import get_environment_simulation, get_virus_simulation_t0
-
-DAYS_WAIT_FOR_LOCKDOWN_REMOVAL = 7
+from scenario.scenario_helper import tighten_lockdown, soften_lockdown
 
 
 # This scenario is a lockdown loosening every DAYS_WAIT_FOR_LOCKDOWN_REMOVAL after the last new case
@@ -19,9 +17,20 @@ def launch_run():
                                          params[nb_block_key], params[remote_work_key])
 
     stats = np.zeros((params[nrun_key], params[nday_key], 6))
+    loosening_day = np.zeros((params[nrun_key]))
     print_progress_bar(0, params[nrun_key] * params[nday_key], prefix='Progress:', suffix='Complete', length=50)
-    days_with_no_cases = 0
     for r in range(params[nrun_key]):
+
+        params[store_preference_key] = 0.95
+        params[remote_work_key] = 0.98
+        params[house_infect_key] = 0.5
+        params[work_infection_key] = 0.001
+        params[store_infection_key] = 0.002
+        params[transport_infection_key] = 0.001
+        days_with_no_cases = 0
+
+        first_day_lockdown_loosening = -1
+
         virus_dic = get_virus_simulation_t0(params[nindividual_key], params[innoculation_number_key],
                                             params[contagion_bounds_key], params[hospitalization_bounds_key],
                                             params[death_bounds_key], params[immunity_bounds_key])
@@ -41,10 +50,10 @@ def launch_run():
                 days_with_no_cases += 1
             else:
                 days_with_no_cases = 0
-            if (days_with_no_cases % DAYS_WAIT_FOR_LOCKDOWN_REMOVAL == 0) and days_with_no_cases > 0:
-                params[house_infect_key] = math.sqrt(params[house_infect_key])
-                params[transport_infection_key] = math.sqrt(params[transport_infection_key])
-                params[work_infection_key] = math.sqrt(params[work_infection_key])
-                params[store_infection_key] = math.sqrt(params[store_infection_key])
-
+            if (days_with_no_cases % params[days_wait_lockdown_removal] == 0) and days_with_no_cases > 0:
+                if first_day_lockdown_loosening == -1:
+                    first_day_lockdown_loosening = i
+                soften_lockdown(params)
+        loosening_day[r] = first_day_lockdown_loosening
+    print("Lockdown removal occured in average after %.2f days" % loosening_day.mean())
     return stats

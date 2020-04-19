@@ -38,7 +38,7 @@ def draw_summary(stats_arg, x_tick=10):
 def draw_examples(stats_arg, x_tick=10):
     grid_size = 3
     fig, axes = plt.subplots(grid_size, grid_size, figsize=(16, 10))
-    if grid_size * grid_size >= stats_arg.shape[0]:
+    if grid_size * grid_size > stats_arg.shape[0]:
         raise AssertionError("Raise the number of runs (--nrun parameter) to draw examples")
     # Maybe I did overthink this but I was looking into the most uncommon runs
     # Prefered a kmeans over a set of pairwise kolmogorov smirnov tests
@@ -207,6 +207,5 @@ def chose_draw_plot(args_arg, stats_arg):
     elif args_arg.all_plots:
         draw_examples(stats_arg)
         draw_summary(stats_arg)
-        draw_new_daily_cases(stats_arg)
     else:
         draw_population_state_daily(stats_arg)

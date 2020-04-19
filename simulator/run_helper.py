@@ -43,4 +43,7 @@ def get_parser():
                         action='store_true')
     parser.add_argument('--all-plots', '--all', help='Draw all plots in a single pass', action='store_true')
 
+    parser.add_argument('--days-lockdown-removal', type=int, help='Number of days to lockdown removal',
+                        dest=days_wait_lockdown_removal)
+
     return parser

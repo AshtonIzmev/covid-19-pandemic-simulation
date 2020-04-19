@@ -1,5 +1,5 @@
 import random
-
+import time
 from scenario import lockdown_scenario
 from simulator.parameters import *
 from simulator.plot_helper import chose_draw_plot
@@ -13,5 +13,8 @@ if __name__ == '__main__':
             params[arg] = v
 
     random.seed(params[random_seed_key])
-    chose_draw_plot(args, lockdown_scenario.launch_run())
+    t_start = time.time()
+    stats_result = lockdown_scenario.launch_run()
+    print("It took : %.2f seconds" % (time.time() - t_start))
+    chose_draw_plot(args, stats_result)
 

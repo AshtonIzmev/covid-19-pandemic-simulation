@@ -24,6 +24,9 @@ hospitalization_bounds_key = "HOSPITALIZATION_BOUNDS"
 death_bounds_key = "DEATH_BOUNDS"
 immunity_bounds_key = "IMMUNITY_BOUNDS"
 
+# Scenario parameters
+days_wait_lockdown_removal = "DAYS_WAIT_FOR_LOCKDOWN_REMOVAL"
+
 params = {
     nrun_key: 1,  # Number of runs
     scenario_id_key: -1,  # Scenario id if running the scenario package
@@ -61,5 +64,8 @@ params = {
 
     # we still don't really know about long-term immunity so let's assume it is a lifetime one
     # https://edition.cnn.com/2020/04/17/health/south-korea-coronavirus-retesting-positive-intl-hnk/index.html
-    immunity_bounds_key: (900, 1000)  # Bounds defining a draw for immunity period
+    immunity_bounds_key: (900, 1000),  # Bounds defining a draw for immunity period
+
+    days_wait_lockdown_removal: 7  # How to long to wait before lockdown removal
+
 }

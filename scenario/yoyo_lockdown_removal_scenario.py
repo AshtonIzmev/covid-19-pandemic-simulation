@@ -1,5 +1,6 @@
 import numpy as np
 
+from scenario.scenario_helper import tighten_lockdown, soften_lockdown
 from simulator.dynamic_helper import propagate_to_stores, propagate_to_houses, propagate_to_workplaces, \
     increment_pandemic_1_day, is_weekend, get_pandemic_statistics, propagate_to_transportation
 from simulator.parameters import *
@@ -7,9 +8,8 @@ from simulator.plot_helper import print_progress_bar
 from simulator.simulation_helper import get_environment_simulation, get_virus_simulation_t0
 
 
-# This scenario is the basic one with a classic dynamic
+# This scenario is a lockdown loosening every DAYS_WAIT_FOR_LOCKDOWN_REMOVAL after the last new case
 def launch_run():
-
     print('Preparing environment...')
     env_dic = get_environment_simulation(params[nindividual_key], params[same_house_p_key],
                                          params[store_per_house_key], params[store_preference_key],
@@ -26,6 +26,8 @@ def launch_run():
         params[store_infection_key] = 0.002
         params[transport_infection_key] = 0.001
 
+        lockdown_min_delay = 0
+
         virus_dic = get_virus_simulation_t0(params[nindividual_key], params[innoculation_number_key],
                                             params[contagion_bounds_key], params[hospitalization_bounds_key],
                                             params[death_bounds_key], params[immunity_bounds_key])
@@ -41,4 +43,17 @@ def launch_run():
             increment_pandemic_1_day(env_dic, virus_dic)
             stats[r][i][0], stats[r][i][1], stats[r][i][2], stats[r][i][3], stats[r][i][4], stats[r][i][5] = \
                 get_pandemic_statistics(virus_dic)
+
+            lockdown_min_delay += 1
+            if stats[r][i][5] == 0 and lockdown_min_delay >= 7:
+                print(i, "soften  ")
+                lockdown_min_delay = 0
+                soften_lockdown(params)
+                soften_lockdown(params)
+            elif stats[r][i][5] >= 5 and lockdown_min_delay >= 7:
+                print(i, "tighten  ")
+                lockdown_min_delay = 0
+                tighten_lockdown(params)
+                tighten_lockdown(params)
+
     return stats

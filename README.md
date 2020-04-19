@@ -23,22 +23,34 @@ python -m simulator.run --hospitalized-cases --nday 200 --nind 5000
 python -m simulator.run  --nday 500 --nind 5000 --summary --immunity-bounds 120 150
 ```
 
+# Run a scenario
+Scenario 0 : Infinite lockdown
+```bash
+ python -m scenario.run --scenario 0 --pop
+```
+Scenario 1 : Lockdown loosening every 7 days without any new case
+```bash
+ python -m scenario.run --scenario 0 --pop
+```
+
 # Usage
 ```bash
-usage: run.py [-h] [--nrun NRUN] [--nind N_INDIVIDUALS] [--nday N_DAYS]
+usage: run.py [-h] [--nrun NRUN] [--random-seed RANDOM_SEED]
+              [--nind N_INDIVIDUALS] [--nday N_DAYS]
               [--sto-house NB_STORE_PER_HOUSE] [--nblock NB_GRID_BLOCK]
               [--remote-work REMOTE_WORK_PERCENT]
               [--sto-pref PROB_PREFERENCE_STORE]
               [--p-same-house PROBA_SAME_HOUSE_RATE]
-              [--inn-infec INITIAL_INNOCULATION_PCT]
+              [--inn-infec INITIAL_INNOCULATION_NB]
               [--p-house PROB_HOUSE_INFECTION]
               [--p-store PROB_STORE_INFECTION] [--p-work PROB_WORK_INFECTION]
               [--contagion-bounds CONTAGION_BOUNDS CONTAGION_BOUNDS]
               [--hospitalization-bounds HOSPITALIZATION_BOUNDS HOSPITALIZATION_BOUNDS]
               [--death-bounds DEATH_BOUNDS DEATH_BOUNDS]
               [--immunity-bounds IMMUNITY_BOUNDS IMMUNITY_BOUNDS]
-              [--population-state] [--hospitalized-cases] [--new-cases]
-              [--summary]
+              [--scenario-id SCENARIO_ID] [--population-state]
+              [--hospitalized-cases] [--new-cases] [--summary] [--examples]
+              [--all-plots]
 
 Please feed model parameters
 
@@ -58,8 +70,9 @@ optional arguments:
   --sto-pref PROB_PREFERENCE_STORE
                         Probability going to nearest store
   --p-same-house PROBA_SAME_HOUSE_RATE
-                        "Probability" for individuals for living in the same house
-  --inn-infec INITIAL_INNOCULATION_PCT
+                        "Probability" for individuals for living in the same
+                        house
+  --inn-infec INITIAL_INNOCULATION_NB
                         Initial innoculation percentage
   --p-house PROB_HOUSE_INFECTION
                         Probability of house infection
@@ -75,6 +88,8 @@ optional arguments:
                         Death bounds
   --immunity-bounds IMMUNITY_BOUNDS IMMUNITY_BOUNDS
                         Immunity bounds
+  --scenario-id SCENARIO_ID, --sce SCENARIO_ID
+                        Immunity bounds
   --population-state, --pop
                         Draw population state graph
   --hospitalized-cases, --hos
@@ -82,6 +97,7 @@ optional arguments:
   --new-cases, --new    Draw new cases graph
   --summary, --sum      Draw a pandemic summary
   --examples, --exa     Draw the most different pandemic evolution examples
+  --all-plots, --all    Draw all plots in a single pass
 ```
 
 # Main idea
