@@ -1,5 +1,6 @@
 # Default parameters
 nrun_key = "NRUN"
+scenario_id_key = "SCENARIO_ID"
 random_seed_key = "RANDOM_SEED"
 
 nindividual_key = "N_INDIVIDUALS"
@@ -25,6 +26,7 @@ immunity_bounds_key = "IMMUNITY_BOUNDS"
 
 params = {
     nrun_key: 1,  # Number of runs
+    scenario_id_key: 1,  # Scenario id if running the scenario package
     random_seed_key: 42,  # Of course 42
     nindividual_key: 1000,  # Number of people
     nday_key: 180,  # Number of simulated days

@@ -33,6 +33,8 @@ def get_parser():
     parser.add_argument('--death-bounds', type=int, nargs=2, help='Death bounds', dest=death_bounds_key)
     parser.add_argument('--immunity-bounds', type=int, nargs=2, help='Immunity bounds', dest=immunity_bounds_key)
 
+    parser.add_argument('--scenario-id', "--sce", type=int, help='Immunity bounds', dest=scenario_id_key)
+
     parser.add_argument('--population-state', '--pop', help='Draw population state graph', action='store_true')
     parser.add_argument('--hospitalized-cases', '--hos', help='Draw hospitalized cases graph', action='store_true')
     parser.add_argument('--new-cases', '--new', help='Draw new cases graph', action='store_true')

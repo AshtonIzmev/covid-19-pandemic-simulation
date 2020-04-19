@@ -204,4 +204,4 @@ def chose_draw_plot(args_arg, stats_arg):
     elif args_arg.examples:
         draw_examples(stats_arg)
     else:
-        draw_examples(stats_arg)
+        draw_population_state_daily(stats_arg)
