@@ -192,4 +192,16 @@ def set_ax_new_daily_cases(ax, stats_arg, x_tick=10):
     ax.legend((p1[0],), ('New cases',))
 
 
-
+def chose_draw_plot(args_arg, stats_arg):
+    if args_arg.population_state:
+        draw_population_state_daily(stats_arg)
+    elif args_arg.new_cases:
+        draw_new_daily_cases(stats_arg)
+    elif args_arg.hospitalized_cases:
+        draw_specific_population_state_daily(stats_arg)
+    elif args_arg.summary:
+        draw_summary(stats_arg)
+    elif args_arg.examples:
+        draw_examples(stats_arg)
+    else:
+        draw_examples(stats_arg)
