@@ -112,8 +112,8 @@ def build_store_house_map(house_store_map_arg):
 
 def build_individual_work_map(individual_adult_map_arg, probability_remote_work_arg):
     # Only adults work, and only half of them
-    workers = list([ind for ind, age in individual_adult_map_arg.items()
-                    if get_r() < probability_remote_work_arg and age == 1])
+    workers = list([ind for ind, is_adult in individual_adult_map_arg.items()
+                    if get_r() < (1-probability_remote_work_arg) and is_adult == 1])
     random.shuffle(workers)
     all_ind_wor = {}
     i_wor = 0

@@ -48,10 +48,11 @@ def get_environment_simulation(number_of_individuals_arg, same_house_rate_arg, n
     }
 
 
-def get_virus_simulation_t0(number_of_individuals_arg, infection_initialization_rate_arg,
+def get_virus_simulation_t0(number_of_individuals_arg, infection_initialization_number_arg,
                             contagion_bound_args, hospitalization_args, death_bound_args, immunity_bound_args):
     inn_ind_cov = dict(zip(range(number_of_individuals_arg),
-                           [int(get_r() <= infection_initialization_rate_arg) for i in range(number_of_individuals_arg)]))
+                           [int(get_r() <= infection_initialization_number_arg / number_of_individuals_arg)
+                            for i in range(number_of_individuals_arg)]))
 
     life_state = dict(zip(range(number_of_individuals_arg), [HEALTHY_V] * number_of_individuals_arg))
 

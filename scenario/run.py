@@ -1,6 +1,6 @@
 import random
-
-from scenario import basic_scenario
+import sys
+from scenario import lockdown_scenario, simple_lockdown_removal_scenario
 from simulator.parameters import *
 from simulator.plot_helper import chose_draw_plot
 from simulator.run_helper import get_parser
@@ -14,9 +14,11 @@ if __name__ == '__main__':
 
     random.seed(params[random_seed_key])
 
-    if params[scenario_id_key] == 1:
-        stats_result = basic_scenario.launch_run()
+    if params[scenario_id_key] == 0:
+        stats_result = lockdown_scenario.launch_run()
+    elif params[scenario_id_key] == 1:
+        stats_result = simple_lockdown_removal_scenario.launch_run()
     else:
-        stats_result = basic_scenario.launch_run()
+        sys.exit(0)
 
     chose_draw_plot(args, stats_result)

@@ -23,11 +23,11 @@ class TestSimulation(unittest.TestCase):
     @staticmethod
     def get_virus_dic():
         return {
-            CON_K: {0: 4, 1: 2, 2: 2, 3: 6, 4: 4, 5: 2, 6: 5, 7: 2, 8: 4, 9: 5},
+            CON_K: {0:  4, 1:  2, 2:  2, 3:  6, 4:  4, 5:  2, 6: 5,  7:  2, 8:  4, 9:  5},
             DEA_K: {0: 34, 1: 21, 2: 30, 3: 35, 4: 29, 5: 37, 6: 26, 7: 33, 8: 33, 9: 28},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 46, 9: 55},
-            HOS_K: {0: 12, 1: 10, 2: 14, 3: 14, 4: 17, 5: 16, 6: 15, 7: 10, 8: 20, 9: 9},
-            STA_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0},
+            HOS_K: {0: 12, 1: 10, 2: 14, 3: 14, 4: 17, 5: 16, 6: 15, 7: 10, 8: 20, 9:  9},
+            STA_K: {0:  0, 1:  0, 2:  0, 3:  1, 4:  1, 5:  0, 6:  0, 7:  0, 8:  0, 9:  0},
             NC_K: 0
         }
 
@@ -62,7 +62,7 @@ class TestSimulation(unittest.TestCase):
         self.assertEqual(result, expected_result)
 
     def test_build_virus_dic(self):
-        result = get_virus_simulation_t0(10, 0.1, (2, 7), (7, 21), (21, 39), (35, 65))
+        result = get_virus_simulation_t0(10, 2, (2, 7), (7, 21), (21, 39), (35, 65))
         expected_result = TestSimulation.get_virus_dic()
         self.assertEqual(result[CON_K], expected_result[CON_K])
         self.assertEqual(result[HOS_K], expected_result[HOS_K])

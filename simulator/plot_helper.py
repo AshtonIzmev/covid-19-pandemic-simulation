@@ -49,12 +49,13 @@ def draw_examples(stats_arg, x_tick=10):
     for axes_row in axes:
         for ax in axes_row:
             set_ax_run_population_state_daily(ax, stats_arg, chosen_run[run_id], x_tick)
-            ax.set_xlabel("")
-            ax.set_ylabel("")
+            if run_id != grid_size-1:
+                ax.legend("")
+            if run_id != 2*grid_size:
+                ax.set_xlabel("")
+                ax.set_ylabel("")
             ax.set_title("Run n°" + str(chosen_run[run_id]))
             run_id += 1
-    axes[grid_size-1][0].set_xlabel('Days since innoculation')
-    axes[grid_size-1][0].set_ylabel('Total population')
     plt.show()
 
 
@@ -188,7 +189,7 @@ def set_ax_new_daily_cases(ax, stats_arg, x_tick=10):
     ax.set_title('New infected cases evolution')
     ax.set_xticks(np.arange(0, n_day_arg, int(n_day_arg / x_tick)), tuple([(str(int(i * n_day_arg / x_tick)))
                                                                            for i in range(x_tick)]))
-    ax.set_yticks(np.arange(0, int(max(new_cases_serie) * 1.1), int(max(new_cases_serie) / 10)))
+    ax.set_yticks(np.arange(0, int(1+max(new_cases_serie) * 1.1), int(1+max(new_cases_serie) / 10)))
     ax.legend((p1[0],), ('New cases',))
 
 
@@ -203,5 +204,9 @@ def chose_draw_plot(args_arg, stats_arg):
         draw_summary(stats_arg)
     elif args_arg.examples:
         draw_examples(stats_arg)
+    elif args_arg.all_plots:
+        draw_examples(stats_arg)
+        draw_summary(stats_arg)
+        draw_new_daily_cases(stats_arg)
     else:
         draw_population_state_daily(stats_arg)

@@ -21,7 +21,7 @@ def get_parser():
     parser.add_argument('--p-same-house', type=float, help='"Probability" for individuals for living in the same house'
                         , dest=same_house_p_key)
     parser.add_argument('--inn-infec', type=float, help='Initial innoculation percentage',
-                        dest=innoculation_pct_key)
+                        dest=innoculation_number_key)
 
     parser.add_argument('--p-house', type=float, help='Probability of house infection', dest=house_infect_key)
     parser.add_argument('--p-store', type=float, help='Probability of store infection', dest=store_infection_key)
@@ -41,5 +41,6 @@ def get_parser():
     parser.add_argument('--summary', '--sum', help='Draw a pandemic summary', action='store_true')
     parser.add_argument('--examples', '--exa', help='Draw the most different pandemic evolution examples',
                         action='store_true')
+    parser.add_argument('--all-plots', '--all', help='Draw all plots in a single pass', action='store_true')
 
     return parser
