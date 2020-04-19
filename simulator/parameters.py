@@ -1,5 +1,6 @@
 # Default parameters
 nrun_key = "NRUN"
+random_seed_key = "RANDOM_SEED"
 
 nindividual_key = "N_INDIVIDUALS"
 nday_key = "N_DAYS"
@@ -24,6 +25,7 @@ immunity_bounds_key = "IMMUNITY_BOUNDS"
 
 params = {
     nrun_key: 1,  # Number of runs
+    random_seed_key: 42,  # Of course 42
     nindividual_key: 1000,  # Number of people
     nday_key: 180,  # Number of simulated days
     innoculation_pct_key: 0.005,  # Proportion of people innoculated at day 0

@@ -1,4 +1,5 @@
 import numpy as np
+import random
 
 from simulator.dynamic_helper import propagate_to_stores, propagate_to_houses, propagate_to_workplaces, \
     increment_pandemic_1_day, is_weekend, get_pandemic_statistics, propagate_to_transportation
@@ -43,6 +44,8 @@ if __name__ == '__main__':
         v = getattr(args, arg)
         if arg in params and v is not None:
             params[arg] = v
+
+    random.seed(params[random_seed_key])
 
     stats_result = launch_run()
     if args.population_state:

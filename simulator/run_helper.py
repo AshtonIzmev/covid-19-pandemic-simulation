@@ -7,6 +7,7 @@ def get_parser():
     parser = argparse.ArgumentParser(description='Please feed model parameters')
 
     parser.add_argument('--nrun', type=int, help='Number of simulations', dest=nrun_key)
+    parser.add_argument('--random-seed', type=int, help='Random seed', dest=random_seed_key)
 
     parser.add_argument('--nind', type=int, help='Number of individuals', dest=nindividual_key)
     parser.add_argument('--nday', type=int, help='Number of days', dest=nday_key)

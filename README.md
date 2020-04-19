@@ -45,6 +45,8 @@ Please feed model parameters
 optional arguments:
   -h, --help            show this help message and exit
   --nrun NRUN           Number of simulations
+  --random-seed RANDOM_SEED
+                        Random seed
   --nind N_INDIVIDUALS  Number of individuals
   --nday N_DAYS         Number of days
   --sto-house NB_STORE_PER_HOUSE
