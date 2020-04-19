@@ -36,5 +36,7 @@ def get_parser():
     parser.add_argument('--hospitalized-cases', '--hos', help='Draw hospitalized cases graph', action='store_true')
     parser.add_argument('--new-cases', '--new', help='Draw new cases graph', action='store_true')
     parser.add_argument('--summary', '--sum', help='Draw a pandemic summary', action='store_true')
+    parser.add_argument('--examples', '--exa', help='Draw the most different pandemic evolution examples',
+                        action='store_true')
 
     return parser

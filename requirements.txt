@@ -4,3 +4,4 @@ seaborn
 scipy
 numpy
 argparse
+sklearn

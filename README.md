@@ -79,6 +79,7 @@ optional arguments:
                         Draw hospitalized cases graph
   --new-cases, --new    Draw new cases graph
   --summary, --sum      Draw a pandemic summary
+  --examples, --exa     Draw the most different pandemic evolution examples
 ```
 
 # Main idea
@@ -142,6 +143,13 @@ python -m simulator.run  --nday 500 --nind 5000 --summary --immunity-bounds 120 
 ```
 ![Temporary immunity waves](/images/summary.png)
 The lockdown beats the immunity decreasing. I had to launch the simulation with those models many times to get it.
+
+Here are multiple runs plot against each other :
+```bash
+python -m simulator.run --nrun 20  --nday 180 --nind 1000 --immunity-bounds 60 90   --exa
+```
+![Examples](/images/examples.png)
+Using a quick and dirty kmeans, we only display the most "different" run distributions to illustrate the butterfly effect of a pandemic
 
 # Backlog
 - [ ]  Switch from dictionaries and list to numpy array (may be way more efficient, probably enabling some nice vectorization)

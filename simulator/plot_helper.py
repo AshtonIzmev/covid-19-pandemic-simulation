@@ -1,11 +1,13 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import stats
+from sklearn.cluster import KMeans
+from sklearn.metrics import pairwise_distances_argmin_min
 
 
 def draw_population_state_daily(stats_arg, x_tick=10):
     fig, ax = plt.subplots(figsize=(15, 10))
-    set_ax_population_state_daily(ax, stats_arg, x_tick)
+    set_ax_mean_population_state_daily(ax, stats_arg, x_tick)
     plt.show()
 
 
@@ -23,13 +25,36 @@ def draw_new_daily_cases(stats_arg, x_tick=10):
 
 def draw_summary(stats_arg, x_tick=10):
     fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(16, 10))
-    set_ax_population_state_daily(ax1, stats_arg, x_tick)
+    set_ax_mean_population_state_daily(ax1, stats_arg, x_tick)
     set_ax_new_daily_cases(ax2, stats_arg, x_tick)
     set_ax_specific_population_state_daily(ax3, stats_arg, x_tick)
     ax1.set_xlabel('')
     ax2.set_xlabel('')
     ax2.set_title('')
     ax3.set_title('')
+    plt.show()
+
+
+def draw_examples(stats_arg, x_tick=10):
+    grid_size = 3
+    fig, axes = plt.subplots(grid_size, grid_size, figsize=(16, 10))
+    if grid_size * grid_size >= stats_arg.shape[0]:
+        raise AssertionError("Raise the number of runs (--nrun parameter) to draw examples")
+    # Maybe I did overthink this but I was looking into the most uncommon runs
+    # Prefered a kmeans over a set of pairwise kolmogorov smirnov tests
+    kmeans = KMeans(n_clusters=grid_size * grid_size, random_state=0)
+    kmeans.fit(stats_arg[:, :, 0])
+    chosen_run, _ = pairwise_distances_argmin_min(kmeans.cluster_centers_, stats_arg[:, :, 0])
+    run_id = 0
+    for axes_row in axes:
+        for ax in axes_row:
+            set_ax_run_population_state_daily(ax, stats_arg, chosen_run[run_id], x_tick)
+            ax.set_xlabel("")
+            ax.set_ylabel("")
+            ax.set_title("Run n°" + str(chosen_run[run_id]))
+            run_id += 1
+    axes[grid_size-1][0].set_xlabel('Days since innoculation')
+    axes[grid_size-1][0].set_ylabel('Total population')
     plt.show()
 
 
@@ -58,21 +83,21 @@ def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, lengt
 
 
 def set_ax_population_state_daily(ax, stats_arg, x_tick=10):
-    n_day_arg = stats_arg.shape[1]
-    n_individual_arg = 1.1*np.max(stats_arg)
-    stats_mean_arg = np.mean(stats_arg, axis=0)
-    dead_serie = [stats_mean_arg[i][3] for i in range(n_day_arg)]
+    n_day_arg = stats_arg.shape[0]
+    n_individual_arg = 1.1 * np.max(stats_arg)
+    dead_serie = [stats_arg[i][3] for i in range(n_day_arg)]
 
-    healthy_serie = [stats_mean_arg[i][0] for i in range(n_day_arg)]
+    healthy_serie = [stats_arg[i][0] for i in range(n_day_arg)]
 
-    infected_serie = [stats_mean_arg[i][1] for i in range(n_day_arg)]
-    infected_serie_stacked = [stats_mean_arg[i][0] + stats_mean_arg[i][3] for i in range(n_day_arg)]
+    infected_serie = [stats_arg[i][1] for i in range(n_day_arg)]
+    infected_serie_stacked = [stats_arg[i][0] + stats_arg[i][3] for i in range(n_day_arg)]
 
-    hospital_serie = [stats_mean_arg[i][2] for i in range(n_day_arg)]
-    hospital_serie_stacked = [stats_mean_arg[i][0] + stats_mean_arg[i][1] + stats_mean_arg[i][3] for i in range(n_day_arg)]
+    hospital_serie = [stats_arg[i][2] for i in range(n_day_arg)]
+    hospital_serie_stacked = [stats_arg[i][0] + stats_arg[i][1] + stats_arg[i][3] for i in
+                              range(n_day_arg)]
 
-    immune_serie = [stats_mean_arg[i][4] for i in range(n_day_arg)]
-    immune_serie_stacked = [stats_mean_arg[i][0] + stats_mean_arg[i][1] + stats_mean_arg[i][2] + stats_mean_arg[i][3]
+    immune_serie = [stats_arg[i][4] for i in range(n_day_arg)]
+    immune_serie_stacked = [stats_arg[i][0] + stats_arg[i][1] + stats_arg[i][2] + stats_arg[i][3]
                             for i in range(n_day_arg)]
 
     indices = np.arange(n_day_arg)
@@ -87,10 +112,22 @@ def set_ax_population_state_daily(ax, stats_arg, x_tick=10):
     ax.set_ylabel('Total population')
     ax.set_xlabel('Days since innoculation')
     ax.set_title('Pandemic evolution')
-    ax.set_xticks(np.arange(0, n_day_arg, int(n_day_arg / x_tick)), tuple([(str(int(i * n_day_arg / x_tick)))
-                                                                           for i in range(x_tick)]))
-    ax.set_yticks(np.arange(0, n_individual_arg, (n_individual_arg/15)))
-    ax.legend((p1[0], p2[0], p3[0], p4[0], p5[0]), ('Dead', 'Healthy', 'Infected', 'Hospitalized', 'Immune'))
+    ax.set_xticks(np.arange(0, n_day_arg, int(n_day_arg / x_tick)),
+                  tuple([(str(int(i * n_day_arg / x_tick))) for i in range(x_tick)]))
+
+    ax.set_yticks(np.arange(0, n_individual_arg, (n_individual_arg / 15)))
+    ax.legend((p1[0], p2[0], p3[0], p4[0], p5[0]), ('Dead', 'Healthy', 'Infected', 'Hospitalized', 'Immune'),
+              framealpha=0.35)
+
+
+def set_ax_mean_population_state_daily(ax, stats_arg, x_tick):
+    stats_mean = np.mean(stats_arg, axis=0)
+    set_ax_population_state_daily(ax, stats_mean, x_tick)
+
+
+def set_ax_run_population_state_daily(ax, stats_arg, run_id, x_tick):
+    stats_run = stats_arg[run_id]
+    set_ax_population_state_daily(ax, stats_run, x_tick)
 
 
 def set_ax_specific_population_state_daily(ax, stats_arg, x_tick=10, style="P"):
