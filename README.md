@@ -155,6 +155,7 @@ Using a quick and dirty kmeans, we only display the most "different" run distrib
 - [ ]  Switch from dictionaries and list to numpy array (may be way more efficient, probably enabling some nice vectorization)
 - [ ]  Contagion parameters depend on geographic blocks
 - [ ]  Make contagion probability slowly raises as I assume people will get tired of the lockdown and start to be lazy at wearing masks and staying home ...
+- [ ]  Reviewing the distribution model of individuals over households, probably it can be modeled with a truncated normal distribution, we can set parameters using information from this website https://www.hcp.ma/Les-projections-de-la-population-et-des-menages-entre-2014-et-2050_a1920.html.
 - [ ]  Use a contagion probability model for each individual (e.g. probability of contagion is obtained with a model)
 - [x]  Infection can and often occurs on public transportation. We need to build a basic transport model with infection probabilities
 - [x]  You probably won't go to the grocerie store every day, but probably twice in week day and once on the weekend (that could be a random variable)
