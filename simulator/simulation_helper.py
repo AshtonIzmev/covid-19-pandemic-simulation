@@ -7,9 +7,9 @@ from initiator.helper import get_r, get_infection_parameters
 from simulator.keys import *
 
 
-def get_environment_simulation(number_of_individuals_arg, same_house_rate_arg, number_store_per_house_arg,
+def get_environment_simulation(number_of_individuals_arg, number_store_per_house_arg,
                                preference_store_arg, nb_block_arg, probability_remote_work_arg):
-    indiv_house = build_individual_houses_map(number_of_individuals_arg, same_house_rate_arg)
+    indiv_house = build_individual_houses_map(number_of_individuals_arg)
     house_indiv = build_house_individual_map(indiv_house)
     indiv_adult = build_individual_adult_map(indiv_house)
     indiv_age = build_individual_age_map(indiv_house)

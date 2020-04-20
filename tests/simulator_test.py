@@ -1,4 +1,5 @@
 import random
+import numpy as np
 import unittest
 
 from initiator.helper import get_infection_parameters
@@ -19,6 +20,7 @@ class TestSimulation(unittest.TestCase):
     @classmethod
     def setUp(cls):
         random.seed(12)
+        np.random.seed(seed=12)
 
     @staticmethod
     def get_virus_dic():
@@ -55,10 +57,25 @@ class TestSimulation(unittest.TestCase):
             WI_K: {0: [5], 1: [4, 1]},
             ITI_K: {1: {1, 4, 5}, 4: {1, 4, 5}, 5: {1, 4, 5}}
         }
+        # to avoid changing all the test values, I added this Dict to test "get_environment_simulation"
+        # and the other tests will be done with the old values =>get_10_01_2_environment_dic
+    def get_10_01_2_environment_new_house_map_dic():
+        return {
+            IH_K: {0: 0, 1: 0, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 2, 8: 2, 9: 2},
+            HI_K: {0: [0, 1], 1: [2, 3, 4, 5, 6], 2: [7, 8, 9]},
+            IAD_K: {0: 1, 1: 1, 2: 1, 3: 1, 4: 0, 5: 0, 6: 0, 7: 1, 8: 1, 9: 0},
+            IAG_K: {0: 30, 1: 47, 2: 33, 3: 23, 4: 2, 5: 15, 6: 13, 7: 26, 8: 37, 9: 0},
+            IW_K: {2: 0, 1: 1},
+            WI_K:{0: [2], 1: [1]},
+            HA_K: {0: [0, 1], 1: [2, 3], 2: [7, 8]},
+            HS_K: {0: 0, 1: 0, 2: 0},
+            SH_K: {0: [0, 1, 2]},
+            ITI_K: {2: {1, 2}, 1: {1, 2}}
+            }
 
     def test_build_environment_dic(self):
-        result = get_environment_simulation(10, 0.1, 2, 1, 5, 0.5)
-        expected_result = TestSimulation.get_10_01_2_environment_dic()
+        result = get_environment_simulation(10, 2, 1, 5, 0.5)
+        expected_result = TestSimulation.get_10_01_2_environment_new_house_map_dic()
         self.assertEqual(result, expected_result)
 
     def test_build_virus_dic(self):

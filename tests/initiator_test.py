@@ -1,4 +1,5 @@
 import random
+import numpy as np
 import unittest
 
 import numpy
@@ -14,22 +15,20 @@ class TestInitiation(unittest.TestCase):
     @classmethod
     def setUp(cls):
         random.seed(12)
+        np.random.seed(seed=12)
 
-    def test_build_individual_houses_map__big_families(self):
-        result = build_individual_houses_map(5, 0.1)
-        self.assertEqual(result, {0: 0, 1: 0, 2: 0, 3: 0, 4: 1})
+    def test_build_individual_houses_map__first_families(self):
+        result = build_individual_houses_map(5)
+        self.assertEqual(result, {0: 0, 1: 0, 2: 1, 3: 1, 4: 1})
 
-    def test_build_individual_houses_map__medium_families(self):
-        result = build_individual_houses_map(5, 0.5)
-        self.assertEqual(result, {0: 0, 1: 1, 2: 1, 3: 2, 4: 2})
+    def test_build_individual_houses_map__second_families(self):
+        result = build_individual_houses_map(10)
+        self.assertEqual(result, {0: 0, 1: 0, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 2, 8: 2, 9: 2})
 
-    def test_build_individual_houses_map__small_families(self):
-        result = build_individual_houses_map(5, 0.95)
-        self.assertEqual(result, {0: 0, 1: 1, 2: 2, 3: 3, 4: 4})
-
-    def test_build_individual_houses_map__average_american_household(self):
-        result = build_individual_houses_map(100, 0.17)
-        self.assertEqual(numpy.mean([len(v) for k, v in invert_map(result).items()]), 2.5)
+    def test_build_individual_houses_map__average_moroccan_household(self):
+        result = build_individual_houses_map(1000)
+        mean_family=numpy.mean([len(v) for k, v in invert_map(result).items()])
+        self.assertEqual(abs(mean_family-4.52)<0.3, True)
 
     def test_build_individual_adult_map(self):
         input_individual_houses_map = {

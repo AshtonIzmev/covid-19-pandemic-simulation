@@ -2,31 +2,28 @@ import random
 
 from scipy import spatial
 
-from initiator.helper import get_r, invert_map, pick_age, get_center_squized_random, pick_random_company_size, \
+from initiator.helper import get_r, get_indiv,invert_map, pick_age, get_center_squized_random, pick_random_company_size, \
     rec_get_manhattan_walk, invert_map_list
 
 
-def build_individual_houses_map(number_individual_arg, proba_same_house_rate):
+def build_individual_houses_map(number_individual_arg):
     # Individual -> House
     all_ind_hou = {}
     i_hou = 0
     i_ind = 0
     is_first_person = True
     prob_keep_hou = get_r()
-    while i_ind < number_individual_arg:
-        if is_first_person:
-            all_ind_hou[i_ind] = i_hou  # Attach first person to the house
-            i_ind = i_ind + 1  # GOTO next person
-            is_first_person = False
-            continue
-        if prob_keep_hou > proba_same_house_rate:
-            all_ind_hou[i_ind] = i_hou  # Attach Next person
-            i_ind = i_ind + 1  # GOTO next person
-            prob_keep_hou = prob_keep_hou / 2  # Divide probability keep_foy
-        else:
-            i_hou = i_hou + 1  # GOTO next house
-            prob_keep_hou = get_r()  # RESET keep_hou probability
-            is_first_person = True  # New house needs a first person
+    while i_ind < number_individual_arg :
+        family_members=get_indiv()
+        individulas=list(range(i_ind,i_ind+family_members))
+        index_house=[i_hou]*family_members
+        one_house=dict(zip(individulas, index_house))
+        all_ind_hou.update(one_house)
+        i_ind=i_ind+family_members
+        i_hou+=1
+    # eliminate side effects
+    for i in range((len(all_ind_hou)-1),number_individual_arg-1,-1):
+        del all_ind_hou[i]
     return all_ind_hou
 
 

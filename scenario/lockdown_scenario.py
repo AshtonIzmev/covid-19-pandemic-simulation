@@ -11,7 +11,7 @@ from simulator.simulation_helper import get_environment_simulation, get_virus_si
 def launch_run():
 
     print('Preparing environment...')
-    env_dic = get_environment_simulation(params[nindividual_key], params[same_house_p_key],
+    env_dic = get_environment_simulation(params[nindividual_key],
                                          params[store_per_house_key], params[store_preference_key],
                                          params[nb_block_key], params[remote_work_key])
 
