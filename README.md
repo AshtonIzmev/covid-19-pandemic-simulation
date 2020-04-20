@@ -11,26 +11,26 @@ pip install -r requirements.txt
 make test
 
 ### To plot new daily cases
-python -m simulator.run --new-cases 
+python -m simulator.run --draw new
  
 ### To plot daily state with 150 days and other parameters kept default
-python -m simulator.run --population-state --nday 150  
+python -m simulator.run --nday 150  --draw pop
 
 ### To plot hospitalization state with 5000 individuals
-python -m simulator.run --hospitalized-cases --nday 200 --nind 5000
+python -m simulator.run --nday 200 --nind 5000 --draw hos
 
 ### To plot a summary of the pandemic (with short immunity time)
-python -m simulator.run  --nday 500 --nind 5000 --summary --immunity-bounds 120 150
+python -m simulator.run  --nday 500 --nind 5000 --immunity-bounds 120 150 --draw sum new
 ```
 
 # Run a scenario
 Scenario 0 : Infinite lockdown with 35k people on 360 days (20 simulations)
 ```bash
-python -m scenario.run --nrun 20  --nday 360 --nind 35000 --scenario 0 --all
+python -m scenario.run --nrun 20  --nday 360 --nind 35000 --scenario 0 --draw pop new hos
 ```
 Scenario 1 : Lockdown loosening every 21 days without any new case
 ```bash
-python -m scenario.run --nrun 20  --nday 360 --nind 35000 --scenario 1 --days-lockdown-removal 21 --all
+python -m scenario.run --nrun 20  --nday 360 --nind 35000 --scenario 1 --days-lockdown-removal 21 --draw pop new hos
 ```
 
 # Usage
@@ -48,9 +48,9 @@ usage: run.py [-h] [--nrun NRUN] [--random-seed RANDOM_SEED]
               [--hospitalization-bounds HOSPITALIZATION_BOUNDS HOSPITALIZATION_BOUNDS]
               [--death-bounds DEATH_BOUNDS DEATH_BOUNDS]
               [--immunity-bounds IMMUNITY_BOUNDS IMMUNITY_BOUNDS]
-              [--scenario-id SCENARIO_ID] [--population-state]
-              [--hospitalized-cases] [--new-cases] [--summary] [--examples]
-              [--all-plots]
+              [--scenario-id SCENARIO_ID]
+              [--draw [DRAW_GRAPH [DRAW_GRAPH ...]]]
+              [--days-lockdown-removal DAYS_WAIT_FOR_LOCKDOWN_REMOVAL]
 
 Please feed model parameters
 
@@ -90,14 +90,13 @@ optional arguments:
                         Immunity bounds
   --scenario-id SCENARIO_ID, --sce SCENARIO_ID
                         Immunity bounds
-  --population-state, --pop
-                        Draw population state graph
-  --hospitalized-cases, --hos
-                        Draw hospitalized cases graph
-  --new-cases, --new    Draw new cases graph
-  --summary, --sum      Draw a pandemic summary
-  --examples, --exa     Draw the most different pandemic evolution examples
-  --all-plots, --all    Draw all plots in a single pass
+  --draw [DRAW_GRAPH [DRAW_GRAPH ...]]
+                        Draw a kind of graph by specifying at least the first
+                        3 letters of its keys. Choose from "example",
+                        "hospital", "new", "summary", "population", "lockdown"
+                        and more
+  --days-lockdown-removal DAYS_WAIT_FOR_LOCKDOWN_REMOVAL
+                        Number of days to lockdown removal
 ```
 
 # Main idea
@@ -157,14 +156,14 @@ Temporary immunity of 60 to 90 days can prevent the pandemic from dying
 
 With a summary of a strange non-wave pandemic evolution using :
 ```bash
-python -m simulator.run  --nday 500 --nind 5000 --summary --immunity-bounds 120 150
+python -m simulator.run  --nday 500 --nind 5000 --immunity-bounds 120 150  --draw summary
 ```
 ![Temporary immunity waves](/images/summary.png)
 The lockdown beats the immunity decreasing. I had to launch the simulation with those models many times to get it.
 
 Here are multiple runs plot against each other :
 ```bash
-python -m simulator.run --nrun 20  --nday 180 --nind 1000 --immunity-bounds 60 90   --exa
+python -m simulator.run --nrun 20  --nday 180 --nind 1000 --immunity-bounds 60 90  --draw exa
 ```
 ![Examples](/images/examples.png)
 Using a quick and dirty kmeans, we only display the most "different" run distributions to illustrate the butterfly effect of a pandemic

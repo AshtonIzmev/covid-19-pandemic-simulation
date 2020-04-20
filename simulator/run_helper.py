@@ -34,15 +34,12 @@ def get_parser():
     parser.add_argument('--immunity-bounds', type=int, nargs=2, help='Immunity bounds', dest=immunity_bounds_key)
 
     parser.add_argument('--scenario-id', "--sce", type=int, help='Immunity bounds', dest=scenario_id_key)
+    parser.add_argument('--draw', type=str, nargs="*",
+                        help='Draw a kind of graph by specifying at least the first 3 letters of its keys. '
+                             'Choose from "example", "hospital", "new", "summary", "population", "lockdown" and more',
+                        dest=draw_graph_key)
 
-    parser.add_argument('--population-state', '--pop', help='Draw population state graph', action='store_true')
-    parser.add_argument('--hospitalized-cases', '--hos', help='Draw hospitalized cases graph', action='store_true')
-    parser.add_argument('--new-cases', '--new', help='Draw new cases graph', action='store_true')
-    parser.add_argument('--summary', '--sum', help='Draw a pandemic summary', action='store_true')
-    parser.add_argument('--examples', '--exa', help='Draw the most different pandemic evolution examples',
-                        action='store_true')
-    parser.add_argument('--all-plots', '--all', help='Draw all plots in a single pass', action='store_true')
-
+    # Scenarios related
     parser.add_argument('--days-lockdown-removal', type=int, help='Number of days to lockdown removal',
                         dest=days_wait_lockdown_removal)
 

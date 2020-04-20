@@ -2,6 +2,7 @@
 nrun_key = "NRUN"
 scenario_id_key = "SCENARIO_ID"
 random_seed_key = "RANDOM_SEED"
+draw_graph_key = "DRAW_GRAPH"
 
 nindividual_key = "N_INDIVIDUALS"
 nday_key = "N_DAYS"
@@ -31,6 +32,8 @@ params = {
     nrun_key: 1,  # Number of runs
     scenario_id_key: -1,  # Scenario id if running the scenario package
     random_seed_key: 42,  # Of course 42
+    draw_graph_key: ["summary", "hospital"],  # By default, draw summary
+
     nindividual_key: 1000,  # Number of people
     nday_key: 180,  # Number of simulated days
     innoculation_number_key: 5,  # Number of people innoculated at day 0
