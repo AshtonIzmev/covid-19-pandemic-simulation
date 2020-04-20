@@ -17,6 +17,12 @@ def draw_specific_population_state_daily(stats_arg, x_tick=10, style="P"):
     plt.show()
 
 
+def draw_lockdown_state_daily(stats_arg, x_tick=10):
+    fig, ax = plt.subplots(figsize=(15, 10))
+    set_ax_lockdown_state_daily(ax, stats_arg, x_tick)
+    plt.show()
+
+
 def draw_new_daily_cases(stats_arg, x_tick=10):
     fig, ax = plt.subplots(figsize=(15, 10))
     set_ax_new_daily_cases(ax, stats_arg, x_tick)
@@ -172,6 +178,29 @@ def set_ax_specific_population_state_daily(ax, stats_arg, x_tick=10, style="P"):
     ax.legend((p[0],), (name_state, ))
 
 
+def set_ax_lockdown_state_daily(ax, stats_arg, x_tick=10):
+    n_day_arg = stats_arg.shape[1]
+    plot_color = "#3F88C5"
+    name_state = "Lockdown state measure"
+
+    stats_mean_arg = np.mean(stats_arg, axis=0)
+    stats_err_arg = stats.sem(stats_arg, axis=0)
+    serie = [stats_mean_arg[i][6] * 100 / stats_mean_arg[0][6] for i in range(n_day_arg)]
+    err = [stats_err_arg[i][6] * 100 / stats_mean_arg[0][6] for i in range(n_day_arg)]
+    indices = np.arange(n_day_arg)
+
+    p = ax.errorbar(indices, serie, yerr=err, ecolor="#808080", color=plot_color)
+
+    ax.set_ylabel(name_state)
+    ax.set_xlabel('Days since innoculation')
+    ax.set_title('Lockdown evolution (base 100 on day t=0)')
+
+    ax.set_xticks(np.arange(0, n_day_arg, int(n_day_arg / x_tick)), tuple([(str(int(i * n_day_arg / x_tick)))
+                                                                           for i in range(x_tick)]))
+    ax.set_yticks(np.arange(0, int(max(serie)), int(1+max(serie)/10)))
+    ax.legend((p[0],), (name_state, ))
+
+
 def set_ax_new_daily_cases(ax, stats_arg, x_tick=10):
     n_day_arg = stats_arg.shape[1]
     stats_mean_arg = np.mean(stats_arg, axis=0)
@@ -205,6 +234,8 @@ def chose_draw_plot(draw_graph_arg, stats_arg):
             draw_summary(stats_arg)
         if contains_substring("ex", draw_graph_arg):
             draw_examples(stats_arg)
+        if contains_substring("loc", draw_graph_arg):
+            draw_lockdown_state_daily(stats_arg)
     else:
         draw_population_state_daily(stats_arg)
 

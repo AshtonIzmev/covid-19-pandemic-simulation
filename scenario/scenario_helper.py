@@ -18,5 +18,5 @@ def tighten_lockdown(params_arg):
 
 
 def measure_lockdown_strength(params_arg):
-    return -(math.log1p(params_arg[house_infect_key]) + math.log1p(params_arg[transport_infection_key]) +
-             math.log1p(params_arg[work_infection_key]) + math.log1p(params_arg[store_infection_key]))
+    return -(math.log(params_arg[house_infect_key]) + math.log(params_arg[transport_infection_key]) +
+             math.log(params_arg[work_infection_key]) + math.log(params_arg[store_infection_key]))

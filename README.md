@@ -69,9 +69,6 @@ optional arguments:
                         Percentage of people remote working
   --sto-pref PROB_PREFERENCE_STORE
                         Probability going to nearest store
-  --p-same-house PROBA_SAME_HOUSE_RATE
-                        "Probability" for individuals for living in the same
-                        house
   --inn-infec INITIAL_INNOCULATION_NB
                         Initial innoculation percentage
   --p-house PROB_HOUSE_INFECTION
