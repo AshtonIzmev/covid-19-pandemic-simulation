@@ -5,10 +5,16 @@ from initiator.core import build_individual_houses_map, build_house_individual_m
     build_individual_workblock_map, build_workblock_individual_map, build_individual_individual_transport_map
 from initiator.helper import get_r, get_infection_parameters
 from simulator.keys import *
+from simulator.parameters import *
 
 
-def get_environment_simulation(number_of_individuals_arg, number_store_per_house_arg,
-                               preference_store_arg, nb_1d_block_arg, probability_remote_work_arg):
+def get_environment_simulation(params_arg):
+    number_of_individuals_arg = params_arg[nindividual_key]
+    number_store_per_house_arg = params_arg[store_per_house_key]
+    preference_store_arg = params_arg[store_preference_key]
+    nb_1d_block_arg = params_arg[nb_1d_block_key]
+    probability_remote_work_arg = params_arg[remote_work_key]
+
     indiv_house = build_individual_houses_map(number_of_individuals_arg)
     house_indiv = build_house_individual_map(indiv_house)
     indiv_adult = build_individual_adult_map(indiv_house)

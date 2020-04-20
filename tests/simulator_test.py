@@ -7,6 +7,7 @@ from simulator.dynamic_helper import update_infection_period, increment_pandemic
     propagate_to_houses, propagate_to_stores, propagate_to_workplaces, propagate_to_transportation
 from simulator.keys import *
 from simulator.simulation_helper import get_environment_simulation, get_virus_simulation_t0
+from simulator.parameters import *
 
 H = HEALTHY_V
 F = INFECTED_V
@@ -74,7 +75,15 @@ class TestSimulation(unittest.TestCase):
             }
 
     def test_build_environment_dic(self):
-        result = get_environment_simulation(10, 2, 1, 5, 0.5)
+        params_test = {
+            nindividual_key: 10,
+            store_per_house_key: 2,
+            store_preference_key: 1,
+            nb_1d_block_key: 5,
+            remote_work_key: 0.5
+        }
+
+        result = get_environment_simulation(params_test)
         expected_result = TestSimulation.get_10_01_2_environment_new_house_map_dic()
         self.assertEqual(result, expected_result)
 
