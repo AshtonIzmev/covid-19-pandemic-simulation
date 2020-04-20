@@ -7,7 +7,7 @@ draw_graph_key = "DRAW_GRAPH"
 nindividual_key = "N_INDIVIDUALS"
 nday_key = "N_DAYS"
 innoculation_number_key = "INITIAL_INNOCULATION_NB"
-nb_block_key = "NB_GRID_BLOCK"
+nb_1d_block_key = "NB_1D_GRID_BLOCK"
 # Work relative
 remote_work_key = "REMOTE_WORK_PERCENT"
 # Store relative
@@ -40,7 +40,9 @@ params = {
     # structure parameters
     store_per_house_key: 20,  # Let's say we have 20 houses for each grocerie store
     store_preference_key: 0.95,  # Probality of going to the nearest store
-    nb_block_key: 10,  # number of block to slice the grid and model public transportation contamination
+    nb_1d_block_key: 10,  # number of block on one axe to slice the grid and model public transportation contamination,
+                          # total number of blocks is nb_1d_block_key^2
+
 
     # parameters that can change over time with lockdown loosening/removal
     remote_work_key: 0.98,  # Percentage of people doing remote work

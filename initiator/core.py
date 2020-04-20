@@ -80,8 +80,8 @@ def build_geo_positions_house(number_house_arg):
     return [(get_r(), get_r()) for i in range(number_house_arg)]
 
 
-def build_block_assignment(geo_arg, nb_blocks_arg):
-    return [(int(h[0] * nb_blocks_arg), int(h[1] * nb_blocks_arg)) for h in geo_arg]
+def build_block_assignment(geo_arg, nb_1d_blocks_arg):
+    return [(int(h[0] * nb_1d_blocks_arg), int(h[1] * nb_1d_blocks_arg)) for h in geo_arg]
 
 
 def build_geo_positions_store(number_store_arg):

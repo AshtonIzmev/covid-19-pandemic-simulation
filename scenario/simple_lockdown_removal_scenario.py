@@ -13,7 +13,7 @@ from scenario.scenario_helper import tighten_lockdown, soften_lockdown, measure_
 def launch_run():
     print('Preparing environment...')
     env_dic = get_environment_simulation(params[nindividual_key], params[store_per_house_key],
-                                         params[store_preference_key], params[nb_block_key], params[remote_work_key])
+                                         params[store_preference_key], params[nb_1d_block_key], params[remote_work_key])
 
     stats = np.zeros((params[nrun_key], params[nday_key], 7))
     loosening_day = np.zeros((params[nrun_key]))

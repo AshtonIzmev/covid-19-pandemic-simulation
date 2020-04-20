@@ -8,7 +8,7 @@ from simulator.keys import *
 
 
 def get_environment_simulation(number_of_individuals_arg, number_store_per_house_arg,
-                               preference_store_arg, nb_block_arg, probability_remote_work_arg):
+                               preference_store_arg, nb_1d_block_arg, probability_remote_work_arg):
     indiv_house = build_individual_houses_map(number_of_individuals_arg)
     house_indiv = build_house_individual_map(indiv_house)
     indiv_adult = build_individual_adult_map(indiv_house)
@@ -25,8 +25,8 @@ def get_environment_simulation(number_of_individuals_arg, number_store_per_house
     house_store = build_house_store_map(geo_store, geo_house, preference_store_arg)
     store_house = build_store_house_map(house_store)
 
-    house_block = build_block_assignment(geo_house, nb_block_arg)
-    workplace_block = build_block_assignment(geo_workplace, nb_block_arg)
+    house_block = build_block_assignment(geo_house, nb_1d_block_arg)
+    workplace_block = build_block_assignment(geo_workplace, nb_1d_block_arg)
 
     indiv_transport_block = build_individual_workblock_map(indiv_house, indiv_workplace, house_block, workplace_block)
     transport_block_indiv = build_workblock_individual_map(indiv_transport_block)
