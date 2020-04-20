@@ -24,13 +24,13 @@ python -m simulator.run  --nday 500 --nind 5000 --summary --immunity-bounds 120 
 ```
 
 # Run a scenario
-Scenario 0 : Infinite lockdown
+Scenario 0 : Infinite lockdown with 35k people on 360 days (20 simulations)
 ```bash
- python -m scenario.run --scenario 0 --pop
+python -m scenario.run --nrun 20  --nday 360 --nind 35000 --scenario 0 --all
 ```
-Scenario 1 : Lockdown loosening every 7 days without any new case
+Scenario 1 : Lockdown loosening every 21 days without any new case
 ```bash
- python -m scenario.run --scenario 0 --pop
+python -m scenario.run --nrun 20  --nday 360 --nind 35000 --scenario 1 --days-lockdown-removal 21 --all
 ```
 
 # Usage
