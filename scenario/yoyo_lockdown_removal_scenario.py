@@ -1,6 +1,6 @@
 import numpy as np
 
-from scenario.scenario_helper import tighten_lockdown, soften_lockdown
+from scenario.scenario_helper import tighten_lockdown, soften_lockdown, measure_lockdown_strength
 from simulator.dynamic_helper import propagate_to_stores, propagate_to_houses, propagate_to_workplaces, \
     increment_pandemic_1_day, is_weekend, get_pandemic_statistics, propagate_to_transportation
 from simulator.parameters import *
@@ -11,11 +11,10 @@ from simulator.simulation_helper import get_environment_simulation, get_virus_si
 # This scenario is a lockdown loosening every DAYS_WAIT_FOR_LOCKDOWN_REMOVAL after the last new case
 def launch_run():
     print('Preparing environment...')
-    env_dic = get_environment_simulation(params[nindividual_key], params[same_house_p_key],
-                                         params[store_per_house_key], params[store_preference_key],
-                                         params[nb_block_key], params[remote_work_key])
+    env_dic = get_environment_simulation(params[nindividual_key], params[store_per_house_key],
+                                         params[store_preference_key], params[nb_block_key], params[remote_work_key])
 
-    stats = np.zeros((params[nrun_key], params[nday_key], 6))
+    stats = np.zeros((params[nrun_key], params[nday_key], 7))
     print_progress_bar(0, params[nrun_key] * params[nday_key], prefix='Progress:', suffix='Complete', length=50)
     for r in range(params[nrun_key]):
 
@@ -43,15 +42,14 @@ def launch_run():
             increment_pandemic_1_day(env_dic, virus_dic)
             stats[r][i][0], stats[r][i][1], stats[r][i][2], stats[r][i][3], stats[r][i][4], stats[r][i][5] = \
                 get_pandemic_statistics(virus_dic)
+            stats[r][i][6] = measure_lockdown_strength(params)
 
             lockdown_min_delay += 1
             if stats[r][i][5] == 0 and lockdown_min_delay >= 7:
-                print(i, "soften  ")
                 lockdown_min_delay = 0
                 soften_lockdown(params)
                 soften_lockdown(params)
             elif stats[r][i][5] >= 5 and lockdown_min_delay >= 7:
-                print(i, "tighten  ")
                 lockdown_min_delay = 0
                 tighten_lockdown(params)
                 tighten_lockdown(params)

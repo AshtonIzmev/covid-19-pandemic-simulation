@@ -5,17 +5,17 @@ from simulator.dynamic_helper import propagate_to_stores, propagate_to_houses, p
 from simulator.parameters import *
 from simulator.plot_helper import print_progress_bar
 from simulator.simulation_helper import get_environment_simulation, get_virus_simulation_t0
+from scenario.scenario_helper import measure_lockdown_strength
 
 
 # This scenario is the basic one with a classic dynamic
 def launch_run():
 
     print('Preparing environment...')
-    env_dic = get_environment_simulation(params[nindividual_key],
-                                         params[store_per_house_key], params[store_preference_key],
-                                         params[nb_block_key], params[remote_work_key])
+    env_dic = get_environment_simulation(params[nindividual_key], params[store_per_house_key],
+                                         params[store_preference_key], params[nb_block_key], params[remote_work_key])
 
-    stats = np.zeros((params[nrun_key], params[nday_key], 6))
+    stats = np.zeros((params[nrun_key], params[nday_key], 7))
     print_progress_bar(0, params[nrun_key] * params[nday_key], prefix='Progress:', suffix='Complete', length=50)
     for r in range(params[nrun_key]):
 
@@ -41,4 +41,6 @@ def launch_run():
             increment_pandemic_1_day(env_dic, virus_dic)
             stats[r][i][0], stats[r][i][1], stats[r][i][2], stats[r][i][3], stats[r][i][4], stats[r][i][5] = \
                 get_pandemic_statistics(virus_dic)
+            stats[r][i][6] = measure_lockdown_strength(params)
+
     return stats
