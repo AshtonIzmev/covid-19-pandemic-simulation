@@ -2,7 +2,7 @@ import random
 
 from scipy import spatial
 
-from initiator.helper import get_r, get_indiv,invert_map, pick_age, get_center_squized_random, pick_random_company_size, \
+from initiator.helper import get_r, get_moroccan_household_distribution,invert_map, pick_age, get_center_squized_random, pick_random_company_size, \
     rec_get_manhattan_walk, invert_map_list
 
 
@@ -11,10 +11,8 @@ def build_individual_houses_map(number_individual_arg):
     all_ind_hou = {}
     i_hou = 0
     i_ind = 0
-    is_first_person = True
-    prob_keep_hou = get_r()
     while i_ind < number_individual_arg:
-        family_members = get_indiv()
+        family_members = get_moroccan_household_distribution()
         individulas = list(range(i_ind, i_ind+family_members))
         index_house = [i_hou]*family_members
         one_house = dict(zip(individulas, index_house))

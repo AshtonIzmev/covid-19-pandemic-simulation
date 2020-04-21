@@ -11,13 +11,13 @@ def get_r():
     return random.random()
 
 
-def get_indiv():
-    myclip_a = 1
-    myclip_b = 10
-    my_mean = 4.52
-    my_std = math.sqrt(4.71)
-    a, b = (myclip_a - my_mean) / my_std, (myclip_b - my_mean) / my_std
-    return truncnorm.rvs(a, b, loc = my_mean, scale = my_std).astype(int)
+def get_moroccan_household_distribution():
+    return get_clipped_gaussian_number(1, 10, 4.52, math.sqrt(4.71))
+
+
+def get_clipped_gaussian_number(lower_clip_arg, upper_clip_arg, mean_arg, std_arg):
+    a, b = (lower_clip_arg - mean_arg) / std_arg, (upper_clip_arg - mean_arg) / std_arg
+    return truncnorm.rvs(a, b, loc=mean_arg, scale=std_arg).astype(int)
 
 
 def get_random_choice_list(list_of_list_arg):
