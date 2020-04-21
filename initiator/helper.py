@@ -9,6 +9,8 @@ from initiator.parameters import covid_mortality_rate, covid_hospitalization_rat
 
 def get_r():
     return random.random()
+
+
 def get_indiv():
     myclip_a = 1
     myclip_b = 10
@@ -16,6 +18,7 @@ def get_indiv():
     my_std = math.sqrt(4.71)
     a, b = (myclip_a - my_mean) / my_std, (myclip_b - my_mean) / my_std
     return truncnorm.rvs(a, b, loc = my_mean, scale = my_std).astype(int)
+
 
 def get_random_choice_list(list_of_list_arg):
     result = []
