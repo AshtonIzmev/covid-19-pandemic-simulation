@@ -13,16 +13,16 @@ def build_individual_houses_map(number_individual_arg):
     i_ind = 0
     is_first_person = True
     prob_keep_hou = get_r()
-    while i_ind < number_individual_arg :
-        family_members=get_indiv()
-        individulas=list(range(i_ind,i_ind+family_members))
-        index_house=[i_hou]*family_members
-        one_house=dict(zip(individulas, index_house))
+    while i_ind < number_individual_arg:
+        family_members = get_indiv()
+        individulas = list(range(i_ind, i_ind+family_members))
+        index_house = [i_hou]*family_members
+        one_house = dict(zip(individulas, index_house))
         all_ind_hou.update(one_house)
-        i_ind=i_ind+family_members
-        i_hou+=1
+        i_ind = i_ind+family_members
+        i_hou += 1
     # eliminate side effects
-    for i in range((len(all_ind_hou)-1),number_individual_arg-1,-1):
+    for i in range((len(all_ind_hou)-1), number_individual_arg-1, -1):
         del all_ind_hou[i]
     return all_ind_hou
 
