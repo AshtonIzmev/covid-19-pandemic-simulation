@@ -26,9 +26,7 @@ def launch_run():
 
         lockdown_min_delay = 0
 
-        virus_dic = get_virus_simulation_t0(params[nindividual_key], params[innoculation_number_key],
-                                            params[contagion_bounds_key], params[hospitalization_bounds_key],
-                                            params[death_bounds_key], params[immunity_bounds_key])
+        virus_dic = get_virus_simulation_t0(params)
         for i in range(params[nday_key]):
             print_progress_bar(r * params[nday_key] + i + 1, params[nrun_key] * params[nday_key],
                                prefix='Progress:', suffix='Complete', length=50)

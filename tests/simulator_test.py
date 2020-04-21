@@ -88,7 +88,15 @@ class TestSimulation(unittest.TestCase):
         self.assertEqual(result, expected_result)
 
     def test_build_virus_dic(self):
-        result = get_virus_simulation_t0(10, 2, (2, 7), (7, 21), (21, 39), (35, 65))
+        params_dic = {
+            nindividual_key: 10,
+            innoculation_number_key: 2,
+            contagion_bounds_key: (2, 7),
+            hospitalization_bounds_key: (7, 21),
+            death_bounds_key: (21, 39),
+            immunity_bounds_key: (35, 65)
+        }
+        result = get_virus_simulation_t0(params_dic)
         expected_result = TestSimulation.get_virus_dic()
         self.assertEqual(result[CON_K], expected_result[CON_K])
         self.assertEqual(result[HOS_K], expected_result[HOS_K])

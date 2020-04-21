@@ -54,8 +54,14 @@ def get_environment_simulation(params_arg):
     }
 
 
-def get_virus_simulation_t0(number_of_individuals_arg, infection_initialization_number_arg,
-                            contagion_bound_args, hospitalization_args, death_bound_args, immunity_bound_args):
+def get_virus_simulation_t0(params_arg):
+    number_of_individuals_arg = params_arg[nindividual_key]
+    infection_initialization_number_arg = params_arg[innoculation_number_key]
+    contagion_bound_args = params_arg[contagion_bounds_key]
+    hospitalization_args = params_arg[hospitalization_bounds_key]
+    death_bound_args = params_arg[death_bounds_key]
+    immunity_bound_args = params_arg[immunity_bounds_key]
+
     inn_ind_cov = dict(zip(range(number_of_individuals_arg),
                            [int(get_r() <= infection_initialization_number_arg / number_of_individuals_arg)
                             for i in range(number_of_individuals_arg)]))
