@@ -6,7 +6,7 @@ import numpy
 
 from initiator.core import build_individual_houses_map, build_individual_adult_map, build_individual_age_map, \
     build_house_adult_map, build_house_store_map, build_individual_work_map, build_individual_workblock_map, \
-    build_individual_individual_transport_map
+    build_individual_individual_transport_map, build_1d_item_behavior, build_2d_item_behavior
 from initiator.helper import invert_map, invert_map_list
 
 
@@ -126,6 +126,31 @@ class TestInitiation(unittest.TestCase):
         workblock_ind = invert_map_list(ind_workblock)
         result = build_individual_individual_transport_map(ind_workblock, workblock_ind)
         self.assertEqual(result, {0: {0, 1, 2}, 1: {0, 1}, 2: {0, 2}, 3: {3}})
+
+    def test_build_2d_item_behavior(self):
+        result = build_2d_item_behavior(5)
+        self.assertEqual(result, {
+            (0, 0): 0.7647972552573965, (0, 1): 1.1654420940263253, (0, 2): 0.8543389011587692,
+            (0, 3): 1.0278371111535274, (0, 4): 0.5533251730179629,
+            (1, 0): 1.3522229649329733, (1, 1): 1.3246291725070376, (1, 2): 0.6013707859371777,
+            (1, 3): 1.431700642993975, (1, 4): 0.7481107366604964,
+            (2, 0): 0.8689806570530012, (2, 1): 1.0731104988941886, (2, 2): 1.4005948170768656,
+            (2, 3): 1.265694653326226, (2, 4): 0.5098287760755669,
+            (3, 0): 1.0201385096625208, (3, 1): 1.039144546661878, (3, 2): 0.9981637359640853,
+            (3, 3): 1.1875100929432938, (3, 4): 0.7709733255944045,
+            (4, 0): 1.1846232304528599, (4, 1): 0.5710131776709169, (4, 2): 0.7460685388593822,
+            (4, 3): 0.7258112352923074, (4, 4): 0.8869675168747945
+        })
+
+    def test_build_1d_item_behavior(self):
+        result = build_1d_item_behavior(5)
+        self.assertEqual(result, {
+            0: 0.7647972552573965,
+            1: 1.1654420940263253,
+            2: 0.8543389011587692,
+            3: 1.0278371111535274,
+            4: 0.5533251730179629
+        })
 
 
 if __name__ == '__main__':

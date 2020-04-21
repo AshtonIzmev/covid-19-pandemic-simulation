@@ -2,7 +2,8 @@ from initiator.core import build_individual_houses_map, build_house_individual_m
     build_individual_adult_map, build_workplace_individual_map, build_individual_age_map, build_house_adult_map, \
     build_house_store_map, build_store_house_map, \
     build_geo_positions_house, build_geo_positions_store, build_geo_positions_workplace, build_block_assignment, \
-    build_individual_workblock_map, build_workblock_individual_map, build_individual_individual_transport_map
+    build_individual_workblock_map, build_workblock_individual_map, build_individual_individual_transport_map, \
+    build_1d_item_behavior, build_2d_item_behavior
 from initiator.helper import get_r, get_infection_parameters
 from simulator.keys import *
 from simulator.parameters import *
@@ -34,6 +35,9 @@ def get_environment_simulation(params_arg):
     house_block = build_block_assignment(geo_house, nb_1d_block_arg)
     workplace_block = build_block_assignment(geo_workplace, nb_1d_block_arg)
 
+    indiv_behavior = build_1d_item_behavior(number_of_individuals_arg)
+    block_behavior = build_2d_item_behavior(nb_1d_block_arg)
+
     indiv_transport_block = build_individual_workblock_map(indiv_house, indiv_workplace, house_block, workplace_block)
     transport_block_indiv = build_workblock_individual_map(indiv_transport_block)
 
@@ -51,6 +55,8 @@ def get_environment_simulation(params_arg):
         HS_K: house_store,
         SH_K: store_house,
         ITI_K: indiv_transport_indiv,
+        BBE_K: block_behavior,
+        IBE_K: indiv_behavior
     }
 
 

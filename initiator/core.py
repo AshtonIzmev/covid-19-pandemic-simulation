@@ -3,7 +3,7 @@ import random
 from scipy import spatial
 
 from initiator.helper import get_r, get_moroccan_household_distribution,invert_map, pick_age, get_center_squized_random, pick_random_company_size, \
-    rec_get_manhattan_walk, invert_map_list
+    rec_get_manhattan_walk, invert_map_list, get_lockdown_behavior_distribution
 
 
 def build_individual_houses_map(number_individual_arg):
@@ -80,6 +80,17 @@ def build_geo_positions_house(number_house_arg):
 
 def build_block_assignment(geo_arg, nb_1d_blocks_arg):
     return [(int(h[0] * nb_1d_blocks_arg), int(h[1] * nb_1d_blocks_arg)) for h in geo_arg]
+
+
+def build_2d_item_behavior(nb_items):
+    item_list = [(i, j) for i in range(nb_items) for j in range(nb_items)]
+    behavior_list = [get_lockdown_behavior_distribution() for _ in range(nb_items * nb_items)]
+    return dict(zip(item_list, behavior_list))
+
+
+def build_1d_item_behavior(nb_items):
+    behavior_list = [get_lockdown_behavior_distribution() for _ in range(nb_items)]
+    return dict(zip(range(nb_items), behavior_list))
 
 
 def build_geo_positions_store(number_store_arg):

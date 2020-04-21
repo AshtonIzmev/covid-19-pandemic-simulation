@@ -1,5 +1,5 @@
 import numpy as np
-
+import time
 from simulator.dynamic_helper import propagate_to_stores, propagate_to_houses, propagate_to_workplaces, \
     increment_pandemic_1_day, is_weekend, get_pandemic_statistics, propagate_to_transportation
 from simulator.parameters import *
