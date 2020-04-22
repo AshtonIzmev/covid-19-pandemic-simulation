@@ -96,7 +96,8 @@ def propagate_to_houses(env_dic, virus_dic, probability_home_infection_arg):
     # And then we reduce_list_multiply_by_key this
     # { 1: 1*2, 2: 1*2, 3: 1*2, 4: 2, 5: 2, 6: 2 }
     people_in_infected_houses = reduce_list_multiply_by_key(
-        [(env_dic[HI_K][hou], beh_p) for (hou, beh_p) in infected_houses_behavior_dic.items()])
+        [(env_dic[HI_K][hou], beh_p) for (hou, beh_p) in infected_houses_behavior_dic.items()]
+    )
 
     # From which we designate newly infected people using weights beh_p
     infected_athome = [i for (i, beh_p) in people_in_infected_houses.items()
@@ -108,12 +109,28 @@ def propagate_to_houses(env_dic, virus_dic, probability_home_infection_arg):
 
 def propagate_to_workplaces(env_dic, virus_dic, probability_work_infection_arg):
     # Contagious people who will go to work
+    # [1, 2, 3] go to work
     infected_gotowork = [i for i in get_infected_people(virus_dic) if i in env_dic[IW_K].keys()
                          and is_contagious(i, virus_dic)]
     # Infected workplaces
-    infected_workplaces = [env_dic[IW_K][ind] for ind in infected_gotowork]
-    infected_backfromwork = [i for i in flatten([env_dic[WI_K][k] for k in infected_workplaces])
-                             if get_r() < probability_work_infection_arg]
+    # [ (1, 1.1), (2, 1), (1, 1.4) ]
+    infected_workplaces_behavior = [(env_dic[IW_K][i], env_dic[IBE_K][i]) for i in infected_gotowork]
+
+    # Infected workplaces
+    # { 1: 1.1* 1.4, 2: 1 }
+    infected_workplaces_behavior_dic = reduce_multiply_by_key(infected_workplaces_behavior)
+
+    # We build people at those workplaces
+    # [ ([1, 2, 3], 1), ([4, 5, 6], 2), ([1, 2, 3], 2) ]
+    # And then we reduce_list_multiply_by_key this
+    # { 1: 1*2, 2: 1*2, 3: 1*2, 4: 2, 5: 2, 6: 2 }
+    exposed_individuals_at_work = reduce_list_multiply_by_key(
+        [(env_dic[WI_K][k], beh_p) for (k, beh_p) in infected_workplaces_behavior_dic.items()]
+    )
+
+    # From which we designate newly infected people using weights beh_p
+    infected_backfromwork = [i for (i, beh_p) in exposed_individuals_at_work.items()
+                             if get_r() < probability_work_infection_arg * beh_p]
 
     # INFECTION STATE UPDATE
     update_infection_period(infected_backfromwork, virus_dic)
@@ -158,4 +175,3 @@ def propagate_to_stores(env_dic, virus_dic, probability_store_infection_arg):
 
     # INFECTION STATE UPDATE
     update_infection_period(infected_backfromstore, virus_dic)
-

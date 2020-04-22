@@ -26,21 +26,21 @@ class TestSimulation(unittest.TestCase):
     @staticmethod
     def get_virus_dic():
         return {
-            CON_K: {0:  4, 1:  2, 2:  2, 3:  6, 4:  4, 5:  2, 6: 5,  7:  2, 8:  4, 9:  5},
+            CON_K: {0: 4, 1: 2, 2: 2, 3: 6, 4: 4, 5: 2, 6: 5, 7: 2, 8: 4, 9: 5},
             DEA_K: {0: 34, 1: 21, 2: 30, 3: 35, 4: 29, 5: 37, 6: 26, 7: 33, 8: 33, 9: 28},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 46, 9: 55},
-            HOS_K: {0: 12, 1: 10, 2: 14, 3: 14, 4: 17, 5: 16, 6: 15, 7: 10, 8: 20, 9:  9},
-            STA_K: {0:  0, 1:  0, 2:  0, 3:  1, 4:  1, 5:  0, 6:  0, 7:  0, 8:  0, 9:  0},
+            HOS_K: {0: 12, 1: 10, 2: 14, 3: 14, 4: 17, 5: 16, 6: 15, 7: 10, 8: 20, 9: 9},
+            STA_K: {0: 0, 1: 0, 2: 0, 3: 1, 4: 1, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0},
             NC_K: 0
         }
 
     @staticmethod
     def get_10_01_virus_dic():
         return {
-            CON_K: {0:  4, 1:  3, 2:  2, 3:  2, 4:  6, 5:  4, 6:  4, 7:  2, 8:  6, 9:  5},
-            HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9:  8},
+            CON_K: {0: 4, 1: 3, 2: 2, 3: 2, 4: 6, 5: 4, 6: 4, 7: 2, 8: 6, 9: 5},
+            HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
             DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: 22, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
-            STA_K: {0:  H, 1:  H, 2:  H, 3:  H, 4:  F, 5:  H, 6:  M, 7:  H, 8:  H, 9:  H},
+            STA_K: {0: H, 1: H, 2: H, 3: H, 4: F, 5: H, 6: M, 7: H, 8: H, 9: H},
             NC_K: 0
         }
 
@@ -70,12 +70,12 @@ class TestSimulation(unittest.TestCase):
             IAD_K: {0: 1, 1: 1, 2: 1, 3: 1, 4: 0, 5: 0, 6: 0, 7: 1, 8: 1, 9: 0},
             IAG_K: {0: 35, 1: 47, 2: 33, 3: 23, 4: 2, 5: 15, 6: 13, 7: 26, 8: 37, 9: 0},
             IW_K: {2: 0, 1: 1},
-            WI_K:{0: [2], 1: [1]},
+            WI_K: {0: [2], 1: [1]},
             HA_K: {0: [0, 1], 1: [2, 3], 2: [7, 8]},
             HS_K: {0: 0, 1: 0, 2: 0},
             SH_K: {0: [0, 1, 2]},
             ITI_K: {2: {1, 2}, 1: {1, 2}}
-            }
+        }
 
     def test_build_environment_dic(self):
         params_test = {
@@ -132,11 +132,11 @@ class TestSimulation(unittest.TestCase):
             return get_infection_parameters(2, 7, 7, 21, 21, 39, 30, 60)
 
         virus_dic = {
-            CON_K: {0: 4,  1: -2, 2: -5, 3: -4, 4:  6, 5: -9, 6: -3, 7:  2, 8: -9, 9:  5},
-            HOS_K: {0: 12, 1: 12, 2: 20, 3:  1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
-            DEA_K: {0: 31, 1:  1, 2:  0, 3: 22, 4: 22, 5:  0, 6:  1, 7: 22, 8: -4, 9: 38},
-            IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8:  1, 9: 55},
-            STA_K: {0:  H, 1:  F, 2:  D, 3:  F, 4:  F, 5:  M, 6:  F, 7:  F, 8:  M, 9:  H},
+            CON_K: {0: 4, 1: -2, 2: -5, 3: -4, 4: 6, 5: -9, 6: -3, 7: 2, 8: -9, 9: 5},
+            HOS_K: {0: 12, 1: 12, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
+            DEA_K: {0: 31, 1: 1, 2: 0, 3: 22, 4: 22, 5: 0, 6: 1, 7: 22, 8: -4, 9: 38},
+            IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1, 9: 55},
+            STA_K: {0: H, 1: F, 2: D, 3: F, 4: F, 5: M, 6: F, 7: F, 8: M, 9: H},
             FN_K: get_infection_params
         }
         env_dic[IAG_K][3] = 82
@@ -180,11 +180,11 @@ class TestSimulation(unittest.TestCase):
     def test_propagate_to_houses_contagious_people(self):
         env_dic = TestSimulation.get_10_01_2_environment_dic()
         virus_dic = {
-            CON_K: {0: -9, 1:  3, 2:  2, 3:  2, 4: -9, 5:  4, 6:  4, 7:  2, 8:  6, 9:  5},
+            CON_K: {0: -9, 1: 3, 2: 2, 3: 2, 4: -9, 5: 4, 6: 4, 7: 2, 8: 6, 9: 5},
             HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
             DEA_K: {0: -5, 1: 23, 2: 23, 3: 22, 4: -5, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 46, 9: 55},
-            STA_K: {0:  F, 1:  H, 2:  H, 3:  H, 4:  D, 5:  H, 6:  H, 7:  H, 8:  M, 9:  H},
+            STA_K: {0: F, 1: H, 2: H, 3: H, 4: D, 5: H, 6: H, 7: H, 8: M, 9: H},
             NC_K: 0
         }
         propagate_to_houses(env_dic, virus_dic, 0.99)
@@ -206,11 +206,11 @@ class TestSimulation(unittest.TestCase):
     def test_propagate_to_houses_careful_daddy_people(self):
         env_dic = TestSimulation.get_10_01_2_environment_dic()
         virus_dic = {
-            CON_K: {0: -9, 1:  3, 2:  2, 3:  2, 4: -9, 5:  4, 6:  4, 7:  2, 8:  6, 9:  5},
+            CON_K: {0: -9, 1: 3, 2: 2, 3: 2, 4: -9, 5: 4, 6: 4, 7: 2, 8: 6, 9: 5},
             HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
             DEA_K: {0: -5, 1: 23, 2: 23, 3: 22, 4: -5, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 46, 9: 55},
-            STA_K: {0:  F, 1:  H, 2:  H, 3:  H, 4:  D, 5:  H, 6:  H, 7:  H, 8:  M, 9:  H},
+            STA_K: {0: F, 1: H, 2: H, 3: H, 4: D, 5: H, 6: H, 7: H, 8: M, 9: H},
             NC_K: 0
         }
         env_dic[IBE_K] = {0: 0.01, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1, 9: 1}
@@ -230,7 +230,7 @@ class TestSimulation(unittest.TestCase):
         }
         virus_dic = {
             CON_K: {0: -9, 1: 3, 2: 2, 3: 2, 4: -9, 5: 4, 6: 4, 7: 2, 8: 6, 9: 5},
-            STA_K: {0:  F, 1:  H, 2:  H, 3:  H, 4:  H, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H},
+            STA_K: {0: F, 1: H, 2: H, 3: H, 4: H, 5: H, 6: H, 7: H, 8: H, 9: H},
             NC_K: 0
         }
         propagate_to_houses(env_dic, virus_dic, 0.5)
@@ -245,7 +245,7 @@ class TestSimulation(unittest.TestCase):
         }
         virus_dic = {
             CON_K: {0: -9, 1: 3, 2: 2, 3: 2, 4: -9, 5: 4, 6: 4, 7: 2, 8: 6, 9: 5},
-            STA_K: {0:  F, 1:  H, 2:  H, 3:  H, 4:  H, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H},
+            STA_K: {0: F, 1: H, 2: H, 3: H, 4: H, 5: H, 6: H, 7: H, 8: H, 9: H},
             NC_K: 0
         }
         propagate_to_houses(env_dic, virus_dic, 0.99)
@@ -260,7 +260,7 @@ class TestSimulation(unittest.TestCase):
         }
         virus_dic = {
             CON_K: {0: -9, 1: 3, 2: 2, 3: 2, 4: -9, 5: 4, 6: 4, 7: 2, 8: 6, 9: 5},
-            STA_K: {0:  F, 1:  H, 2:  H, 3:  H, 4:  H, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H},
+            STA_K: {0: F, 1: H, 2: H, 3: H, 4: H, 5: H, 6: H, 7: H, 8: H, 9: H},
             NC_K: 0
         }
         propagate_to_houses(env_dic, virus_dic, 0.99)
@@ -274,7 +274,7 @@ class TestSimulation(unittest.TestCase):
             HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
             DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: 22, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 46, 9: 55},
-            STA_K: {0:  F, 1:  H, 2:  H, 3:  H, 4:  D, 5:  H, 6:  H, 7:  H, 8:  M, 9:  H},
+            STA_K: {0: F, 1: H, 2: H, 3: H, 4: D, 5: H, 6: H, 7: H, 8: M, 9: H},
             NC_K: 0
         }
         propagate_to_houses(env_dic, virus_dic, 0.99)
@@ -302,11 +302,11 @@ class TestSimulation(unittest.TestCase):
             WI_K: {0: [5], 1: [4, 1]}
         }
         virus_dic = {
-            CON_K: {0: 4,  1:  3, 2:  2, 3:  2, 4: -5, 5:  4, 6:  4, 7:  2, 8:  6, 9:  5},
+            CON_K: {0: 4, 1: 3, 2: 2, 3: 2, 4: -5, 5: 4, 6: 4, 7: 2, 8: 6, 9: 5},
             HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
             DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: -2, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 46, 9: 55},
-            STA_K: {0:  H, 1:  H, 2:  H, 3:  F, 4:  D, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H},
+            STA_K: {0: H, 1: H, 2: H, 3: F, 4: D, 5: H, 6: H, 7: H, 8: H, 9: H},
             NC_K: 0
         }
         propagate_to_stores(env_dic, virus_dic, 0.99)
@@ -330,11 +330,11 @@ class TestSimulation(unittest.TestCase):
             WI_K: {0: [5], 1: [4, 1]}
         }
         virus_dic = {
-            CON_K: {0: 4,  1:  3, 2:  2, 3:  2, 4: -5, 5:  4, 6:  4, 7:  2, 8:  6, 9:  5},
+            CON_K: {0: 4, 1: 3, 2: 2, 3: 2, 4: -5, 5: 4, 6: 4, 7: 2, 8: 6, 9: 5},
             HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
             DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: -2, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 46, 9: 55},
-            STA_K: {0:  H, 1:  F, 2:  H, 3:  H, 4:  H, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H},
+            STA_K: {0: H, 1: F, 2: H, 3: H, 4: H, 5: H, 6: H, 7: H, 8: H, 9: H},
             NC_K: 0
         }
         propagate_to_stores(env_dic, virus_dic, 0.99)
@@ -358,11 +358,11 @@ class TestSimulation(unittest.TestCase):
             WI_K: {0: [5], 1: [4, 1]}
         }
         virus_dic = {
-            CON_K: {0: 4,  1: -2, 2:  2, 3:  2, 4: -5, 5:  4, 6:  4, 7:  2, 8:  6, 9:  5},
+            CON_K: {0: 4, 1: -2, 2: 2, 3: 2, 4: -5, 5: 4, 6: 4, 7: 2, 8: 6, 9: 5},
             HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
             DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: -2, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 46, 9: 55},
-            STA_K: {0:  H, 1:  F, 2:  H, 3:  H, 4:  H, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H},
+            STA_K: {0: H, 1: F, 2: H, 3: H, 4: H, 5: H, 6: H, 7: H, 8: H, 9: H},
             NC_K: 0
         }
         propagate_to_stores(env_dic, virus_dic, 0.99)
@@ -375,22 +375,13 @@ class TestSimulation(unittest.TestCase):
 
     def test_propagate_to_workplaces_contagious(self):
         env_dic = {
-            HA_K: {0: [0, 1], 1: [4, 5], 2: [8, 9]},
-            HI_K: {0: [0, 1, 2, 3], 1: [4, 5, 6, 7], 2: [8, 9]},
-            HS_K: {0: 0, 1: 1, 2: 0},
-            IAD_K: {0: 1, 1: 1, 2: 0, 3: 0, 4: 1, 5: 1, 6: 0, 7: 0, 8: 1, 9: 1},
-            IAG_K: {0: 26, 1: 51, 2: 13, 3: 2, 4: 35, 5: 33, 6: 6, 7: 1, 8: 27, 9: 20},
-            IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2},
             IW_K: {1: 1, 4: 1, 5: 0},
-            SH_K: {0: [0, 2], 1: [1]},
-            WI_K: {0: [5], 1: [4, 1]}
+            WI_K: {0: [5], 1: [4, 1]},
+            IBE_K: {1: 1, 4: 1, 5: 1}
         }
         virus_dic = {
-            CON_K: {0: 4,  1: -2, 2: 2,  3:  2, 4: -5, 5:  4, 6:  4, 7:  2, 8:  6, 9:  5},
-            HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
-            DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: -2, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
-            IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 46, 9: 55},
-            STA_K: {0:  H, 1:  H, 2:  H, 3:  H, 4:  F, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H},
+            CON_K: {1: -2, 4: -5, 5: 4},
+            STA_K: {1: H, 4: F, 5: H},
             NC_K: 0
         }
         propagate_to_workplaces(env_dic, virus_dic, 0.99)
@@ -399,24 +390,49 @@ class TestSimulation(unittest.TestCase):
         self.assertEqual(virus_dic[STA_K][4], F)
         self.assertEqual(virus_dic[STA_K][5], H)
 
-    def test_propagate_to_workplaces_notcontagious(self):
+    def test_propagate_to_workplaces_dangerous(self):
         env_dic = {
-            HA_K: {0: [0, 1], 1: [4, 5], 2: [8, 9]},
-            HI_K: {0: [0, 1, 2, 3], 1: [4, 5, 6, 7], 2: [8, 9]},
-            HS_K: {0: 0, 1: 1, 2: 0},
-            IAD_K: {0: 1, 1: 1, 2: 0, 3: 0, 4: 1, 5: 1, 6: 0, 7: 0, 8: 1, 9: 1},
-            IAG_K: {0: 26, 1: 51, 2: 13, 3: 2, 4: 35, 5: 33, 6: 6, 7: 1, 8: 27, 9: 20},
-            IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2},
             IW_K: {1: 1, 4: 1, 5: 0},
-            SH_K: {0: [0, 2], 1: [1]},
-            WI_K: {0: [5], 1: [4, 1]}
+            WI_K: {0: [5], 1: [4, 1]},
+            IBE_K: {1: 1, 4: 100, 5: 1}
         }
         virus_dic = {
-            CON_K: {0: 4,  1: -2, 2: 2,  3:  2, 4:  1, 5:  4, 6:  4, 7:  2, 8:  6, 9:  5},
-            HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
-            DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: 17, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
-            IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 46, 9: 55},
-            STA_K: {0:  H, 1:  H, 2:  H, 3:  H, 4:  F, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H},
+            CON_K: {1: -2, 4: -5, 5: 4},
+            STA_K: {1: H, 4: F, 5: H},
+            NC_K: 0
+        }
+        propagate_to_workplaces(env_dic, virus_dic, 0.01)
+        # adults who go to the store propagate the virus
+        self.assertEqual(virus_dic[STA_K][1], F)
+        self.assertEqual(virus_dic[STA_K][4], F)
+        self.assertEqual(virus_dic[STA_K][5], H)
+
+    def test_propagate_to_workplaces_carefull(self):
+        env_dic = {
+            IW_K: {1: 1, 4: 1, 5: 0},
+            WI_K: {0: [5], 1: [4, 1]},
+            IBE_K: {1: 1, 4: 0.0001, 5: 1}
+        }
+        virus_dic = {
+            CON_K: {1: -2, 4: -5, 5: 4},
+            STA_K: {1: H, 4: F, 5: H},
+            NC_K: 0
+        }
+        propagate_to_workplaces(env_dic, virus_dic, 0.99)
+        # adults who go to the store propagate the virus
+        self.assertEqual(virus_dic[STA_K][1], H)
+        self.assertEqual(virus_dic[STA_K][4], F)
+        self.assertEqual(virus_dic[STA_K][5], H)
+
+    def test_propagate_to_workplaces_notcontagious(self):
+        env_dic = {
+            IW_K: {1: 1, 4: 1, 5: 0},
+            WI_K: {0: [5], 1: [4, 1]},
+            IBE_K: {1: 1, 4: 1, 5: 1}
+        }
+        virus_dic = {
+            CON_K: {1: -2, 4: 1, 5: 4},
+            STA_K: {1: H,  4: F, 5: H},
             NC_K: 0
         }
         propagate_to_workplaces(env_dic, virus_dic, 0.99)
@@ -427,22 +443,13 @@ class TestSimulation(unittest.TestCase):
 
     def test_propagate_to_workplaces_noworkers(self):
         env_dic = {
-            HA_K: {0: [0, 1], 1: [4, 5], 2: [8, 9]},
-            HI_K: {0: [0, 1, 2, 3], 1: [4, 5, 6, 7], 2: [8, 9]},
-            HS_K: {0: 0, 1: 1, 2: 0},
-            IAD_K: {0: 1, 1: 1, 2: 0, 3: 0, 4: 1, 5: 1, 6: 0, 7: 0, 8: 1, 9: 1},
-            IAG_K: {0: 26, 1: 51, 2: 13, 3: 2, 4: 35, 5: 33, 6: 6, 7: 1, 8: 27, 9: 20},
-            IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2},
             IW_K: {1: 1, 4: 1, 5: 0},
-            SH_K: {0: [0, 2], 1: [1]},
-            WI_K: {0: [5], 1: [4, 1]}
+            WI_K: {0: [5], 1: [4, 1]},
+            IBE_K: {1: 1, 4: 1, 5: 1}
         }
         virus_dic = {
-            CON_K: {0: -2, 1: -2, 2: -2, 3: -2, 4:  1, 5:  4, 6: -2, 7:  2, 8:  6, 9:  5},
-            HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
-            DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: 17, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
-            IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 46, 9: 55},
-            STA_K: {0:  F, 1:  H, 2:  F, 3:  F, 4:  H, 5:  H, 6:  F, 7:  H, 8:  H, 9:  H},
+            CON_K: {1: -2, 4: 1, 5: 4},
+            STA_K: {1: H,  4: H, 5: H},
             NC_K: 0
         }
         propagate_to_workplaces(env_dic, virus_dic, 0.99)
