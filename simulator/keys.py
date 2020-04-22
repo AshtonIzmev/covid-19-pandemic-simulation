@@ -9,7 +9,7 @@ HS_K = "house_to_store_mapping"
 SH_K = "store_to_house_mapping"
 ITI_K = "individual_transport_individual_mapping"
 
-BBE_K = "block_lockdown_behavior"
+HB_K = "house_to_block_mapping"
 IBE_K = "individual_behavior"
 
 CON_K = "individual_to_contagion_mapping"

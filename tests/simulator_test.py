@@ -89,11 +89,11 @@ class TestSimulation(unittest.TestCase):
         result = get_environment_simulation(params_test)
         expected_result = TestSimulation.get_10_01_2_environment_new_house_map_dic()
         self.assertTrue(IBE_K in result.keys())
-        self.assertTrue(BBE_K in result.keys())
+        self.assertTrue(HB_K in result.keys())
         # We delete them in order to avoid including 100 values dictionnary in the test
         # we verified they exists it should be enough
         del result[IBE_K]
-        del result[BBE_K]
+        del result[HB_K]
         self.assertEqual(result, expected_result)
 
     def test_build_virus_dic(self):

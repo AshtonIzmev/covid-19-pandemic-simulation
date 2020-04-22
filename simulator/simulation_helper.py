@@ -36,14 +36,12 @@ def get_environment_simulation(params_arg):
     workplace_block = build_block_assignment(geo_workplace, nb_1d_block_arg)
 
     indiv_behavior = build_1d_item_behavior(number_of_individuals_arg)
-    block_behavior = build_2d_item_behavior(nb_1d_block_arg)
 
     indiv_transport_block = build_individual_workblock_map(indiv_house, indiv_workplace, house_block, workplace_block)
     transport_block_indiv = build_workblock_individual_map(indiv_transport_block)
 
     indiv_transport_indiv = build_individual_individual_transport_map(indiv_transport_block, transport_block_indiv)
 
-    a = 1
     return {
         IH_K: indiv_house,
         HI_K: house_indiv,
@@ -55,7 +53,7 @@ def get_environment_simulation(params_arg):
         HS_K: house_store,
         SH_K: store_house,
         ITI_K: indiv_transport_indiv,
-        BBE_K: block_behavior,
+        HB_K: house_block,
         IBE_K: indiv_behavior
     }
 
