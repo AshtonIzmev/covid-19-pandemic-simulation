@@ -2,8 +2,6 @@ import random
 import numpy as np
 import unittest
 
-import numpy
-
 from initiator.core import build_individual_houses_map, build_individual_adult_map, build_individual_age_map, \
     build_house_adult_map, build_house_store_map, build_individual_work_map, build_individual_workblock_map, \
     build_individual_individual_transport_map, build_1d_item_behavior, build_2d_item_behavior
@@ -27,8 +25,8 @@ class TestInitiation(unittest.TestCase):
 
     def test_build_individual_houses_map__average_moroccan_household(self):
         result = build_individual_houses_map(1000)
-        mean_family=numpy.mean([len(v) for k, v in invert_map(result).items()])
-        self.assertEqual(abs(mean_family-4.52)<0.3, True)
+        mean_family = np.mean([len(v) for k, v in invert_map(result).items()])
+        self.assertTrue(abs(mean_family-4.52) < 0.3)
 
     def test_build_individual_adult_map(self):
         input_individual_houses_map = {
@@ -151,6 +149,11 @@ class TestInitiation(unittest.TestCase):
             3: 1.0278371111535274,
             4: 0.5533251730179629
         })
+
+    def test_build_1d_item_behavior_mean(self):
+        result = build_1d_item_behavior(5000)
+        mean_behavior = np.mean(list(result.values()))
+        self.assertTrue(abs(mean_behavior - 1) < 0.05)
 
 
 if __name__ == '__main__':
