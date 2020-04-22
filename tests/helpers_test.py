@@ -2,7 +2,8 @@ import random
 import unittest
 
 from initiator.helper import invert_map, flatten, get_random_choice_list, get_infection_parameters, \
-    get_mortalty_rate, get_hospitalization_rate, rec_get_manhattan_walk, invert_map_list
+    get_mortalty_rate, get_hospitalization_rate, rec_get_manhattan_walk, invert_map_list, reduce_multiply_by_key,\
+    reduce_list_multiply_by_key
 
 
 class TestHelpers(unittest.TestCase):
@@ -60,6 +61,25 @@ class TestHelpers(unittest.TestCase):
     def test_rec_get_manhattan_walk_same_block(self):
         result = rec_get_manhattan_walk([], (1, 1), (1, 1))
         self.assertEqual(result, [(1, 1)])
+
+    def test_reduce_multiply_by_key(self):
+        result = reduce_multiply_by_key([(0, 1), (0, 1.5), (1, 2), ('a', 5), (99, 0), (99, 12)])
+        self.assertEqual(result, {
+            0: 1.5,
+            1: 2,
+            'a': 5,
+            99: 0
+        })
+
+    def test_reduce_list_multiply_by_key(self):
+        result = reduce_list_multiply_by_key([([1, 2, 3], 2), ([2, 3, 4], 1.5), ([3, 4, 5], 1.25)])
+        self.assertEqual(result, {
+            1: 2,
+            2: 3.0,
+            3: 3.75,
+            4: 1.875,
+            5: 1.25
+        })
 
 
 if __name__ == '__main__':

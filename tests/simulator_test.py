@@ -40,7 +40,7 @@ class TestSimulation(unittest.TestCase):
             CON_K: {0:  4, 1:  3, 2:  2, 3:  2, 4:  6, 5:  4, 6:  4, 7:  2, 8:  6, 9:  5},
             HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9:  8},
             DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: 22, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
-            STA_K: {0:  H, 1:  H, 2:  H, 3:  H, 4:  F, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H},
+            STA_K: {0:  H, 1:  H, 2:  H, 3:  H, 4:  F, 5:  H, 6:  M, 7:  H, 8:  H, 9:  H},
             NC_K: 0
         }
 
@@ -56,7 +56,8 @@ class TestSimulation(unittest.TestCase):
             IW_K: {1: 1, 4: 1, 5: 0},
             SH_K: {0: [0, 1, 2]},
             WI_K: {0: [5], 1: [4, 1]},
-            ITI_K: {1: {1, 4, 5}, 4: {1, 4, 5}, 5: {1, 4, 5}}
+            ITI_K: {1: {1, 4, 5}, 4: {1, 4, 5}, 5: {1, 4, 5}},
+            IBE_K: {0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1, 9: 1}
         }
         # to avoid changing all the test values, I added this Dict to test "get_environment_simulation"
         # and the other tests will be done with the old values =>get_10_01_2_environment_dic
@@ -115,11 +116,13 @@ class TestSimulation(unittest.TestCase):
         virus_dic = TestSimulation.get_10_01_virus_dic()
         # 4 is already infected
         # 1 and 9 are going to be infected
-        update_infection_period([1, 9], virus_dic)
+        update_infection_period([1, 9, 6], virus_dic)
         self.assertEqual(virus_dic[STA_K][1], F)
         self.assertEqual(virus_dic[STA_K][2], H)
         self.assertEqual(virus_dic[STA_K][4], F)
+        self.assertEqual(virus_dic[STA_K][6], M)
         self.assertEqual(virus_dic[STA_K][9], F)
+        self.assertEqual(virus_dic[NC_K], 2)
 
     def test_increment_pandemic_1_day(self):
         random.seed(22)
@@ -199,6 +202,70 @@ class TestSimulation(unittest.TestCase):
         self.assertEqual(virus_dic[STA_K][7], H)
         # Immune people do not contaminate
         self.assertEqual(virus_dic[STA_K][9], H)
+
+    def test_propagate_to_houses_careful_daddy_people(self):
+        env_dic = TestSimulation.get_10_01_2_environment_dic()
+        virus_dic = {
+            CON_K: {0: -9, 1:  3, 2:  2, 3:  2, 4: -9, 5:  4, 6:  4, 7:  2, 8:  6, 9:  5},
+            HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
+            DEA_K: {0: -5, 1: 23, 2: 23, 3: 22, 4: -5, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
+            IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 46, 9: 55},
+            STA_K: {0:  F, 1:  H, 2:  H, 3:  H, 4:  D, 5:  H, 6:  H, 7:  H, 8:  M, 9:  H},
+            NC_K: 0
+        }
+        env_dic[IBE_K] = {0: 0.01, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1, 9: 1}
+        propagate_to_houses(env_dic, virus_dic, 0.99)
+
+        self.assertEqual(virus_dic[STA_K][0], F)
+        # careful people do not contaminate
+        self.assertEqual(virus_dic[STA_K][1], H)
+        self.assertEqual(virus_dic[STA_K][2], H)
+        self.assertEqual(virus_dic[STA_K][3], H)
+
+    def test_propagate_to_houses_dangerous_daddy_people(self):
+        env_dic = {
+            HI_K: {0: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]},
+            IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0},
+            IBE_K: {0: 0.9, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1, 9: 1}
+        }
+        virus_dic = {
+            CON_K: {0: -9, 1: 3, 2: 2, 3: 2, 4: -9, 5: 4, 6: 4, 7: 2, 8: 6, 9: 5},
+            STA_K: {0:  F, 1:  H, 2:  H, 3:  H, 4:  H, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H},
+            NC_K: 0
+        }
+        propagate_to_houses(env_dic, virus_dic, 0.5)
+        self.assertEqual(virus_dic[STA_K][0], F)
+        self.assertEqual(sum(virus_dic[STA_K].values()), 5)
+
+    def test_propagate_to_houses_very_carefull_daddy_people(self):
+        env_dic = {
+            HI_K: {0: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]},
+            IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0},
+            IBE_K: {0: 0.0000001, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1, 9: 1}
+        }
+        virus_dic = {
+            CON_K: {0: -9, 1: 3, 2: 2, 3: 2, 4: -9, 5: 4, 6: 4, 7: 2, 8: 6, 9: 5},
+            STA_K: {0:  F, 1:  H, 2:  H, 3:  H, 4:  H, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H},
+            NC_K: 0
+        }
+        propagate_to_houses(env_dic, virus_dic, 0.99)
+        self.assertEqual(virus_dic[STA_K][0], F)
+        self.assertEqual(sum(virus_dic[STA_K].values()), 1)
+
+    def test_propagate_to_houses_very_dangerous_daddy_people(self):
+        env_dic = {
+            HI_K: {0: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]},
+            IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0},
+            IBE_K: {0: 0.99, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1, 9: 1}
+        }
+        virus_dic = {
+            CON_K: {0: -9, 1: 3, 2: 2, 3: 2, 4: -9, 5: 4, 6: 4, 7: 2, 8: 6, 9: 5},
+            STA_K: {0:  F, 1:  H, 2:  H, 3:  H, 4:  H, 5:  H, 6:  H, 7:  H, 8:  H, 9:  H},
+            NC_K: 0
+        }
+        propagate_to_houses(env_dic, virus_dic, 0.99)
+        self.assertEqual(virus_dic[STA_K][0], F)
+        self.assertEqual(sum(virus_dic[STA_K].values()), 10)
 
     def test_propagate_to_houses_noncontagious_people(self):
         env_dic = TestSimulation.get_10_01_2_environment_dic()

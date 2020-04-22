@@ -1,5 +1,6 @@
 from initiator.helper import flatten, get_random_choice_list
-from initiator.helper import get_r, get_mortalty_rate, get_hospitalization_rate
+from initiator.helper import get_r, get_mortalty_rate, get_hospitalization_rate, reduce_multiply_by_key, \
+    reduce_list_multiply_by_key
 from simulator.keys import *
 
 
@@ -80,13 +81,26 @@ def is_alive(individual_arg, virus_dic):
 
 
 def propagate_to_houses(env_dic, virus_dic, probability_home_infection_arg):
-    # Houses that contain an infected and contagious person
-    infected_houses = [env_dic[IH_K][i] for i in get_infected_people(virus_dic)
-                       if is_contagious(i, virus_dic)]
+    # Houses that contain an infected and contagious person with an associated behavior weight
+    # ( (1, 1.5), (1, 2), (2, 1) )
+    # House 1 with 1.5 and 2 weights and House 2 with weight 1
+    infected_houses_behavior = [(env_dic[IH_K][i], env_dic[IBE_K][i]) for i in get_infected_people(virus_dic)
+                                if is_contagious(i, virus_dic)]
 
-    # People infected (not necessarily contagious) from a contagious person living in their house
-    infected_athome = [i for i in flatten([env_dic[HI_K][hou] for hou in infected_houses])
-                       if get_r() < probability_home_infection_arg]
+    # We reduce_multiply_by_key multiply it to get
+    # { 1: 1.5 * 2  ,   2: 1 }
+    infected_houses_behavior_dic = reduce_multiply_by_key(infected_houses_behavior)
+
+    # We build people at those houses
+    # [ ([1, 2, 3], 1), ([4, 5, 6], 2), ([1, 2, 3], 2) ]
+    # And then we reduce_list_multiply_by_key this
+    # { 1: 1*2, 2: 1*2, 3: 1*2, 4: 2, 5: 2, 6: 2 }
+    people_in_infected_houses = reduce_list_multiply_by_key(
+        [(env_dic[HI_K][hou], beh_p) for (hou, beh_p) in infected_houses_behavior_dic.items()])
+
+    # From which we designate newly infected people using weights beh_p
+    infected_athome = [i for (i, beh_p) in people_in_infected_houses.items()
+                       if get_r() < probability_home_infection_arg * beh_p]
 
     # INFECTION STATE UPDATE
     update_infection_period(infected_athome, virus_dic)

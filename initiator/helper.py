@@ -142,3 +142,18 @@ def rec_get_manhattan_walk(result, p1, p2):
             return rec_get_manhattan_walk(result + [p1, p2], (i, j + 1), (k, l))
         else:
             return rec_get_manhattan_walk(result + [p1, p2], (k, l + 1), (i, j))
+
+
+def reduce_multiply_by_key(tuple_list):
+    result_dic = {}
+    for (k, v) in tuple_list:
+        result_dic[k] = v * (result_dic[k] if k in result_dic else 1)
+    return result_dic
+
+
+def reduce_list_multiply_by_key(tuple_list):
+    result_dic = {}
+    for (l, v) in tuple_list:
+        for k in l:
+            result_dic[k] = v * (result_dic[k] if k in result_dic else 1)
+    return result_dic
