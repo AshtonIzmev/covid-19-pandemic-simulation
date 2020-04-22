@@ -1,8 +1,6 @@
 # covid-19-pandemic-simulation
 "Life simulation" of a SEIR inspired model to better understand pandemic using python.
 
-This project is subject to heavy changes until the 2020-04-20.
-
 # Getting started
 ```bash
 pip install -r requirements.txt
@@ -37,10 +35,9 @@ python -m scenario.run --nrun 20  --nday 360 --nind 35000 --scenario 1 --days-lo
 ```bash
 usage: run.py [-h] [--nrun NRUN] [--random-seed RANDOM_SEED]
               [--nind N_INDIVIDUALS] [--nday N_DAYS]
-              [--sto-house NB_STORE_PER_HOUSE] [--nblock NB_GRID_BLOCK]
+              [--sto-house NB_STORE_PER_HOUSE] [--nblock NB_1D_GRID_BLOCK]
               [--remote-work REMOTE_WORK_PERCENT]
               [--sto-pref PROB_PREFERENCE_STORE]
-              [--p-same-house PROBA_SAME_HOUSE_RATE]
               [--inn-infec INITIAL_INNOCULATION_NB]
               [--p-house PROB_HOUSE_INFECTION]
               [--p-store PROB_STORE_INFECTION] [--p-work PROB_WORK_INFECTION]
@@ -63,7 +60,7 @@ optional arguments:
   --nday N_DAYS         Number of days
   --sto-house NB_STORE_PER_HOUSE
                         Number of store per house
-  --nblock NB_GRID_BLOCK
+  --nblock NB_1D_GRID_BLOCK
                         Number of blocks in the grid
   --remote-work REMOTE_WORK_PERCENT
                         Percentage of people remote working
@@ -119,7 +116,6 @@ We maintain a dictionnary of this transportation relationship between workers to
 * N_INDIVIDUALS : number of person involved in this simulation (default 5000)
 * N_DAYS : number of days for the simulation (default 120)
 * NB_STO_PER_HOU : number of house for each store (default 20)
-* PROBA_SAME_HOUSE_RATE : probability used to define the number of individuals in a house (default 0.1 builds 3.57 average people per house)
 * PROB_PREFERENCE_STORE : probability to go to the nearest store (otherwise it will be the second nearest ...)
 * REMOTE_WORK_PERCENT : percentage of people doing remote work (thus not going to workplaces)
 * INITIAL_INNOCULATION_PCT : Percentage of people who get the virus at day 0
