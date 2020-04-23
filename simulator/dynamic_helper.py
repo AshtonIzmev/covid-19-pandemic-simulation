@@ -161,25 +161,39 @@ def propagate_to_transportation(env_dic, virus_dic, probability_transport_infect
 def propagate_to_stores(env_dic, virus_dic, probability_store_infection_arg):
     # Filter on living people because we have a random choice to make in each house
     # People who will go to their store (one person per house as imposed by lockdown)
-    individuals_gotostore = get_random_choice_list([[i for i in env_dic[HA_K][h] if is_alive(i, virus_dic)]
-                                                    for h in range(len(env_dic[HA_K]))])
+    # [1, 2, 3, 4, 5, 6] go to the store
+    individuals_gotostore = get_random_choice_list([
+        [i for i in env_dic[HA_K][h] if is_alive(i, virus_dic)] for h in range(len(env_dic[HA_K]))
+    ])
 
     # Contagious people who will go to their store
+    # [1, 4, 5] are infected and going to the store
     individuals_infected_gotostore = [i for i in individuals_gotostore if is_contagious(i, virus_dic)]
 
     # Stores that will be visited by a contagious person
-    infected_stores = [env_dic[HS_K][env_dic[IH_K][i]] for i in individuals_infected_gotostore]
+    # [ (0, 1), (0, 1.3), (2, 1.2)] where stores 0 and 2 are infected
+    infected_stores = [(env_dic[HS_K][env_dic[IH_K][i]], env_dic[IBE_K][i]) for i in individuals_infected_gotostore]
+
+    # { 0: 1*1.3, 2: 1.2 } are the weights of each infected store
+    infected_stores_dic = reduce_multiply_by_key(infected_stores)
 
     # People who live in a house that goes to a contagious store
-    individuals_attachedto_infected_store = flatten(flatten(
-        [[env_dic[HA_K][h] for h in env_dic[SH_K][s]] for s in infected_stores]))
+    # We have [ ([1, 4, 9], 1*1.3), ([2, 6, 7], 1.2) ]
+    # Then reduced the following people { 1: 1.3, 4: 1.3, 9: 1.3, 2: 1.2, 6: 1.2, 7: 1.2 }
+    individuals_attachedto_infected_store = reduce_list_multiply_by_key(
+        flatten([[(env_dic[HA_K][h], beh_p) for h in env_dic[SH_K][s]] for (s, beh_p) in infected_stores_dic.items()])
+    )
 
     # People who did go to that contagious store
-    individuals_goto_infected_store = list(set(individuals_attachedto_infected_store)
-                                           .intersection(set(individuals_gotostore)))
+    # { 1: 1.3, 4: 1.3, 2: 1.2, 6: 1.2 } ## 9 and 7 have been removed since they did not go to the store that day
 
+    individuals_goto_infected_store = {
+        k: individuals_attachedto_infected_store[k]
+        for k in (individuals_gotostore & individuals_attachedto_infected_store.keys())
+    }
     # People who got infected from going to their store
-    infected_backfromstore = [i for i in individuals_goto_infected_store if get_r() < probability_store_infection_arg]
+    infected_backfromstore = [i for (i, beh_p) in individuals_goto_infected_store.items()
+                              if get_r() < probability_store_infection_arg * beh_p]
 
     # INFECTION STATE UPDATE
     update_infection_period(infected_backfromstore, virus_dic)
