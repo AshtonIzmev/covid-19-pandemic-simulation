@@ -138,13 +138,21 @@ def propagate_to_workplaces(env_dic, virus_dic, probability_work_infection_arg):
 
 def propagate_to_transportation(env_dic, virus_dic, probability_transport_infection_arg):
     # Contagious people who will go to work
+    # [1, 2, 3] go to work
     infected_who_goto_work = [i for i in get_infected_people(virus_dic) if i in env_dic[IW_K].keys()
                               and is_contagious(i, virus_dic)]
+
     # Infected public transportation blocks
-    # No more reduce in python3 ... :(
-    infected_who_share_blocks = list(set(flatten([env_dic[ITI_K][ind] for ind in infected_who_goto_work])))
-    infected_bad_luck_transport = [k for k in infected_who_share_blocks
-                                   if get_r() < probability_transport_infection_arg]
+    # individuals 1, 2, 3 are in an infected block
+    # same for 4, 5, 6
+    # Reduce this : [ ({1, 2, 3}, 1), ({4, 5, 6}, 1.5) ]
+    # which gives  { 1: 1, 2: 1, 3: 2, 4: 1.5, 5: 1.5, 6: 1.5 }
+    people_sharing_transportation = reduce_list_multiply_by_key(
+        [(env_dic[ITI_K][i], env_dic[IBE_K][i]) for i in infected_who_goto_work]
+    )
+
+    infected_bad_luck_transport = [i for (i, beh_p) in people_sharing_transportation.items()
+                                   if get_r() < probability_transport_infection_arg * beh_p]
 
     # INFECTION STATE UPDATE
     update_infection_period(infected_bad_luck_transport, virus_dic)
