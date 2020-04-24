@@ -24,6 +24,7 @@ def launch_run():
         params[work_infection_key] = 0.001
         params[store_infection_key] = 0.002
         params[transport_infection_key] = 0.001
+        params[innoculation_number_key] = 100
 
         virus_dic = get_virus_simulation_t0(params)
         for i in range(params[nday_key]):

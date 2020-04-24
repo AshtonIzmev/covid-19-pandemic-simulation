@@ -1,11 +1,12 @@
+import math
 import numpy as np
 
-from scenario.scenario_helper import tighten_lockdown, soften_lockdown, measure_lockdown_strength
 from simulator.dynamic_helper import propagate_to_stores, propagate_to_houses, propagate_to_workplaces, \
     increment_pandemic_1_day, is_weekend, get_pandemic_statistics, propagate_to_transportation
 from simulator.parameters import *
 from simulator.plot_helper import print_progress_bar
 from simulator.simulation_helper import get_environment_simulation, get_virus_simulation_t0
+from scenario.scenario_helper import tighten_lockdown, soften_lockdown, measure_lockdown_strength
 
 
 # This scenario is a lockdown loosening every DAYS_WAIT_FOR_LOCKDOWN_REMOVAL after the last new case
@@ -14,6 +15,7 @@ def launch_run():
     env_dic = get_environment_simulation(params)
 
     stats = np.zeros((params[nrun_key], params[nday_key], 7))
+    loosening_day = np.zeros((params[nrun_key]))
     print_progress_bar(0, params[nrun_key] * params[nday_key], prefix='Progress:', suffix='Complete', length=50)
     for r in range(params[nrun_key]):
 
@@ -23,8 +25,11 @@ def launch_run():
         params[work_infection_key] = 0.001
         params[store_infection_key] = 0.002
         params[transport_infection_key] = 0.001
+        params[innoculation_number_key] = 100
 
-        lockdown_min_delay = 0
+        days_with_no_cases = 0
+
+        first_day_lockdown_loosening = -1
 
         virus_dic = get_virus_simulation_t0(params)
         for i in range(params[nday_key]):
@@ -41,14 +46,14 @@ def launch_run():
                 get_pandemic_statistics(virus_dic)
             stats[r][i][6] = measure_lockdown_strength(params)
 
-            lockdown_min_delay += 1
-            if stats[r][i][5] == 0 and lockdown_min_delay >= 7:
-                lockdown_min_delay = 0
+            if stats[r][i][5] == 0:
+                days_with_no_cases += 1
+            else:
+                days_with_no_cases = 0
+            if (days_with_no_cases % params[days_wait_lockdown_removal] == 0) and days_with_no_cases > 0:
+                if first_day_lockdown_loosening == -1:
+                    first_day_lockdown_loosening = i
                 soften_lockdown(params)
-                soften_lockdown(params)
-            elif stats[r][i][5] >= 5 and lockdown_min_delay >= 7:
-                lockdown_min_delay = 0
-                tighten_lockdown(params)
-                tighten_lockdown(params)
-
+        loosening_day[r] = first_day_lockdown_loosening
+    print("Lockdown removal occured in average after %.2f days" % loosening_day.mean())
     return stats

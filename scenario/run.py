@@ -1,7 +1,7 @@
 import random
 import sys
 import time
-from scenario import lockdown_scenario, simple_lockdown_removal_scenario, yoyo_lockdown_removal_scenario
+from scenario.example import simple_lockdown_removal_scenario_1, yoyo_lockdown_removal_scenario, base_lockdown_scenario_0
 from simulator.parameters import *
 from simulator.plot_helper import chose_draw_plot
 from simulator.run_helper import get_parser
@@ -18,9 +18,9 @@ if __name__ == '__main__':
     t_start = time.time()
 
     if params[scenario_id_key] == 0:  # Total lockdown
-        stats_result = lockdown_scenario.launch_run()
+        stats_result = base_lockdown_scenario_0.launch_run()
     elif params[scenario_id_key] == 1:  # Lockdown removal after N days
-        stats_result = simple_lockdown_removal_scenario.launch_run()
+        stats_result = simple_lockdown_removal_scenario_1.launch_run()
     elif params[scenario_id_key] == 2:  # Yoyo lockdown removal
         stats_result = yoyo_lockdown_removal_scenario.launch_run()
     else:
