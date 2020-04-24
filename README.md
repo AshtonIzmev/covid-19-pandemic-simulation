@@ -10,7 +10,7 @@ make test
 
 ### To plot new daily cases
 python -m simulator.run --draw new
- 
+
 ### To plot daily state with 150 days and other parameters kept default
 python -m simulator.run --nday 150  --draw pop
 
@@ -108,8 +108,8 @@ So what is "life" in a pandemic lockdown situation (where almost all nations are
 8. Death or immunity will not make you anymore contagious for other individual, obviously
 
 # Public transportation model
-Each house and workplace is being assigned a geolocation in a grid. This grid can be cut into blocks (defined by a parameter). 
-When a worker goes from his house to his workplace, he goes through blocks that are shared by other workers. 
+Each house and workplace is being assigned a geolocation in a grid. This grid can be cut into blocks (defined by a parameter).
+When a worker goes from his house to his workplace, he goes through blocks that are shared by other workers.
 We maintain a dictionnary of this transportation relationship between workers to propagate the pandemic.
 
 # Input parameters
@@ -163,6 +163,7 @@ Using a quick and dirty kmeans, we only display the most "different" run distrib
 
 # Backlog
 - [ ]  Switch from dictionaries and list to numpy array (may be way more efficient, probably enabling some nice vectorization)
+- [ ]  Add a test-isolation stratey. Since at the end of the confinement, we assume that a part of the people will be tested and positive persons will be isolated.
 - [ ]  Make contagion probability slowly raises as I assume people will get tired of the lockdown and start to be lazy at wearing masks and staying home ...
 - [ ]  IN PROGRESS Contagion parameters depend on geographic blocks
 - [ ]  IN PROGRESS Use a contagion probability model for each individual (e.g. probability of contagion is obtained with a model)
