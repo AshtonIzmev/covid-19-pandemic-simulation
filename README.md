@@ -165,8 +165,8 @@ Using a quick and dirty kmeans, we only display the most "different" run distrib
 - [ ]  Switch from dictionaries and list to numpy array (may be way more efficient, probably enabling some nice vectorization)
 - [ ]  Add a test-isolation stratey. Since at the end of the confinement, we assume that a part of the people will be tested and positive persons will be isolated.
 - [ ]  Make contagion probability slowly raises as I assume people will get tired of the lockdown and start to be lazy at wearing masks and staying home ...
-- [ ]  IN PROGRESS Contagion parameters depend on geographic blocks
-- [ ]  IN PROGRESS Use a contagion probability model for each individual (e.g. probability of contagion is obtained with a model)
+- [x]  Contagion parameters depend on geographic blocks (using individual model, we achieve this)
+- [x]  Use a contagion probability model for each individual (e.g. probability of contagion is obtained with a model)
 - [x]  Reviewing the distribution model of individuals over households, probably it can be modeled with a truncated normal distribution, we can set parameters using information from this website https://www.hcp.ma/Les-projections-de-la-population-et-des-menages-entre-2014-et-2050_a1920.html.
 - [x]  Infection can and often occurs on public transportation. We need to build a basic transport model with infection probabilities
 - [x]  You probably won't go to the grocerie store every day, but probably twice in week day and once on the weekend (that could be a random variable)
