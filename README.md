@@ -105,7 +105,8 @@ So what is "life" in a pandemic lockdown situation (where almost all nations are
 5. In every place (house, store, work or transport), you get to interact with other individuals who can be infected. So there is a probability you will get infected too
 6. If you are infected, you become contagious after few days and start to spread the disease
 7. If you are infected, you will die or recover from the disease after a period of time, based on your age (and health issues but let's forget about those for now)
-8. Death or immunity will not make you anymore contagious for other individual, obviously
+8. If hospitals are full, mortality rates raises
+9. Death or immunity will not make you anymore contagious for other individual, obviously
 
 # Public transportation model
 Each house and workplace is being assigned a geolocation in a grid. This grid can be cut into blocks (defined by a parameter).
@@ -164,6 +165,7 @@ Using a quick and dirty kmeans, we only display the most "different" run distrib
 # Backlog
 - [ ]  Switch from dictionaries and list to numpy array (may be way more efficient, probably enabling some nice vectorization but huge refactors to come)
 - [ ]  Add a test-isolation stratey. Since at the end of the confinement, we assume that a part of the people will be tested and positive persons will be isolated.
+- [x]  When hospitals are full, mortality rates raises
 - [x]  Make contagion probability slowly raises as I assume people will get tired of the lockdown and start to be lazy at wearing masks and staying home ... (Handled in a scenario)
 - [x]  Contagion parameters depend on geographic blocks (using individual model, we achieve this)
 - [x]  Use a contagion probability model for each individual (e.g. probability of contagion is obtained with a model)

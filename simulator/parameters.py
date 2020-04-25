@@ -23,6 +23,7 @@ contagion_bounds_key = "CONTAGION_BOUNDS"
 hospitalization_bounds_key = "HOSPITALIZATION_BOUNDS"
 death_bounds_key = "DEATH_BOUNDS"
 immunity_bounds_key = "IMMUNITY_BOUNDS"
+icu_bed_per_thousand_individual_key = "ICU_BED_PER_1K_INDIV"
 
 # Scenario parameters
 days_wait_lockdown_removal = "DAYS_WAIT_FOR_LOCKDOWN_REMOVAL"
@@ -68,6 +69,9 @@ params = {
     # we still don't really know about long-term immunity so let's assume it is a lifetime one
     # https://edition.cnn.com/2020/04/17/health/south-korea-coronavirus-retesting-positive-intl-hnk/index.html
     immunity_bounds_key: (900, 1000),  # Bounds defining a draw for immunity period
+
+    # Moroccan data : http://northafricapost.com/39786-covid-19-morocco-expands-hospital-capacity.html
+    icu_bed_per_thousand_individual_key: 0.085,
 
     days_wait_lockdown_removal: 7  # How to long to wait before lockdown removal
 

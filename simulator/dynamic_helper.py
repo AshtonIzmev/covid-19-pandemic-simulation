@@ -16,17 +16,20 @@ def update_infection_period(newly_infected_individuals_arg, virus_dic):
             virus_dic[NC_K] = virus_dic[NC_K] + 1
 
 
-def increment_pandemic_1_day(env_dic, virus_dic):
+# ICU factor is used to raise death probability when hospitals are saturated
+def increment_pandemic_1_day(env_dic, virus_dic, available_beds):
+    icu_factor = max(1.0, len(get_hospitalized_people(virus_dic)) / (2*available_beds))
     for i in get_infected_people(virus_dic) + get_hospitalized_people(virus_dic):
         # Contagion and decision periods are decremented
         virus_dic[CON_K][i] = virus_dic[CON_K][i] - 1
         virus_dic[HOS_K][i] = virus_dic[HOS_K][i] - 1
         virus_dic[DEA_K][i] = virus_dic[DEA_K][i] - 1
+        # Even if hospitals are full, sick people are being parked in artisanal lacking care "hospitals"
         if virus_dic[HOS_K][i] == 0 and get_r() < get_hospitalization_rate(env_dic[IAG_K][i]):
             virus_dic[STA_K][i] = HOSPITALIZED_V
         # Decide over life
         if virus_dic[DEA_K][i] == 0:
-            if get_r() < get_mortalty_rate(env_dic[IAG_K][i]):
+            if get_r() < get_mortalty_rate(env_dic[IAG_K][i]) * icu_factor:
                 virus_dic[STA_K][i] = DEAD_V
             else:
                 virus_dic[STA_K][i] = IMMUNE_V
