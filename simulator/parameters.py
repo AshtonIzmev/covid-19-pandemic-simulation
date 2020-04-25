@@ -31,7 +31,7 @@ params = {
     nrun_key: 1,  # Number of runs
     scenario_id_key: -1,  # Scenario id if running the scenario package
     random_seed_key: 42,  # Of course 42
-    draw_graph_key: ["lockdown"],  # By default, draw summary
+    draw_graph_key: ["summary"],  # By default, draw summary
 
     nindividual_key: 1000,  # Number of people
     nday_key: 180,  # Number of simulated days

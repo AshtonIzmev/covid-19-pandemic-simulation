@@ -2,8 +2,9 @@ import random
 
 from scipy import spatial
 
-from initiator.helper import get_r, get_moroccan_household_distribution,invert_map, pick_age, get_center_squized_random, pick_random_company_size, \
-    rec_get_manhattan_walk, invert_map_list, get_lockdown_behavior_distribution
+from initiator.helper import get_r, get_moroccan_household_distribution, invert_map, pick_age, \
+    get_center_squized_random, pick_random_company_size, rec_get_manhattan_walk, invert_map_list, \
+    get_lockdown_behavior_distribution
 
 
 def build_individual_houses_map(number_individual_arg):

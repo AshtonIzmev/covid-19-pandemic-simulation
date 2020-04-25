@@ -14,7 +14,7 @@ covid_mortality_rate = {
     1: 0.02,
     0: 0
 }
-
+# Source : https://gis.cdc.gov/grasp/COVIDNet/COVID19_5.html
 covid_hospitalization_rate = {
     8: 0.172,
     7: 0.158,

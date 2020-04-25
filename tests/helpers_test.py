@@ -63,9 +63,9 @@ class TestHelpers(unittest.TestCase):
         self.assertEqual(result, [(1, 1)])
 
     def test_reduce_multiply_by_key(self):
-        result = reduce_multiply_by_key([(0, 1), (0, 1.5), (1, 2), ('a', 5), (99, 0), (99, 12)])
+        result = reduce_multiply_by_key([(0, 2), (0, 1.5), (1, 2), ('a', 5), (99, 0), (99, 12)])
         self.assertEqual(result, {
-            0: 1.5,
+            0: 3,
             1: 2,
             'a': 5,
             99: 0

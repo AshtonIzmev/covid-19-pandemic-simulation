@@ -162,9 +162,9 @@ python -m simulator.run --nrun 20  --nday 180 --nind 1000 --immunity-bounds 60 9
 Using a quick and dirty kmeans, we only display the most "different" run distributions to illustrate the butterfly effect of a pandemic
 
 # Backlog
-- [ ]  Switch from dictionaries and list to numpy array (may be way more efficient, probably enabling some nice vectorization)
+- [ ]  Switch from dictionaries and list to numpy array (may be way more efficient, probably enabling some nice vectorization but huge refactors to come)
 - [ ]  Add a test-isolation stratey. Since at the end of the confinement, we assume that a part of the people will be tested and positive persons will be isolated.
-- [ ]  Make contagion probability slowly raises as I assume people will get tired of the lockdown and start to be lazy at wearing masks and staying home ...
+- [x]  Make contagion probability slowly raises as I assume people will get tired of the lockdown and start to be lazy at wearing masks and staying home ... (Handled in a scenario)
 - [x]  Contagion parameters depend on geographic blocks (using individual model, we achieve this)
 - [x]  Use a contagion probability model for each individual (e.g. probability of contagion is obtained with a model)
 - [x]  Reviewing the distribution model of individuals over households, probably it can be modeled with a truncated normal distribution, we can set parameters using information from this website https://www.hcp.ma/Les-projections-de-la-population-et-des-menages-entre-2014-et-2050_a1920.html.
