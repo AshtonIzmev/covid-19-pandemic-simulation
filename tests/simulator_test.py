@@ -210,12 +210,35 @@ class TestSimulation(unittest.TestCase):
             HOS_K: {0: -5, 1: -6, 2: 20, 3: 1,  4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
             DEA_K: {0:  1, 1:  1, 2: 0,  3: 22, 4: 22, 5: 0,  6: 1,  7: 22, 8: -4, 9: 38},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1,  9: 55},
+            # No hospitalized people
             STA_K: {0:  F, 1:  F, 2: P,  3: P,  4: P,  5: P,  6: P,  7: P,  8: P,  9: P},
             FN_K: get_infection_params
         }
         env_dic[IAG_K][0] = 82
         env_dic[IAG_K][1] = 15
         increment_pandemic_1_day(env_dic, virus_dic, 0.6)
+        self.assertEqual(virus_dic[STA_K][0], M)
+        self.assertEqual(virus_dic[STA_K][1], M)
+
+    def test_increment_pandemic_1_day_hospitals_almost_full_indiv_hospitalized(self):
+        random.seed(22)
+        env_dic = TestSimulation.get_10_01_2_environment_dic()
+
+        def get_infection_params():
+            return get_infection_parameters(2, 7, 7, 21, 21, 39, 30, 60)
+
+        virus_dic = {
+            CON_K: {0: -8, 1: -9, 2: -5, 3: -4, 4: 6,  5: -9, 6: -3, 7: 2,  8: -9, 9: 5},
+            HOS_K: {0: -5, 1: -6, 2: 20, 3: 1,  4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
+            DEA_K: {0:  1, 1:  1, 2: 0,  3: 22, 4: 22, 5: 0,  6: 1,  7: 22, 8: -4, 9: 38},
+            IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1,  9: 55},
+            # Two hospitalized people (going to decision next day)
+            STA_K: {0:  P, 1:  P, 2: P,  3: P,  4: P,  5: P,  6: P,  7: P,  8: P,  9: P},
+            FN_K: get_infection_params
+        }
+        env_dic[IAG_K][0] = 82
+        env_dic[IAG_K][1] = 15
+        increment_pandemic_1_day(env_dic, virus_dic, 1.5)
         self.assertEqual(virus_dic[STA_K][0], D)
         self.assertEqual(virus_dic[STA_K][1], M)
 
@@ -231,12 +254,12 @@ class TestSimulation(unittest.TestCase):
             HOS_K: {0: -5, 1: -6, 2: 20, 3: 1,  4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
             DEA_K: {0:  1, 1:  1, 2: 0,  3: 22, 4: 22, 5: 0,  6: 1,  7: 22, 8: -4, 9: 38},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1,  9: 55},
-            STA_K: {0:  F, 1:  F, 2: P,  3: P,  4: P,  5: P,  6: P,  7: P,  8: P,  9: P},
+            STA_K: {0:  P, 1:  P, 2: P,  3: P,  4: P,  5: P,  6: P,  7: P,  8: P,  9: P},
             FN_K: get_infection_params
         }
         env_dic[IAG_K][0] = 82
         env_dic[IAG_K][1] = 15
-        increment_pandemic_1_day(env_dic, virus_dic, 0.005)
+        increment_pandemic_1_day(env_dic, virus_dic, 0.5)
         self.assertEqual(virus_dic[STA_K][0], D)
         self.assertEqual(virus_dic[STA_K][1], D)
 
