@@ -1,4 +1,4 @@
-from initiator.helper import flatten, get_random_choice_list
+from initiator.helper import get_random_choice_list, choose_weight_order
 from initiator.helper import get_r, get_mortalty_rate, get_hospitalization_rate, reduce_multiply_by_key, \
     reduce_list_multiply_by_key
 from simulator.keys import *
@@ -163,7 +163,7 @@ def propagate_to_transportation(env_dic, virus_dic, probability_transport_infect
     update_infection_period(infected_bad_luck_transport, virus_dic)
 
 
-def propagate_to_stores(env_dic, virus_dic, probability_store_infection_arg):
+def propagate_to_stores(env_dic, virus_dic, probability_store_infection_arg, same_store_preference):
     # Filter on living people because we have a random choice to make in each house
     # People who will go to their store (one person per house as imposed by lockdown)
     # [1, 2, 3, 4, 5, 6] go to the store
@@ -175,30 +175,27 @@ def propagate_to_stores(env_dic, virus_dic, probability_store_infection_arg):
     # [1, 4, 5] are infected and going to the store
     individuals_infected_gotostore = [i for i in individuals_gotostore if is_contagious(i, virus_dic)]
 
+    # [(2, 0), (3, 1), (6, 2)]  2, 3 and 6 are infected and going to the stores 0, 1 and 2
+    # we divide same_store_preference by behavior since high behavior value is bad behavior
+    individuals_healthy_gotostore = [
+        (i, choose_weight_order(env_dic[HS_K][env_dic[IH_K][i]], same_store_preference / env_dic[IBE_K][i]))
+        for i in individuals_gotostore if not is_contagious(i, virus_dic)
+    ]
+
     # Stores that will be visited by a contagious person
-    # [ (0, 1), (0, 1.3), (2, 1.2)] where stores 0 and 2 are infected
-    infected_stores = [(env_dic[HS_K][env_dic[IH_K][i]], env_dic[IBE_K][i]) for i in individuals_infected_gotostore]
+    # [ (0, 1), (0, 1.3), (2, 1.2)] where stores 0 and 2 are infected with 1, 1.3 and 1.2 weights
+    infected_stores = [
+        (choose_weight_order(env_dic[HS_K][env_dic[IH_K][i]], same_store_preference / env_dic[IBE_K][i]), env_dic[IBE_K][i])
+        for i in individuals_infected_gotostore
+    ]
 
     # { 0: 1*1.3, 2: 1.2 } are the weights of each infected store
     infected_stores_dic = reduce_multiply_by_key(infected_stores)
 
-    # People who live in a house that goes to a contagious store
-    # We have [ ([1, 4, 9], 1*1.3), ([2, 6, 7], 1.2) ]
-    # Then reduced the following people { 1: 1.3, 4: 1.3, 9: 1.3, 2: 1.2, 6: 1.2, 7: 1.2 }
-    individuals_attachedto_infected_store = reduce_list_multiply_by_key(
-        flatten([[(env_dic[HA_K][h], beh_p) for h in env_dic[SH_K][s]] for (s, beh_p) in infected_stores_dic.items()])
-    )
-
-    # People who did go to that contagious store
-    # { 1: 1.3, 4: 1.3, 2: 1.2, 6: 1.2 } ## 9 and 7 have been removed since they did not go to the store that day
-
-    individuals_goto_infected_store = {
-        k: individuals_attachedto_infected_store[k]
-        for k in (individuals_gotostore & individuals_attachedto_infected_store.keys())
-    }
-    # People who got infected from going to their store
-    infected_backfromstore = [i for (i, beh_p) in individuals_goto_infected_store.items()
-                              if get_r() < probability_store_infection_arg * beh_p]
+    # We get the list of people who are healty + have chosen an infected store + get bad luck with get_r
+    # [2, 6] got infected
+    gonna_be_infected = [ind for (ind, s) in individuals_healthy_gotostore if s in infected_stores_dic.keys()
+                         and get_r() < probability_store_infection_arg * env_dic[IBE_K][ind] * infected_stores_dic[s]]
 
     # INFECTION STATE UPDATE
-    update_infection_period(infected_backfromstore, virus_dic)
+    update_infection_period(gonna_be_infected, virus_dic)

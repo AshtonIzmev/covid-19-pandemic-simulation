@@ -36,7 +36,7 @@ def launch_run():
                 propagate_to_transportation(env_dic, virus_dic, params[transport_infection_key], params[remote_work_key])
                 propagate_to_workplaces(env_dic, virus_dic, params[work_infection_key], params[remote_work_key])
             if is_weekend(i):
-                propagate_to_stores(env_dic, virus_dic, params[store_infection_key])
+                propagate_to_stores(env_dic, virus_dic, params[store_infection_key], params[store_preference_key])
             increment_pandemic_1_day(env_dic, virus_dic, available_beds)
             stats[r][i][0], stats[r][i][1], stats[r][i][2], stats[r][i][3], stats[r][i][4], stats[r][i][5] = \
                 get_pandemic_statistics(virus_dic)

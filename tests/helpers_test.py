@@ -3,7 +3,7 @@ import unittest
 
 from initiator.helper import invert_map, flatten, get_random_choice_list, get_infection_parameters, \
     get_mortalty_rate, get_hospitalization_rate, rec_get_manhattan_walk, invert_map_list, reduce_multiply_by_key,\
-    reduce_list_multiply_by_key
+    reduce_list_multiply_by_key, choose_weight_order
 
 
 class TestHelpers(unittest.TestCase):
@@ -80,6 +80,11 @@ class TestHelpers(unittest.TestCase):
             4: 1.875,
             5: 1.25
         })
+
+    def test_choose_weight_order(self):
+        self.assertEqual(choose_weight_order(list(range(100)), 0.001), 99)
+        self.assertEqual(choose_weight_order(list(range(100)), 0.999), 0)
+        self.assertEqual(choose_weight_order(list(range(100)), 0.021), 45)
 
 
 if __name__ == '__main__':

@@ -49,12 +49,11 @@ class TestSimulation(unittest.TestCase):
         return {
             HA_K: {0: [0, 1], 1: [4, 5], 2: [8, 9]},
             HI_K: {0: [0, 1, 2, 3], 1: [4, 5, 6, 7], 2: [8, 9]},
-            HS_K: {0: 0, 1: 0, 2: 0},
+            HS_K: {0: [0, 0, 0], 1: [0, 0, 0], 2: [0, 0, 0]},
             IAD_K: {0: 1, 1: 1, 2: 0, 3: 0, 4: 1, 5: 1, 6: 0, 7: 0, 8: 1, 9: 1},
             IAG_K: {0: 26, 1: 51, 2: 13, 3: 2, 4: 35, 5: 33, 6: 6, 7: 1, 8: 27, 9: 20},
             IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2},
             IW_K: {1: 1, 4: 1, 5: 0},
-            SH_K: {0: [0, 1, 2]},
             WI_K: {0: [5], 1: [4, 1]},
             ITI_K: {1: {1, 4, 5}, 4: {1, 4, 5}, 5: {1, 4, 5}},
             IBE_K: {0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1, 9: 1}
@@ -72,8 +71,7 @@ class TestSimulation(unittest.TestCase):
             IW_K: {0: 0, 1: 0, 2: 0, 3: 0, 7: 0, 8: 0},
             WI_K: {0: [0, 3, 7, 2, 1, 8]},
             HA_K: {0: [0, 1], 1: [2, 3], 2: [7, 8]},
-            HS_K: {0: 0, 1: 0, 2: 0},
-            SH_K: {0: [0, 1, 2]},
+            HS_K: {0: [0, 1, 1], 1: [0, 1, 1], 2: [0, 1, 1]},
             ITI_K: {0: {0, 1, 2, 3, 7, 8},
                     1: {0, 1, 2, 3, 7, 8},
                     2: {0, 1, 2, 3, 7, 8},
@@ -89,7 +87,8 @@ class TestSimulation(unittest.TestCase):
             store_per_house_key: 2,
             store_preference_key: 1,
             nb_1d_block_key: 5,
-            remote_work_key: 0.5
+            remote_work_key: 0.5,
+            store_nb_choice_key: 3
         }
 
         result = get_environment_simulation(params_test)
@@ -384,16 +383,16 @@ class TestSimulation(unittest.TestCase):
     def test_propagate_to_stores_child(self):
         env_dic = {
             HA_K: {0: [0, 1], 1: [4, 5], 2: [8, 9]},
-            HS_K: {0: 0, 1: 1, 2: 0},
+            HS_K: {0: [0, 0, 0], 1: [1, 1, 1], 2: [0, 0, 0]},
             IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2},
-            SH_K: {0: [0, 2], 1: [1]},
+            IBE_K: {0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1, 9: 1},
         }
         virus_dic = {
             CON_K: {0: 4, 1: 3, 2: 2, 3: 2, 4: -5, 5: 4, 6: 4, 7: 2, 8: 6, 9: 5},
             STA_K: {0: H, 1: H, 2: H, 3: F, 4: D, 5: H, 6: H, 7: H, 8: H, 9: H},
             NC_K: 0
         }
-        propagate_to_stores(env_dic, virus_dic, 0.99)
+        propagate_to_stores(env_dic, virus_dic, 0.99, 0.95)
         # children do not go to stores
         self.assertEqual(virus_dic[STA_K][0], H)
         self.assertEqual(virus_dic[STA_K][1], H)
@@ -404,16 +403,16 @@ class TestSimulation(unittest.TestCase):
     def test_propagate_to_stores_adult_notcontagious(self):
         env_dic = {
             HA_K: {0: [0, 1], 1: [4, 5], 2: [8, 9]},
-            HS_K: {0: 0, 1: 1, 2: 0},
+            HS_K: {0: [0, 0, 0], 1: [1, 1, 1], 2: [0, 0, 0]},
             IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2},
-            SH_K: {0: [0, 2], 1: [1]},
+            IBE_K: {0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1, 9: 1},
         }
         virus_dic = {
             CON_K: {0: 4, 1: 3, 2: 2, 3: 2, 4: -5, 5: 4, 6: 4, 7: 2, 8: 6, 9: 5},
             STA_K: {0: H, 1: F, 2: H, 3: H, 4: H, 5: H, 6: H, 7: H, 8: H, 9: H},
             NC_K: 0
         }
-        propagate_to_stores(env_dic, virus_dic, 0.99)
+        propagate_to_stores(env_dic, virus_dic, 0.99, 0.95)
         # adults who go to the store propagate the virus
         self.assertEqual(virus_dic[STA_K][0], H)
         self.assertEqual(virus_dic[STA_K][1], F)
@@ -424,17 +423,78 @@ class TestSimulation(unittest.TestCase):
     def test_propagate_to_stores_adult_contagious(self):
         env_dic = {
             HA_K: {0: [0, 1], 1: [4, 5], 2: [8, 9]},
-            HS_K: {0: 0, 1: 1, 2: 0},
+            HS_K: {0: [0, 0, 0], 1: [1, 1, 1], 2: [0, 0, 0]},
             IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2},
-            SH_K: {0: [0, 2], 1: [1]},
             IBE_K: {0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1, 9: 1}
         }
         virus_dic = {
             CON_K: {0: 4, 1: -2, 2: 2, 3: 2, 4: -5, 5: 4, 6: 4, 7: 2, 8: 6, 9: 5},
-            STA_K: {0: H, 1: F, 2: H, 3: H, 4: H, 5: H, 6: H, 7: H, 8: H, 9: H},
+            STA_K: {0: H, 1:  F, 2: H, 3: H, 4:  H, 5: H, 6: H, 7: H, 8: H, 9: H},
             NC_K: 0
         }
-        propagate_to_stores(env_dic, virus_dic, 0.99)
+        propagate_to_stores(env_dic, virus_dic, 0.99, 0.95)
+        # adults who go to the store propagate the virus
+        self.assertEqual(virus_dic[STA_K][0], H)
+        self.assertEqual(virus_dic[STA_K][1], F)
+        self.assertEqual(virus_dic[STA_K][5], H)
+        self.assertEqual(virus_dic[STA_K][8], H)
+        self.assertEqual(virus_dic[STA_K][9], F)
+
+    def test_propagate_to_stores_adult_contagious_bad_gobal_behavior(self):
+        env_dic = {
+            HA_K: {0: [0, 1], 1: [4, 5], 2: [8, 9]},
+            HS_K: {0: [1, 0, 0], 1: [1, 1, 1], 2: [1, 0, 0]},
+            IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2},
+            IBE_K: {0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1, 9: 1}
+        }
+        virus_dic = {
+            CON_K: {0: 4, 1: -2, 2: 2, 3: 2, 4: -5, 5: 4, 6: 4, 7: 2, 8: 6, 9: 5},
+            STA_K: {0: H, 1:  F, 2: H, 3: H, 4:  H, 5: H, 6: H, 7: H, 8: H, 9: H},
+            NC_K: 0
+        }
+        propagate_to_stores(env_dic, virus_dic, 0.99, 0.01)
+        # adults who go to the store propagate the virus
+        self.assertEqual(virus_dic[STA_K][0], H)
+        self.assertEqual(virus_dic[STA_K][1], F)
+        self.assertEqual(virus_dic[STA_K][5], H)
+        self.assertEqual(virus_dic[STA_K][8], H)
+        self.assertEqual(virus_dic[STA_K][9], F)
+
+    def test_propagate_to_stores_adult_contagious_bad_individual_behavior(self):
+        # Individual 1 has bad behavior and goes to a store he should not go to
+        env_dic = {
+            HA_K: {0: [0, 1], 1: [4, 5], 2: [8, 9]},
+            HS_K: {0: [1, 0, 0], 1: [1, 1, 1], 2: [0, 0, 0]},
+            IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2},
+            IBE_K: {0: 1, 1: 100, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1, 9: 1}
+        }
+        virus_dic = {
+            CON_K: {0: 4, 1: -2, 2: 2, 3: 2, 4: -5, 5: 4, 6: 4, 7: 2, 8: 6, 9: 5},
+            STA_K: {0: H, 1:  F, 2: H, 3: H, 4:  H, 5: H, 6: H, 7: H, 8: H, 9: H},
+            NC_K: 0
+        }
+        propagate_to_stores(env_dic, virus_dic, 0.99, 0.95)
+        # adults who go to the store propagate the virus
+        self.assertEqual(virus_dic[STA_K][0], H)
+        self.assertEqual(virus_dic[STA_K][1], F)
+        self.assertEqual(virus_dic[STA_K][5], H)
+        self.assertEqual(virus_dic[STA_K][8], H)
+        self.assertEqual(virus_dic[STA_K][9], F)
+
+    def test_propagate_to_stores_adult_contagious_bad_2individual_behavior(self):
+        # Both individual 1 and 9 has bad behavior and go to a store they should not go to
+        env_dic = {
+            HA_K: {0: [0, 1], 1: [4, 5], 2: [8, 9]},
+            HS_K: {0: [1, 0, 0], 1: [1, 1, 1], 2: [1, 0, 0]},
+            IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2},
+            IBE_K: {0: 1, 1: 100, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1, 9: 100}
+        }
+        virus_dic = {
+            CON_K: {0: 4, 1: -2, 2: 2, 3: 2, 4: -5, 5: 4, 6: 4, 7: 2, 8: 6, 9: 5},
+            STA_K: {0: H, 1:  F, 2: H, 3: H, 4:  H, 5: H, 6: H, 7: H, 8: H, 9: H},
+            NC_K: 0
+        }
+        propagate_to_stores(env_dic, virus_dic, 0.99, 0.95)
         # adults who go to the store propagate the virus
         self.assertEqual(virus_dic[STA_K][0], H)
         self.assertEqual(virus_dic[STA_K][1], F)
@@ -446,9 +506,8 @@ class TestSimulation(unittest.TestCase):
         # A corriger
         env_dic = {
             HA_K: {0: [0, 1], 1: [4, 5], 2: [8, 9]},
-            HS_K: {0: 0, 1: 1, 2: 0},
+            HS_K: {0: [0, 0, 0], 1: [1, 1, 1], 2: [0, 0, 0]},
             IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2},
-            SH_K: {0: [0, 2], 1: [1]},
             IBE_K: {0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1, 9: 1}
         }
         virus_dic = {
@@ -456,7 +515,7 @@ class TestSimulation(unittest.TestCase):
             STA_K: {0: H, 1: F, 2: F, 3: H, 4: H, 5: F, 6: H, 7: H, 8: H, 9: H},
             NC_K: 0
         }
-        propagate_to_stores(env_dic, virus_dic, 0.99)
+        propagate_to_stores(env_dic, virus_dic, 0.99, 0.95)
         # adults who go to the store propagate the virus
         self.assertEqual(virus_dic[STA_K][0], H)
         self.assertEqual(virus_dic[STA_K][1], F)

@@ -106,15 +106,10 @@ def get_store_index(indexes, prob_preference_store):
     return [index[0] if get_r() < prob_preference_store else index[1] for index in indexes]
 
 
-def build_house_store_map(geo_position_store_arg, geo_position_house_arg,prob_preference_store):
-    distance, indexes = spatial.KDTree(geo_position_store_arg).query(geo_position_house_arg, k=2)
-    all_hou_sto = dict(zip(range(len(geo_position_house_arg)), get_store_index(indexes, prob_preference_store)))
+def build_house_store_map(geo_position_store_arg, geo_position_house_arg, nb_store_choice):
+    _, indexes = spatial.KDTree(geo_position_store_arg).query(geo_position_house_arg, k=nb_store_choice)
+    all_hou_sto = dict(zip(range(len(geo_position_house_arg)), [list(i) for i in indexes]))
     return all_hou_sto
-
-
-def build_store_house_map(house_store_map_arg):
-    # Grocerie store -> List of House
-    return invert_map(house_store_map_arg)
 
 
 def build_individual_work_map(individual_adult_map_arg):

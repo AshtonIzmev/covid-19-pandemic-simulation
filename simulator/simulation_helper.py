@@ -1,9 +1,8 @@
 from initiator.core import build_individual_houses_map, build_house_individual_map, build_individual_work_map, \
     build_individual_adult_map, build_workplace_individual_map, build_individual_age_map, build_house_adult_map, \
-    build_house_store_map, build_store_house_map, \
-    build_geo_positions_house, build_geo_positions_store, build_geo_positions_workplace, build_block_assignment, \
+    build_house_store_map, build_geo_positions_house, build_geo_positions_store, build_geo_positions_workplace, build_block_assignment, \
     build_individual_workblock_map, build_workblock_individual_map, build_individual_individual_transport_map, \
-    build_1d_item_behavior, build_2d_item_behavior
+    build_1d_item_behavior
 from initiator.helper import get_r, get_infection_parameters
 from simulator.keys import *
 from simulator.parameters import *
@@ -12,9 +11,8 @@ from simulator.parameters import *
 def get_environment_simulation(params_arg):
     number_of_individuals_arg = params_arg[nindividual_key]
     number_store_per_house_arg = params_arg[store_per_house_key]
-    preference_store_arg = params_arg[store_preference_key]
     nb_1d_block_arg = params_arg[nb_1d_block_key]
-    probability_remote_work_arg = params_arg[remote_work_key]
+    nb_store_choice = params_arg[store_nb_choice_key]
 
     indiv_house = build_individual_houses_map(number_of_individuals_arg)
     house_indiv = build_house_individual_map(indiv_house)
@@ -29,8 +27,7 @@ def get_environment_simulation(params_arg):
     geo_workplace = build_geo_positions_workplace(len(workplace_indiv))
     geo_store = build_geo_positions_store(int(len(house_indiv) / number_store_per_house_arg))
 
-    house_store = build_house_store_map(geo_store, geo_house, preference_store_arg)
-    store_house = build_store_house_map(house_store)
+    house_store = build_house_store_map(geo_store, geo_house, nb_store_choice)
 
     house_block = build_block_assignment(geo_house, nb_1d_block_arg)
     workplace_block = build_block_assignment(geo_workplace, nb_1d_block_arg)
@@ -51,7 +48,6 @@ def get_environment_simulation(params_arg):
         WI_K: workplace_indiv,
         HA_K: house_adult,
         HS_K: house_store,
-        SH_K: store_house,
         ITI_K: indiv_transport_indiv,
         HB_K: house_block,
         IBE_K: indiv_behavior

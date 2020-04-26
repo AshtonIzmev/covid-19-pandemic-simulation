@@ -157,3 +157,10 @@ def reduce_list_multiply_by_key(tuple_list):
         for k in l:
             result_dic[k] = v * (result_dic[k] if k in result_dic else 1)
     return result_dic
+
+
+def choose_weight_order(list_arg, prob):
+    try:
+        return next(x[1] for x in enumerate(list_arg) if get_r() <= prob)
+    except StopIteration:
+        return list_arg[-1]

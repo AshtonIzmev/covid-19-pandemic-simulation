@@ -13,6 +13,7 @@ remote_work_key = "REMOTE_WORK_PERCENT"
 # Store relative
 store_per_house_key = "NB_STORE_PER_HOUSE"
 store_preference_key = "PROB_PREFERENCE_STORE"
+store_nb_choice_key = "STORE_NB_CHOICE_KEY"
 # Dynamic
 house_infect_key = "PROB_HOUSE_INFECTION"
 work_infection_key = "PROB_WORK_INFECTION"
@@ -41,6 +42,7 @@ params = {
     # structure parameters
     store_per_house_key: 20,  # Let's say we have 20 houses for each grocerie store
     store_preference_key: 0.95,  # Probality of going to the nearest store
+    store_nb_choice_key: 3,  # Number of stores that a single house can go to
     nb_1d_block_key: 10,  # number of block on one axe to slice the grid and model public transportation contamination,
                           # total number of blocks is nb_1d_block_key^2
 
