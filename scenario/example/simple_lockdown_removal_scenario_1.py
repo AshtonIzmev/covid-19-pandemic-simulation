@@ -14,7 +14,7 @@ def launch_run():
     print('Preparing environment...')
     env_dic = get_environment_simulation(params)
 
-    stats = np.zeros((params[nrun_key], params[nday_key], 7))
+    stats = np.zeros((params[nrun_key], params[nday_key], 8))
     loosening_day = np.zeros((params[nrun_key]))
     print_progress_bar(0, params[nrun_key] * params[nday_key], prefix='Progress:', suffix='Complete', length=50)
     for r in range(params[nrun_key]):
@@ -43,7 +43,8 @@ def launch_run():
             if is_weekend(i):
                 propagate_to_stores(env_dic, virus_dic, params[store_infection_key])
             increment_pandemic_1_day(env_dic, virus_dic, available_beds)
-            stats[r][i][0], stats[r][i][1], stats[r][i][2], stats[r][i][3], stats[r][i][4], stats[r][i][5] = \
+            stats[r][i][0], stats[r][i][1], stats[r][i][2], stats[r][i][3], stats[r][i][4], stats[r][i][5], stats[r][i][
+                7] = \
                 get_pandemic_statistics(virus_dic)
             stats[r][i][6] = measure_lockdown_strength(params)
 
