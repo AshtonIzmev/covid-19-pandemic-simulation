@@ -8,6 +8,7 @@ nindividual_key = "N_INDIVIDUALS"
 nday_key = "N_DAYS"
 innoculation_number_key = "INITIAL_INNOCULATION_NB"
 nb_1d_block_key = "NB_1D_GRID_BLOCK"
+quarantine_days_key="QUARANTINE_DAYS"
 # Work relative
 remote_work_key = "REMOTE_WORK_PERCENT"
 # Store relative
@@ -70,9 +71,10 @@ params = {
     # https://edition.cnn.com/2020/04/17/health/south-korea-coronavirus-retesting-positive-intl-hnk/index.html
     immunity_bounds_key: (900, 1000),  # Bounds defining a draw for immunity period
 
+    quarantine_days_key : 15, #the days of isolation if the test is positive
+
     # Moroccan data : http://northafricapost.com/39786-covid-19-morocco-expands-hospital-capacity.html
     icu_bed_per_thousand_individual_key: 0.085,
 
     days_wait_lockdown_removal: 7  # How to long to wait before lockdown removal
-
 }

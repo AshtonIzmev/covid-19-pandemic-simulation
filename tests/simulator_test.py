@@ -103,7 +103,8 @@ class TestSimulation(unittest.TestCase):
             contagion_bounds_key: (2, 7),
             hospitalization_bounds_key: (7, 21),
             death_bounds_key: (21, 39),
-            immunity_bounds_key: (35, 65)
+            immunity_bounds_key: (35, 65),
+            quarantine_days_key : 15
         }
         result = get_virus_simulation_t0(params_dic)
         expected_result = TestSimulation.get_virus_dic()
