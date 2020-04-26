@@ -21,10 +21,10 @@ def launch_run():
         params[store_preference_key] = 0.95
         params[remote_work_key] = 0.98
         params[house_infect_key] = 0.5
-        params[work_infection_key] = 0.001
-        params[store_infection_key] = 0.002
-        params[transport_infection_key] = 0.001
-        params[innoculation_number_key] = 100
+        params[work_infection_key] = 0.01
+        params[store_infection_key] = 0.02
+        params[transport_infection_key] = 0.01
+        params[innoculation_number_key] = 5
         available_beds = params[icu_bed_per_thousand_individual_key] * params[nindividual_key] / 1000
 
         virus_dic = get_virus_simulation_t0(params)
