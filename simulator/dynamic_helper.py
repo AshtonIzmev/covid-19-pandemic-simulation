@@ -112,11 +112,11 @@ def propagate_to_houses(env_dic, virus_dic, probability_home_infection_arg):
     update_infection_period(infected_athome, virus_dic)
 
 
-def propagate_to_workplaces(env_dic, virus_dic, probability_work_infection_arg):
+def propagate_to_workplaces(env_dic, virus_dic, probability_work_infection_arg, probability_remote_work_arg):
     # Contagious people who will go to work
     # [1, 2, 3] go to work
     infected_gotowork = [i for i in get_infected_people(virus_dic) if i in env_dic[IW_K].keys()
-                         and is_contagious(i, virus_dic)]
+                         and is_contagious(i, virus_dic) and get_r() < (1-probability_remote_work_arg)]
     # Infected workplaces
     # [ (1, 1.1), (2, 1), (1, 1.4) ]
     infected_workplaces_behavior = [(env_dic[IW_K][i], env_dic[IBE_K][i]) for i in infected_gotowork]
@@ -141,11 +141,11 @@ def propagate_to_workplaces(env_dic, virus_dic, probability_work_infection_arg):
     update_infection_period(infected_backfromwork, virus_dic)
 
 
-def propagate_to_transportation(env_dic, virus_dic, probability_transport_infection_arg):
+def propagate_to_transportation(env_dic, virus_dic, probability_transport_infection_arg, probability_remote_work_arg):
     # Contagious people who will go to work
     # [1, 2, 3] go to work
     infected_who_goto_work = [i for i in get_infected_people(virus_dic) if i in env_dic[IW_K].keys()
-                              and is_contagious(i, virus_dic)]
+                              and is_contagious(i, virus_dic) and get_r() < (1-probability_remote_work_arg)]
 
     # Infected public transportation blocks
     # individuals 1, 2, 3 are in an infected block

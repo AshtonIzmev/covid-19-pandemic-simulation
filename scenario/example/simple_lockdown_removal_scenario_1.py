@@ -22,10 +22,10 @@ def launch_run():
         params[store_preference_key] = 0.95
         params[remote_work_key] = 0.98
         params[house_infect_key] = 0.5
-        params[work_infection_key] = 0.001
-        params[store_infection_key] = 0.002
-        params[transport_infection_key] = 0.001
-        params[innoculation_number_key] = 100
+        params[work_infection_key] = 0.01
+        params[store_infection_key] = 0.02
+        params[transport_infection_key] = 0.01
+        params[innoculation_number_key] = 5
         available_beds = params[icu_bed_per_thousand_individual_key] * params[nindividual_key] / 1000
 
         days_with_no_cases = 0
@@ -38,8 +38,8 @@ def launch_run():
                                prefix='Progress:', suffix='Complete', length=50)
             propagate_to_houses(env_dic, virus_dic, params[house_infect_key])
             if not is_weekend(i):
-                propagate_to_transportation(env_dic, virus_dic, params[transport_infection_key])
-                propagate_to_workplaces(env_dic, virus_dic, params[work_infection_key])
+                propagate_to_transportation(env_dic, virus_dic, params[transport_infection_key], params[remote_work_key])
+                propagate_to_workplaces(env_dic, virus_dic, params[work_infection_key], params[remote_work_key])
             if is_weekend(i):
                 propagate_to_stores(env_dic, virus_dic, params[store_infection_key])
             increment_pandemic_1_day(env_dic, virus_dic, available_beds)
@@ -56,5 +56,8 @@ def launch_run():
                     first_day_lockdown_loosening = i
                 soften_lockdown(params)
         loosening_day[r] = first_day_lockdown_loosening
-    print("Lockdown removal occured in average after %.2f days" % loosening_day.mean())
+
+    loosening_day_ok = [l_v for l_v in loosening_day if l_v != -1]
+    print("Lockdown removal occured %d times in average after %.2f days"
+          % (len(loosening_day_ok), sum(loosening_day_ok)/len(loosening_day_ok)))
     return stats

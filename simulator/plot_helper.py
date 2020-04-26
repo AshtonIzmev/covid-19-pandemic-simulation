@@ -197,9 +197,12 @@ def set_ax_lockdown_state_daily(ax, stats_arg, x_tick=10):
     ax.set_xlabel('Days since innoculation')
     ax.set_title('Lockdown evolution (base 100 on day t=0)')
 
+    max_s = int(max(serie))
+    min_s = int(min(serie))
+
     ax.set_xticks(np.arange(0, n_day_arg, int(n_day_arg / x_tick)), tuple([(str(int(i * n_day_arg / x_tick)))
                                                                            for i in range(x_tick)]))
-    ax.set_yticks(np.arange(0, int(max(serie)), int(1+max(serie)/10)))
+    ax.set_yticks(np.arange(min_s-1, max_s+1, 1+int((max_s-min_s)/10)))
     ax.legend((p[0],), (name_state, ))
 
 

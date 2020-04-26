@@ -69,12 +69,18 @@ class TestSimulation(unittest.TestCase):
             HI_K: {0: [0, 1], 1: [2, 3, 4, 5, 6], 2: [7, 8, 9]},
             IAD_K: {0: 1, 1: 1, 2: 1, 3: 1, 4: 0, 5: 0, 6: 0, 7: 1, 8: 1, 9: 0},
             IAG_K: {0: 35, 1: 47, 2: 33, 3: 23, 4: 2, 5: 15, 6: 13, 7: 26, 8: 37, 9: 0},
-            IW_K: {2: 0, 1: 1},
-            WI_K: {0: [2], 1: [1]},
+            IW_K: {0: 0, 1: 0, 2: 0, 3: 0, 7: 0, 8: 0},
+            WI_K: {0: [0, 3, 7, 2, 1, 8]},
             HA_K: {0: [0, 1], 1: [2, 3], 2: [7, 8]},
             HS_K: {0: 0, 1: 0, 2: 0},
             SH_K: {0: [0, 1, 2]},
-            ITI_K: {2: {1, 2}, 1: {1, 2}}
+            ITI_K: {0: {0, 1, 2, 3, 7, 8},
+                    1: {0, 1, 2, 3, 7, 8},
+                    2: {0, 1, 2, 3, 7, 8},
+                    3: {0, 1, 2, 3, 7, 8},
+                    7: {0, 1, 2, 3, 7, 8},
+                    8: {0, 1, 2, 3, 7, 8}
+                    }
         }
 
     def test_build_environment_dic(self):
@@ -469,10 +475,27 @@ class TestSimulation(unittest.TestCase):
             STA_K: {1: H, 4: F, 5: H},
             NC_K: 0
         }
-        propagate_to_workplaces(env_dic, virus_dic, 0.99)
+        propagate_to_workplaces(env_dic, virus_dic, 0.99, 0.1)
         # adults who go to the store propagate the virus
         self.assertEqual(virus_dic[STA_K][1], F)
         self.assertEqual(virus_dic[STA_K][4], F)
+        self.assertEqual(virus_dic[STA_K][5], H)
+
+    def test_propagate_to_workplaces_contagious_remote_work(self):
+        env_dic = {
+            IW_K: {1: 1, 4: 1, 5: 0},
+            WI_K: {0: [5], 1: [4, 1]},
+            IBE_K: {1: 1, 4: 1, 5: 1}
+        }
+        virus_dic = {
+            CON_K: {1: -2, 4: -5, 5: 4},
+            STA_K: {1: H, 4: F, 5: H},
+            NC_K: 0
+        }
+        propagate_to_workplaces(env_dic, virus_dic, 0.99, 0.99)
+        # adults who go to the store propagate the virus
+        self.assertEqual(virus_dic[STA_K][4], F)
+        self.assertEqual(virus_dic[STA_K][1], H)
         self.assertEqual(virus_dic[STA_K][5], H)
 
     def test_propagate_to_workplaces_dangerous(self):
@@ -486,7 +509,7 @@ class TestSimulation(unittest.TestCase):
             STA_K: {1: H, 4: F, 5: H},
             NC_K: 0
         }
-        propagate_to_workplaces(env_dic, virus_dic, 0.01)
+        propagate_to_workplaces(env_dic, virus_dic, 0.01, 0.1)
         # adults who go to the store propagate the virus
         self.assertEqual(virus_dic[STA_K][1], F)
         self.assertEqual(virus_dic[STA_K][4], F)
@@ -503,7 +526,7 @@ class TestSimulation(unittest.TestCase):
             STA_K: {1: H, 4: F, 5: H},
             NC_K: 0
         }
-        propagate_to_workplaces(env_dic, virus_dic, 0.99)
+        propagate_to_workplaces(env_dic, virus_dic, 0.99, 0.98)
         # adults who go to the store propagate the virus
         self.assertEqual(virus_dic[STA_K][1], H)
         self.assertEqual(virus_dic[STA_K][4], F)
@@ -520,7 +543,7 @@ class TestSimulation(unittest.TestCase):
             STA_K: {1: H,  4: F, 5: H},
             NC_K: 0
         }
-        propagate_to_workplaces(env_dic, virus_dic, 0.99)
+        propagate_to_workplaces(env_dic, virus_dic, 0.99, 0.98)
         # adults who go to the store propagate the virus
         self.assertEqual(virus_dic[STA_K][1], H)
         self.assertEqual(virus_dic[STA_K][4], F)
@@ -537,7 +560,7 @@ class TestSimulation(unittest.TestCase):
             STA_K: {1: H,  4: H, 5: H},
             NC_K: 0
         }
-        propagate_to_workplaces(env_dic, virus_dic, 0.99)
+        propagate_to_workplaces(env_dic, virus_dic, 0.99, 0.98)
         # adults who go to the store propagate the virus
         self.assertEqual(virus_dic[STA_K][1], H)
         self.assertEqual(virus_dic[STA_K][4], H)
@@ -554,9 +577,24 @@ class TestSimulation(unittest.TestCase):
             STA_K: {0:  F, 1:  H, 4: H, 5: H},
             NC_K: 0
         }
-        propagate_to_transportation(env_dic, virus_dic, 1)
+        propagate_to_transportation(env_dic, virus_dic, 1, 0.1)
         self.assertEqual(virus_dic[STA_K][4], H)
         self.assertEqual(virus_dic[STA_K][5], F)
+
+    def test_propagate_to_transportation_remote_work(self):
+        env_dic = {
+            IW_K: {0: 1, 1: 1, 4: 1, 5: 0},
+            ITI_K: {0: {0, 5}, 4: {4}, 5: {0, 5}},
+            IBE_K: {0: 1, 1: 1, 4: 1, 5: 1}
+        }
+        virus_dic = {
+            CON_K: {0: -2, 1: -2, 4: 1, 5: 4},
+            STA_K: {0:  F, 1:  H, 4: H, 5: H},
+            NC_K: 0
+        }
+        propagate_to_transportation(env_dic, virus_dic, 1, 0.99)
+        self.assertEqual(virus_dic[STA_K][4], H)
+        self.assertEqual(virus_dic[STA_K][5], H)
 
     def test_propagate_to_transportation_carefull_people(self):
         env_dic = {
@@ -569,7 +607,7 @@ class TestSimulation(unittest.TestCase):
             STA_K: {0:  F, 1:  H, 4: H, 5: H},
             NC_K: 0
         }
-        propagate_to_transportation(env_dic, virus_dic, 1)
+        propagate_to_transportation(env_dic, virus_dic, 1, 0.98)
         self.assertEqual(virus_dic[STA_K][4], H)
         self.assertEqual(virus_dic[STA_K][5], H)
 
@@ -584,7 +622,7 @@ class TestSimulation(unittest.TestCase):
             STA_K: {0:  F, 1:  H, 4: H, 5: H},
             NC_K: 0
         }
-        propagate_to_transportation(env_dic, virus_dic, 0.001)
+        propagate_to_transportation(env_dic, virus_dic, 0.001, 0.1)
         self.assertEqual(virus_dic[STA_K][4], H)
         self.assertEqual(virus_dic[STA_K][5], F)
 

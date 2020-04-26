@@ -87,8 +87,8 @@ class TestInitiation(unittest.TestCase):
             7: 1, 8: 1,
             9: 1
         }
-        result = build_individual_work_map(input_individual_adult_map, 0.5)
-        self.assertEqual(result, {0: 0, 4: 0, 5: 0})
+        result = build_individual_work_map(input_individual_adult_map)
+        self.assertEqual(result, {0: 2, 1: 2, 4: 1, 5: 0, 7: 1, 8: 2, 9: 2})
 
     def test_build_individual_work_blocks(self):
         result = build_individual_workblock_map(

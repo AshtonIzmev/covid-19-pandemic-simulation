@@ -21,7 +21,7 @@ def get_environment_simulation(params_arg):
     indiv_adult = build_individual_adult_map(indiv_house)
     indiv_age = build_individual_age_map(indiv_house)
 
-    indiv_workplace = build_individual_work_map(indiv_adult, probability_remote_work_arg)
+    indiv_workplace = build_individual_work_map(indiv_adult)
     workplace_indiv = build_workplace_individual_map(indiv_workplace)
     house_adult = build_house_adult_map(indiv_house, indiv_adult)
 
