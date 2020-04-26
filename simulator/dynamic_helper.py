@@ -19,7 +19,7 @@ def update_infection_period(newly_infected_individuals_arg, virus_dic):
 # ICU factor is used to raise death probability when hospitals are saturated
 def increment_pandemic_1_day(env_dic, virus_dic, available_beds):
     icu_factor = max(1.0, len(get_hospitalized_people(virus_dic)) / (2*available_beds))
-    for i in get_infected_people(virus_dic) + get_hospitalized_people(virus_dic):
+    for i in get_infected_people(virus_dic) + get_hospitalized_people(virus_dic)+ get_isolated_people(virus_dic):
         # Contagion and decision periods are decremented
         virus_dic[CON_K][i] = virus_dic[CON_K][i] - 1
         virus_dic[HOS_K][i] = virus_dic[HOS_K][i] - 1
@@ -45,6 +45,8 @@ def increment_pandemic_1_day(env_dic, virus_dic, available_beds):
             virus_dic[DEA_K][i] = dea
             virus_dic[IMM_K][i] = imm
 
+def get_isolated_people(virus_dic):
+    return [k for k, v in virus_dic[STA_K].items() if v == ISOLATED_V]
 
 def get_hospitalized_people(virus_dic):
     return [k for k, v in virus_dic[STA_K].items() if v == HOSPITALIZED_V]
@@ -69,7 +71,7 @@ def get_immune_people(virus_dic):
 def get_pandemic_statistics(virus_dic):
     results = (len(get_healthy_people(virus_dic)), len(get_infected_people(virus_dic)),
                len(get_hospitalized_people(virus_dic)), len(get_deadpeople(virus_dic)),
-               len(get_immune_people(virus_dic)), virus_dic[NC_K])
+               len(get_immune_people(virus_dic)), virus_dic[NC_K],len(get_isolated_people(virus_dic)))
     # Reset new cases counter
     virus_dic[NC_K] = 0
     return results
@@ -81,6 +83,25 @@ def is_contagious(individual_arg, virus_dic):
 
 def is_alive(individual_arg, virus_dic):
     return virus_dic[STA_K][individual_arg] != DEAD_V
+
+def get_new_hospitalized_people(old_virus_dic,new_virus_dic):
+    return list(set(get_hospitalized_people(new_virus_dic)).difference(set(get_hospitalized_people(old_virus_dic))))
+
+
+
+def get_families(persons_index,env_dic):
+    families_members=[]
+    for person in persons_index:
+        house_index=env_dic[IH_K][person]
+        families_members=families_members+env_dic[HI_K][house_index]
+    return list(set(families_members))
+
+
+def update_isolation_state(old_virus_dic,new_virus_dic,env_dic):
+    new_hospitalized_cases=get_new_hospitalized_people(old_virus_dic,new_virus_dic)
+    families_members=get_families(new_hospitalized_cases,env_dic)
+    new_virus_dic[STA_K].update((k, ISOLATED_V) for k, v in new_virus_dic[STA_K].items() if (v == INFECTED_V and (k in families_members)) )
+
 
 
 def propagate_to_houses(env_dic, virus_dic, probability_home_infection_arg):
