@@ -1,16 +1,16 @@
+import math
 import numpy as np
 
-from scenario.scenario_helper import measure_lockdown_strength
 from simulator.dynamic_helper import propagate_to_stores, propagate_to_houses, propagate_to_workplaces, \
     increment_pandemic_1_day, is_weekend, get_pandemic_statistics, propagate_to_transportation
 from simulator.parameters import *
 from simulator.plot_helper import print_progress_bar
 from simulator.simulation_helper import get_environment_simulation, get_virus_simulation_t0
+from scenario.scenario_helper import tighten_lockdown, soften_lockdown, measure_lockdown_strength
 
 
-# This scenario is the "just a flu"
+# This scenario is a loose lockdown à la suedoise
 def launch_run():
-
     print('Preparing environment...')
     env_dic = get_environment_simulation(params)
 
@@ -21,9 +21,9 @@ def launch_run():
         params[store_preference_key] = 0.3
         params[remote_work_key] = 0.58
         params[house_infect_key] = 0.5
-        params[work_infection_key] = 0.1
-        params[store_infection_key] = 0.2
-        params[transport_infection_key] = 0.1
+        params[work_infection_key] = 0.01
+        params[store_infection_key] = 0.02
+        params[transport_infection_key] = 0.01
         params[innoculation_number_key] = 5
         available_beds = params[icu_bed_per_thousand_individual_key] * params[nindividual_key] / 1000
 

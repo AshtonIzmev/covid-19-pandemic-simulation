@@ -18,8 +18,9 @@ def get_parser():
     parser.add_argument('--remote-work', type=float, help='Percentage of people remote working', dest=remote_work_key)
 
     parser.add_argument('--sto-pref', type=float, help='Probability going to nearest store', dest=store_preference_key)
-    parser.add_argument('--inn-infec', type=float, help='Initial innoculation percentage',
-                        dest=innoculation_number_key)
+    parser.add_argument('--sto-nb', type=int, help='Number of nearest stores to consider', dest=store_nb_choice_key)
+
+    parser.add_argument('--inn-infec', type=float, help='Initial innoculation percentage', dest=innoculation_number_key)
 
     parser.add_argument('--p-house', type=float, help='Probability of house infection', dest=house_infect_key)
     parser.add_argument('--p-store', type=float, help='Probability of store infection', dest=store_infection_key)
@@ -31,6 +32,9 @@ def get_parser():
     parser.add_argument('--death-bounds', type=int, nargs=2, help='Death bounds', dest=death_bounds_key)
     parser.add_argument('--immunity-bounds', type=int, nargs=2, help='Immunity bounds', dest=immunity_bounds_key)
 
+    parser.add_argument('--nbeds-icu', type=int, help='Number of ICU beds per thousand population',
+                        dest=icu_bed_per_thousand_individual_key)
+
     parser.add_argument('--scenario-id', "--sce", type=int, help='Immunity bounds', dest=scenario_id_key)
     parser.add_argument('--draw', type=str, nargs="*",
                         help='Draw a kind of graph by specifying at least the first 3 letters of its keys. '
@@ -38,7 +42,7 @@ def get_parser():
                         dest=draw_graph_key)
 
     # Scenarios related
-    parser.add_argument('--days-lockdown-removal', type=int, help='Number of days to lockdown removal',
-                        dest=days_wait_lockdown_removal)
+    parser.add_argument('--extra-scenario-params', type=int, nargs="*", help='Additional scenario parameters',
+                        dest=additional_scenario_params_key)
 
     return parser

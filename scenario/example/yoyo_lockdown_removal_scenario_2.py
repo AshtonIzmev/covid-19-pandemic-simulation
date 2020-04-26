@@ -27,7 +27,11 @@ def launch_run():
         params[innoculation_number_key] = 5
         available_beds = params[icu_bed_per_thousand_individual_key] * params[nindividual_key] / 1000
 
-        lockdown_min_delay = 0
+        if len(params[additional_scenario_params_key]) < 1:
+            raise AssertionError("Need an additional_scenario parameter")
+        lockdown_change_min_delay = params[additional_scenario_params_key][0]
+
+        days_to_lockdown_change = 0
         first_day_lockdown_loosening = -1
 
         virus_dic = get_virus_simulation_t0(params)
@@ -45,14 +49,15 @@ def launch_run():
                 get_pandemic_statistics(virus_dic)
             stats[r][i][6] = measure_lockdown_strength(params)
 
-            lockdown_min_delay += 1
-            if stats[r][i][5] <= 5 and lockdown_min_delay >= params[days_wait_lockdown_removal]:
+            days_to_lockdown_change += 1
+
+            if stats[r][i][5] <= 5 and days_to_lockdown_change >= lockdown_change_min_delay:
                 if first_day_lockdown_loosening == -1:
                     first_day_lockdown_loosening = i
-                lockdown_min_delay = 0
+                days_to_lockdown_change = 0
                 soften_lockdown(params)
-            elif stats[r][i][2] >= available_beds and lockdown_min_delay >= params[days_wait_lockdown_removal]:
-                lockdown_min_delay = 0
+            elif stats[r][i][2] >= available_beds and days_to_lockdown_change >= lockdown_change_min_delay:
+                days_to_lockdown_change = 0
                 tighten_lockdown(params)
 
         loosening_day[r] = first_day_lockdown_loosening

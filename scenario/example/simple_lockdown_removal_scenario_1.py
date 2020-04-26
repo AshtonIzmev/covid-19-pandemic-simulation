@@ -28,6 +28,10 @@ def launch_run():
         params[innoculation_number_key] = 5
         available_beds = params[icu_bed_per_thousand_individual_key] * params[nindividual_key] / 1000
 
+        if len(params[additional_scenario_params_key]) < 1:
+            raise AssertionError("Need an additional_scenario parameter")
+        days_to_lockdown_loosening = params[additional_scenario_params_key][0]
+
         days_with_no_cases = 0
 
         first_day_lockdown_loosening = -1
@@ -51,7 +55,8 @@ def launch_run():
                 days_with_no_cases += 1
             else:
                 days_with_no_cases = 0
-            if (days_with_no_cases % params[days_wait_lockdown_removal] == 0) and days_with_no_cases > 0:
+
+            if (days_with_no_cases % days_to_lockdown_loosening == 0) and days_with_no_cases > 0:
                 if first_day_lockdown_loosening == -1:
                     first_day_lockdown_loosening = i
                 soften_lockdown(params)

@@ -27,7 +27,7 @@ immunity_bounds_key = "IMMUNITY_BOUNDS"
 icu_bed_per_thousand_individual_key = "ICU_BED_PER_1K_INDIV"
 
 # Scenario parameters
-days_wait_lockdown_removal = "DAYS_WAIT_FOR_LOCKDOWN_REMOVAL"
+additional_scenario_params_key = "ADDITIONAL_SCENARIO_PARAMETERS"
 
 params = {
     nrun_key: 1,  # Number of runs
@@ -75,6 +75,6 @@ params = {
     # Moroccan data : http://northafricapost.com/39786-covid-19-morocco-expands-hospital-capacity.html
     icu_bed_per_thousand_individual_key: 0.085,
 
-    days_wait_lockdown_removal: 7  # How to long to wait before lockdown removal
+    additional_scenario_params_key: []  # Additional scenario parameters
 
 }

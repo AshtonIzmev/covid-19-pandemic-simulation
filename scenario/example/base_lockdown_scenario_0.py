@@ -1,11 +1,11 @@
 import numpy as np
-import time
+
+from scenario.scenario_helper import measure_lockdown_strength
 from simulator.dynamic_helper import propagate_to_stores, propagate_to_houses, propagate_to_workplaces, \
     increment_pandemic_1_day, is_weekend, get_pandemic_statistics, propagate_to_transportation
 from simulator.parameters import *
 from simulator.plot_helper import print_progress_bar
 from simulator.simulation_helper import get_environment_simulation, get_virus_simulation_t0
-from scenario.scenario_helper import measure_lockdown_strength
 
 
 # This scenario is the basic one with a classic dynamic
