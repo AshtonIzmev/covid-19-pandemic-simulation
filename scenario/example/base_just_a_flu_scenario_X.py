@@ -25,7 +25,10 @@ def launch_run():
         params[store_infection_key] = 0.2
         params[transport_infection_key] = 0.1
         params[innoculation_number_key] = 1
+        # With realistic icu bed figures
         available_beds = params[icu_bed_per_thousand_individual_key] * params[nindividual_key] / 1000
+        # With no icu bed limitation
+        # available_beds = params[icu_bed_per_thousand_individual_key] * params[nindividual_key] * 1000
 
         virus_dic = get_virus_simulation_t0(params)
         for i in range(params[nday_key]):
