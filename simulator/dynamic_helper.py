@@ -76,6 +76,8 @@ def get_pandemic_statistics(virus_dic):
     virus_dic[NC_K] = 0
     return results
 
+def is_isolated(individual_arg, virus_dic):
+    return virus_dic[STA_K][individual_arg] == ISOLATED_V
 
 def is_contagious(individual_arg, virus_dic):
     return virus_dic[STA_K][individual_arg] == INFECTED_V and virus_dic[CON_K][individual_arg] < 0
@@ -151,6 +153,9 @@ def propagate_to_workplaces(env_dic, virus_dic, probability_work_infection_arg):
     exposed_individuals_at_work = reduce_list_multiply_by_key(
         [(env_dic[WI_K][k], beh_p) for (k, beh_p) in infected_workplaces_behavior_dic.items()]
     )
+    # filter isolated persons from exposed_individuals
+    exposed_individuals_at_work={k: v for k, v in exposed_individuals_at_work.items() if not(is_isolated(k, virus_dic))}
+
 
     # From which we designate newly infected people using weights beh_p
     infected_backfromwork = [i for (i, beh_p) in exposed_individuals_at_work.items()
@@ -187,7 +192,7 @@ def propagate_to_stores(env_dic, virus_dic, probability_store_infection_arg):
     # People who will go to their store (one person per house as imposed by lockdown)
     # [1, 2, 3, 4, 5, 6] go to the store
     individuals_gotostore = get_random_choice_list([
-        [i for i in env_dic[HA_K][h] if is_alive(i, virus_dic)] for h in range(len(env_dic[HA_K]))
+        [i for i in env_dic[HA_K][h] if (is_alive(i, virus_dic) and not(is_isolated(i, virus_dic)))] for h in range(len(env_dic[HA_K]))
     ])
 
     # Contagious people who will go to their store
