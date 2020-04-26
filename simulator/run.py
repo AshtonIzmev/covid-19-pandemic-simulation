@@ -17,4 +17,3 @@ if __name__ == '__main__':
     stats_result = base_lockdown_scenario_0.launch_run()
     print("It took : %.2f seconds" % (time.time() - t_start))
     chose_draw_plot(params[draw_graph_key], stats_result)
-
