@@ -2,7 +2,7 @@ import random
 import unittest
 
 from initiator.helper import invert_map, flatten, get_random_choice_list, get_infection_parameters, \
-    get_mortalty_rate, get_hospitalization_rate, rec_get_manhattan_walk, invert_map_list, reduce_multiply_by_key,\
+    get_mortalty_rate, get_hospitalization_rate, rec_get_manhattan_walk, invert_map_list, reduce_multiply_by_key, \
     reduce_list_multiply_by_key, choose_weight_order
 
 

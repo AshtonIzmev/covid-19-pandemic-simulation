@@ -1,6 +1,7 @@
 import random
 import sys
 import time
+
 from scenario.example import simple_lockdown_removal_scenario_1, yoyo_lockdown_removal_scenario_2, \
     base_lockdown_scenario_0, base_just_a_flu_scenario_X, loose_lockdown_scenario_3
 from simulator.parameters import *

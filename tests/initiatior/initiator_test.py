@@ -1,6 +1,7 @@
 import random
-import numpy as np
 import unittest
+
+import numpy as np
 
 from initiator.core import build_individual_houses_map, build_individual_adult_map, build_individual_age_map, \
     build_house_adult_map, build_house_store_map, build_individual_work_map, build_individual_workblock_map, \

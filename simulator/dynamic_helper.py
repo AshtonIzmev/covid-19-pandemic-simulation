@@ -1,6 +1,6 @@
-from initiator.helper import get_random_choice_list, choose_weight_order
 from initiator.helper import get_r, get_mortalty_rate, get_hospitalization_rate, reduce_multiply_by_key, \
     reduce_list_multiply_by_key
+from initiator.helper import get_random_choice_list, choose_weight_order
 from simulator.keys import *
 
 
@@ -133,8 +133,8 @@ def propagate_to_houses(env_dic, virus_dic, probability_home_infection_arg):
     infected_athome = [i for (i, beh_p) in people_in_infected_houses.items()
                        if get_r() < probability_home_infection_arg * beh_p]
 
-    # INFECTION STATE UPDATE
     update_infection_period(infected_athome, virus_dic)
+    # INFECTION STATE UPDATE
 
 
 def propagate_to_workplaces(env_dic, virus_dic, probability_work_infection_arg, probability_remote_work_arg):

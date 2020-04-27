@@ -1,7 +1,8 @@
-import random
-from scipy.stats import truncnorm
-import pandas as pd
 import math
+import random
+
+import pandas as pd
+from scipy.stats import truncnorm
 
 from initiator.parameters import covid_mortality_rate, covid_hospitalization_rate, world_age_distribution, \
     TPE_MAX_EMPLOYEES, PME_MAX_EMPLOYEES, GE_MAX_EMPLOYEES
