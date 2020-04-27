@@ -14,6 +14,7 @@ F = INFECTED_V
 M = IMMUNE_V
 D = DEAD_V
 P = HOSPITALIZED_V
+I = ISOLATED_V
 
 
 class TestSimulation(unittest.TestCase):
@@ -108,7 +109,7 @@ class TestSimulation(unittest.TestCase):
             contagion_bounds_key: (2, 7),
             hospitalization_bounds_key: (7, 21),
             death_bounds_key: (21, 39),
-            immunity_bounds_key: (35, 65)
+            immunity_bounds_key: (35, 65),
         }
         result = get_virus_simulation_t0(params_dic)
         expected_result = TestSimulation.get_virus_dic()
@@ -182,6 +183,28 @@ class TestSimulation(unittest.TestCase):
         self.assertEqual(virus_dic[IMM_K][8], 49)
         self.assertEqual(virus_dic[STA_K][8], H)
 
+    def test_increment_pandemic_1_day_isolated_cases(self):
+        random.seed(22)
+        env_dic = TestSimulation.get_10_01_2_environment_dic()
+
+        def get_infection_params():
+            return get_infection_parameters(2, 7, 7, 21, 21, 39, 30, 60)
+
+        virus_dic = {
+            CON_K: {0: 4, 1: -2, 2: -5, 3: -4, 4: 6, 5: -9, 6: -3, 7: 2, 8: -9, 9: 5},
+            HOS_K: {0: 1, 1: 12, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
+            DEA_K: {0: 31, 1: 1, 2: 0, 3: 22, 4: 22, 5: 0, 6: 1, 7: 22, 8: -4, 9: 38},
+            IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1, 9: 55},
+            STA_K: {0: F, 1: F, 2: D, 3: F, 4: F, 5: M, 6: F, 7: F, 8: M, 9: H},
+            FN_K: get_infection_params
+        }
+        increment_pandemic_1_day(env_dic, virus_dic, 100)
+        # person 0 will be isolated since a member of his family(person 3)is hospitalized (what a sad story for him)
+        self.assertEqual(virus_dic[STA_K][0], I)
+        self.assertEqual(virus_dic[STA_K][1], M)
+        self.assertEqual(virus_dic[STA_K][2], D)
+        self.assertEqual(virus_dic[STA_K][3], P)
+
     def test_increment_pandemic_1_day_hospitals_empty(self):
         random.seed(22)
         env_dic = TestSimulation.get_10_01_2_environment_dic()
@@ -190,11 +213,11 @@ class TestSimulation(unittest.TestCase):
             return get_infection_parameters(2, 7, 7, 21, 21, 39, 30, 60)
 
         virus_dic = {
-            CON_K: {0: -8, 1: -9, 2: -5, 3: -4, 4: 6,  5: -9, 6: -3, 7: 2,  8: -9, 9: 5},
-            HOS_K: {0: -5, 1: -6, 2: 20, 3: 1,  4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
-            DEA_K: {0:  1, 1:  1, 2: 0,  3: 22, 4: 22, 5: 0,  6: 1,  7: 22, 8: -4, 9: 38},
-            IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1,  9: 55},
-            STA_K: {0:  F, 1:  F, 2: P,  3: P,  4: P,  5: P,  6: P,  7: P,  8: P,  9: P},
+            CON_K: {0: -8, 1: -9, 2: -5, 3: -4, 4: 6, 5: -9, 6: -3, 7: 2, 8: -9, 9: 5},
+            HOS_K: {0: -5, 1: -6, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
+            DEA_K: {0: 1, 1: 1, 2: 0, 3: 22, 4: 22, 5: 0, 6: 1, 7: 22, 8: -4, 9: 38},
+            IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1, 9: 55},
+            STA_K: {0: F, 1: F, 2: P, 3: P, 4: P, 5: P, 6: P, 7: P, 8: P, 9: P},
             FN_K: get_infection_params
         }
         env_dic[IAG_K][0] = 82
@@ -211,12 +234,12 @@ class TestSimulation(unittest.TestCase):
             return get_infection_parameters(2, 7, 7, 21, 21, 39, 30, 60)
 
         virus_dic = {
-            CON_K: {0: -8, 1: -9, 2: -5, 3: -4, 4: 6,  5: -9, 6: -3, 7: 2,  8: -9, 9: 5},
-            HOS_K: {0: -5, 1: -6, 2: 20, 3: 1,  4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
-            DEA_K: {0:  1, 1:  1, 2: 0,  3: 22, 4: 22, 5: 0,  6: 1,  7: 22, 8: -4, 9: 38},
-            IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1,  9: 55},
+            CON_K: {0: -8, 1: -9, 2: -5, 3: -4, 4: 6, 5: -9, 6: -3, 7: 2, 8: -9, 9: 5},
+            HOS_K: {0: -5, 1: -6, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
+            DEA_K: {0: 1, 1: 1, 2: 0, 3: 22, 4: 22, 5: 0, 6: 1, 7: 22, 8: -4, 9: 38},
+            IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1, 9: 55},
             # No hospitalized people
-            STA_K: {0:  F, 1:  F, 2: P,  3: P,  4: P,  5: P,  6: P,  7: P,  8: P,  9: P},
+            STA_K: {0: F, 1: F, 2: P, 3: P, 4: P, 5: P, 6: P, 7: P, 8: P, 9: P},
             FN_K: get_infection_params
         }
         env_dic[IAG_K][0] = 82
@@ -233,12 +256,12 @@ class TestSimulation(unittest.TestCase):
             return get_infection_parameters(2, 7, 7, 21, 21, 39, 30, 60)
 
         virus_dic = {
-            CON_K: {0: -8, 1: -9, 2: -5, 3: -4, 4: 6,  5: -9, 6: -3, 7: 2,  8: -9, 9: 5},
-            HOS_K: {0: -5, 1: -6, 2: 20, 3: 1,  4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
-            DEA_K: {0:  1, 1:  1, 2: 0,  3: 22, 4: 22, 5: 0,  6: 1,  7: 22, 8: -4, 9: 38},
-            IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1,  9: 55},
+            CON_K: {0: -8, 1: -9, 2: -5, 3: -4, 4: 6, 5: -9, 6: -3, 7: 2, 8: -9, 9: 5},
+            HOS_K: {0: -5, 1: -6, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
+            DEA_K: {0: 1, 1: 1, 2: 0, 3: 22, 4: 22, 5: 0, 6: 1, 7: 22, 8: -4, 9: 38},
+            IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1, 9: 55},
             # Two hospitalized people (going to decision next day)
-            STA_K: {0:  P, 1:  P, 2: P,  3: P,  4: P,  5: P,  6: P,  7: P,  8: P,  9: P},
+            STA_K: {0: P, 1: P, 2: P, 3: P, 4: P, 5: P, 6: P, 7: P, 8: P, 9: P},
             FN_K: get_infection_params
         }
         env_dic[IAG_K][0] = 82
@@ -255,11 +278,11 @@ class TestSimulation(unittest.TestCase):
             return get_infection_parameters(2, 7, 7, 21, 21, 39, 30, 60)
 
         virus_dic = {
-            CON_K: {0: -8, 1: -9, 2: -5, 3: -4, 4: 6,  5: -9, 6: -3, 7: 2,  8: -9, 9: 5},
-            HOS_K: {0: -5, 1: -6, 2: 20, 3: 1,  4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
-            DEA_K: {0:  1, 1:  1, 2: 0,  3: 22, 4: 22, 5: 0,  6: 1,  7: 22, 8: -4, 9: 38},
-            IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1,  9: 55},
-            STA_K: {0:  P, 1:  P, 2: P,  3: P,  4: P,  5: P,  6: P,  7: P,  8: P,  9: P},
+            CON_K: {0: -8, 1: -9, 2: -5, 3: -4, 4: 6, 5: -9, 6: -3, 7: 2, 8: -9, 9: 5},
+            HOS_K: {0: -5, 1: -6, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
+            DEA_K: {0: 1, 1: 1, 2: 0, 3: 22, 4: 22, 5: 0, 6: 1, 7: 22, 8: -4, 9: 38},
+            IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1, 9: 55},
+            STA_K: {0: P, 1: P, 2: P, 3: P, 4: P, 5: P, 6: P, 7: P, 8: P, 9: P},
             FN_K: get_infection_params
         }
         env_dic[IAG_K][0] = 82
@@ -599,7 +622,7 @@ class TestSimulation(unittest.TestCase):
         }
         virus_dic = {
             CON_K: {1: -2, 4: 1, 5: 4},
-            STA_K: {1: H,  4: F, 5: H},
+            STA_K: {1: H, 4: F, 5: H},
             NC_K: 0
         }
         propagate_to_workplaces(env_dic, virus_dic, 0.99, 0.98)
@@ -616,7 +639,7 @@ class TestSimulation(unittest.TestCase):
         }
         virus_dic = {
             CON_K: {1: -2, 4: 1, 5: 4},
-            STA_K: {1: H,  4: H, 5: H},
+            STA_K: {1: H, 4: H, 5: H},
             NC_K: 0
         }
         propagate_to_workplaces(env_dic, virus_dic, 0.99, 0.98)
@@ -633,7 +656,7 @@ class TestSimulation(unittest.TestCase):
         }
         virus_dic = {
             CON_K: {0: -2, 1: -2, 4: 1, 5: 4},
-            STA_K: {0:  F, 1:  H, 4: H, 5: H},
+            STA_K: {0: F, 1: H, 4: H, 5: H},
             NC_K: 0
         }
         propagate_to_transportation(env_dic, virus_dic, 1, 0.1)
@@ -663,7 +686,7 @@ class TestSimulation(unittest.TestCase):
         }
         virus_dic = {
             CON_K: {0: -2, 1: -2, 4: 1, 5: 4},
-            STA_K: {0:  F, 1:  H, 4: H, 5: H},
+            STA_K: {0: F, 1: H, 4: H, 5: H},
             NC_K: 0
         }
         propagate_to_transportation(env_dic, virus_dic, 1, 0.98)
@@ -678,7 +701,7 @@ class TestSimulation(unittest.TestCase):
         }
         virus_dic = {
             CON_K: {0: -2, 1: -2, 4: 1, 5: 4},
-            STA_K: {0:  F, 1:  H, 4: H, 5: H},
+            STA_K: {0: F, 1: H, 4: H, 5: H},
             NC_K: 0
         }
         propagate_to_transportation(env_dic, virus_dic, 0.001, 0.1)

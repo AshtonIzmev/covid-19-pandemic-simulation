@@ -16,10 +16,17 @@ def update_infection_period(newly_infected_individuals_arg, virus_dic):
             virus_dic[NC_K] = virus_dic[NC_K] + 1
 
 
+def update_isolation_state(new_hospitalized_arg, virus_dic, env_dic):
+    families_members = get_families(new_hospitalized_arg, env_dic)
+    virus_dic[STA_K].update(
+        (k, ISOLATED_V) for k, v in virus_dic[STA_K].items() if (v == INFECTED_V and (k in families_members)))
+
+
 # ICU factor is used to raise death probability when hospitals are saturated
 def increment_pandemic_1_day(env_dic, virus_dic, available_beds):
     icu_factor = max(1.0, len(get_hospitalized_people(virus_dic)) / available_beds)
-    for i in get_infected_people(virus_dic) + get_hospitalized_people(virus_dic):
+    new_hospitalized_people = []  # for tracking new hospitalized persons
+    for i in get_infected_people(virus_dic) + get_hospitalized_people(virus_dic) + get_isolated_people(virus_dic):
         # Contagion and decision periods are decremented
         virus_dic[CON_K][i] = virus_dic[CON_K][i] - 1
         virus_dic[HOS_K][i] = virus_dic[HOS_K][i] - 1
@@ -27,14 +34,16 @@ def increment_pandemic_1_day(env_dic, virus_dic, available_beds):
         # Even if hospitals are full, sick people are being parked in artisanal lacking care "hospitals"
         if virus_dic[HOS_K][i] == 0 and get_r() < get_hospitalization_rate(env_dic[IAG_K][i]):
             virus_dic[STA_K][i] = HOSPITALIZED_V
+            new_hospitalized_people.append(i)
         # Decide over life
         if virus_dic[DEA_K][i] == 0:
             # icu_factor only applies on hospitalized people
-            if get_r() < get_mortalty_rate(env_dic[IAG_K][i]) *  \
+            if get_r() < get_mortalty_rate(env_dic[IAG_K][i]) * \
                     (icu_factor if (virus_dic[STA_K][i] == HOSPITALIZED_V) else 1):
                 virus_dic[STA_K][i] = DEAD_V
             else:
                 virus_dic[STA_K][i] = IMMUNE_V
+    update_isolation_state(new_hospitalized_people, virus_dic, env_dic)
     for i in get_immune_people(virus_dic):
         # Losing immunity
         virus_dic[IMM_K][i] = virus_dic[IMM_K][i] - 1
@@ -46,6 +55,10 @@ def increment_pandemic_1_day(env_dic, virus_dic, available_beds):
             virus_dic[HOS_K][i] = hos
             virus_dic[DEA_K][i] = dea
             virus_dic[IMM_K][i] = imm
+
+
+def get_isolated_people(virus_dic):
+    return [k for k, v in virus_dic[STA_K].items() if v == ISOLATED_V]
 
 
 def get_hospitalized_people(virus_dic):
@@ -71,10 +84,14 @@ def get_immune_people(virus_dic):
 def get_pandemic_statistics(virus_dic):
     results = (len(get_healthy_people(virus_dic)), len(get_infected_people(virus_dic)),
                len(get_hospitalized_people(virus_dic)), len(get_deadpeople(virus_dic)),
-               len(get_immune_people(virus_dic)), virus_dic[NC_K])
+               len(get_immune_people(virus_dic)), virus_dic[NC_K], len(get_isolated_people(virus_dic)))
     # Reset new cases counter
     virus_dic[NC_K] = 0
     return results
+
+
+def is_isolated(individual_arg, virus_dic):
+    return virus_dic[STA_K][individual_arg] == ISOLATED_V
 
 
 def is_contagious(individual_arg, virus_dic):
@@ -83,6 +100,14 @@ def is_contagious(individual_arg, virus_dic):
 
 def is_alive(individual_arg, virus_dic):
     return virus_dic[STA_K][individual_arg] != DEAD_V
+
+
+def get_families(persons_index, env_dic):
+    families_members = []
+    for person in persons_index:
+        house_index = env_dic[IH_K][person]
+        families_members = families_members + env_dic[HI_K][house_index]
+    return list(set(families_members))
 
 
 def propagate_to_houses(env_dic, virus_dic, probability_home_infection_arg):
@@ -132,6 +157,9 @@ def propagate_to_workplaces(env_dic, virus_dic, probability_work_infection_arg, 
     exposed_individuals_at_work = reduce_list_multiply_by_key(
         [(env_dic[WI_K][k], beh_p) for (k, beh_p) in infected_workplaces_behavior_dic.items()]
     )
+    # filter isolated persons from exposed_individuals
+    exposed_individuals_at_work = {k: v for k, v in exposed_individuals_at_work.items() if
+                                   not (is_isolated(k, virus_dic))}
 
     # From which we designate newly infected people using weights beh_p
     infected_backfromwork = [i for (i, beh_p) in exposed_individuals_at_work.items()
@@ -168,7 +196,8 @@ def propagate_to_stores(env_dic, virus_dic, probability_store_infection_arg, sam
     # People who will go to their store (one person per house as imposed by lockdown)
     # [1, 2, 3, 4, 5, 6] go to the store
     individuals_gotostore = get_random_choice_list([
-        [i for i in env_dic[HA_K][h] if is_alive(i, virus_dic)] for h in range(len(env_dic[HA_K]))
+        [i for i in env_dic[HA_K][h] if (is_alive(i, virus_dic) and not (is_isolated(i, virus_dic)))] for h in
+        range(len(env_dic[HA_K]))
     ])
 
     # Contagious people who will go to their store

@@ -8,6 +8,7 @@ nindividual_key = "N_INDIVIDUALS"
 nday_key = "N_DAYS"
 innoculation_number_key = "INITIAL_INNOCULATION_NB"
 nb_1d_block_key = "NB_1D_GRID_BLOCK"
+quarantine_days_key = "QUARANTINE_DAYS"
 # Work relative
 remote_work_key = "REMOTE_WORK_PERCENT"
 # Store relative
@@ -44,8 +45,7 @@ params = {
     store_preference_key: 0.95,  # Probality of going to the nearest store
     store_nb_choice_key: 3,  # Number of stores that a single house can go to
     nb_1d_block_key: 10,  # number of block on one axe to slice the grid and model public transportation contamination,
-                          # total number of blocks is nb_1d_block_key^2
-
+    # total number of blocks is nb_1d_block_key^2
 
     # parameters that can change over time with lockdown loosening/removal
     remote_work_key: 0.98,  # Percentage of people doing remote work
@@ -71,6 +71,8 @@ params = {
     # we still don't really know about long-term immunity so let's assume it is a lifetime one
     # https://edition.cnn.com/2020/04/17/health/south-korea-coronavirus-retesting-positive-intl-hnk/index.html
     immunity_bounds_key: (900, 1000),  # Bounds defining a draw for immunity period
+
+    quarantine_days_key: 15,  # the days of isolation if the test is positive
 
     # Moroccan data : http://northafricapost.com/39786-covid-19-morocco-expands-hospital-capacity.html
     icu_bed_per_thousand_individual_key: 0.085,
