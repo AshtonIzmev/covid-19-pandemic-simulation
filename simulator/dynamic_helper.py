@@ -235,9 +235,20 @@ def propagate_to_stores(env_dic, virus_dic, probability_store_infection_arg, sam
 
 
 def get_pandemic_statistics(virus_dic):
-    results = (len(get_healthy_people(virus_dic)), len(get_infected_people(virus_dic)),
-               len(get_hospitalized_people(virus_dic)), len(get_deadpeople(virus_dic)),
-               len(get_immune_people(virus_dic)), virus_dic[NC_K], len(get_isolated_people(virus_dic)))
+    results = {
+        "hea": len(get_healthy_people(virus_dic)),
+        "inf": len(get_infected_people(virus_dic)),
+        "hos": len(get_hospitalized_people(virus_dic)),
+        "dea": len(get_deadpeople(virus_dic)),
+        "imm": len(get_immune_people(virus_dic)),
+        "iso": len(get_isolated_people(virus_dic)),
+        "new": virus_dic[NC_K]
+    }
     # Reset new cases counter
     virus_dic[NC_K] = 0
     return results
+
+
+def update_stats(virus_dic, stats, r, d):
+    for k, v in get_pandemic_statistics(virus_dic).items():
+        stats[k][r][d] = v

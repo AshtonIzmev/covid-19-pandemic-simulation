@@ -1,6 +1,20 @@
 import math
+import numpy as np
 
 from simulator.parameters import *
+
+
+def get_zero_stats():
+    return {
+        "hea": np.zeros((params[nrun_key], params[nday_key])),
+        "inf": np.zeros((params[nrun_key], params[nday_key])),
+        "hos": np.zeros((params[nrun_key], params[nday_key])),
+        "dea": np.zeros((params[nrun_key], params[nday_key])),
+        "imm": np.zeros((params[nrun_key], params[nday_key])),
+        "iso": np.zeros((params[nrun_key], params[nday_key])),
+        "new": np.zeros((params[nrun_key], params[nday_key])),
+        "loc": np.zeros((params[nrun_key], params[nday_key]))
+    }
 
 
 def soften_lockdown(params_arg):

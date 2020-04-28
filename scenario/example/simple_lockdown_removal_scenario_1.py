@@ -1,8 +1,8 @@
 import numpy as np
 
-from scenario.scenario_helper import soften_lockdown, measure_lockdown_strength
+from scenario.scenario_helper import soften_lockdown, measure_lockdown_strength, get_zero_stats
 from simulator.dynamic_helper import propagate_to_stores, propagate_to_houses, propagate_to_workplaces, \
-    increment_pandemic_1_day, is_weekend, get_pandemic_statistics, propagate_to_transportation
+    increment_pandemic_1_day, is_weekend, update_stats, propagate_to_transportation
 from simulator.parameters import *
 from simulator.plot_helper import print_progress_bar
 from simulator.simulation_helper import get_environment_simulation, get_virus_simulation_t0
@@ -13,7 +13,7 @@ def launch_run():
     print('Preparing environment...')
     env_dic = get_environment_simulation(params)
 
-    stats = np.zeros((params[nrun_key], params[nday_key], 8))
+    stats = get_zero_stats()
     loosening_day = np.zeros((params[nrun_key]))
     print_progress_bar(0, params[nrun_key] * params[nday_key], prefix='Progress:', suffix='Complete', length=50)
     for r in range(params[nrun_key]):
@@ -36,29 +36,28 @@ def launch_run():
         first_day_lockdown_loosening = -1
 
         virus_dic = get_virus_simulation_t0(params)
-        for i in range(params[nday_key]):
-            print_progress_bar(r * params[nday_key] + i + 1, params[nrun_key] * params[nday_key],
+        for day in range(params[nday_key]):
+            print_progress_bar(r * params[nday_key] + day + 1, params[nrun_key] * params[nday_key],
                                prefix='Progress:', suffix='Complete', length=50)
             propagate_to_houses(env_dic, virus_dic, params[house_infect_key])
-            if not is_weekend(i):
+            if not is_weekend(day):
                 propagate_to_transportation(env_dic, virus_dic, params[transport_infection_key], params[remote_work_key])
                 propagate_to_workplaces(env_dic, virus_dic, params[work_infection_key], params[remote_work_key])
-            if is_weekend(i):
+            if is_weekend(day):
                 propagate_to_stores(env_dic, virus_dic, params[store_infection_key], params[store_preference_key])
             increment_pandemic_1_day(env_dic, virus_dic, available_beds)
-            stats[r][i][0], stats[r][i][1], stats[r][i][2], stats[r][i][3], stats[r][i][4], stats[r][i][5], stats[r][i][
-                7] = \
-                get_pandemic_statistics(virus_dic)
-            stats[r][i][6] = measure_lockdown_strength(params)
 
-            if stats[r][i][5] == 0:
+            update_stats(virus_dic, stats, r, day)
+            stats["loc"][r][day] = measure_lockdown_strength(params)
+
+            if stats['new'][r][day] == 0:
                 days_with_no_cases += 1
             else:
                 days_with_no_cases = 0
 
             if (days_with_no_cases % days_to_lockdown_loosening == 0) and days_with_no_cases > 0:
                 if first_day_lockdown_loosening == -1:
-                    first_day_lockdown_loosening = i
+                    first_day_lockdown_loosening = day
                 soften_lockdown(params)
         loosening_day[r] = first_day_lockdown_loosening
 

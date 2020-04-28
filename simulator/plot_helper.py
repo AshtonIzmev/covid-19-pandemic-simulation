@@ -19,7 +19,7 @@ def draw_specific_population_state_daily(stats_arg, x_tick=10, style="P"):
 
 def draw_lockdown_state_daily(stats_arg, x_tick=10):
     fig, ax = plt.subplots(figsize=(15, 10))
-    set_ax_lockdown_state_daily(ax, stats_arg, x_tick)
+    set_ax_lockdown_state_daily(ax, stats_arg["loc"], x_tick)
     plt.show()
 
 
@@ -44,18 +44,18 @@ def draw_summary(stats_arg, x_tick=10):
 def draw_examples(stats_arg, x_tick=10):
     grid_size = 3
     fig, axes = plt.subplots(grid_size, grid_size, figsize=(16, 10))
-    if grid_size * grid_size > stats_arg.shape[0]:
+    if grid_size * grid_size > stats_arg['hea'].shape[0]:
         raise AssertionError("Raise the number of runs (--nrun parameter) to draw examples")
     # Maybe I did overthink this but I was looking into the most uncommon runs
     # Prefered a kmeans over a set of pairwise kolmogorov smirnov tests
     kmeans = KMeans(n_clusters=grid_size * grid_size, random_state=0)
-    kmeans.fit(stats_arg[:, :, 0])
-    chosen_runs, _ = pairwise_distances_argmin_min(kmeans.cluster_centers_, stats_arg[:, :, 0])
+    kmeans.fit(stats_arg['hea'][:, :])
+    chosen_runs, _ = pairwise_distances_argmin_min(kmeans.cluster_centers_, stats_arg['hea'][:, :])
     run_index = 0
     for axes_row in axes:
         for ax in axes_row:
             run_id = chosen_runs[run_index]
-            death_pct = (100 * stats_arg[run_id][:, 3][-1] / np.max(stats_arg))
+            death_pct = (100 * stats_arg['dea'][run_id][:][-1] / np.max(stats_arg['hea']))
             set_ax_run_population_state_daily(ax, stats_arg, run_id, x_tick)
             if run_index != grid_size-1:
                 ax.legend("")
@@ -92,26 +92,26 @@ def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, lengt
 
 
 def set_ax_population_state_daily(ax, stats_arg, x_tick=10):
-    n_day_arg = stats_arg.shape[0]
-    n_individual_arg = 1.1 * np.max(stats_arg)
-    dead_serie = [stats_arg[i][3] for i in range(n_day_arg)]
+    n_day_arg = stats_arg['hea'].shape[0]
+    n_individual_arg = 1.1 * np.max(stats_arg['hea'])
+    dead_serie = [stats_arg["dea"][i] for i in range(n_day_arg)]
 
-    healthy_serie = [stats_arg[i][0] for i in range(n_day_arg)]
+    healthy_serie = [stats_arg["hea"][i] for i in range(n_day_arg)]
 
-    infected_serie = [stats_arg[i][1] for i in range(n_day_arg)]
-    infected_serie_stacked = [stats_arg[i][0] + stats_arg[i][3] for i in range(n_day_arg)]
+    infected_serie = [stats_arg["inf"][i] for i in range(n_day_arg)]
+    infected_serie_stacked = [stats_arg["hea"][i] + stats_arg["dea"][i] for i in range(n_day_arg)]
 
-    hospital_serie = [stats_arg[i][2] for i in range(n_day_arg)]
-    hospital_serie_stacked = [stats_arg[i][0] + stats_arg[i][1] + stats_arg[i][3] for i in
+    hospital_serie = [stats_arg["hos"][i] for i in range(n_day_arg)]
+    hospital_serie_stacked = [stats_arg["hea"][i] + stats_arg["dea"][i] + stats_arg["inf"][i] for i in
                               range(n_day_arg)]
 
-    immune_serie = [stats_arg[i][4] for i in range(n_day_arg)]
-    immune_serie_stacked = [stats_arg[i][0] + stats_arg[i][1] + stats_arg[i][2] + stats_arg[i][3]
+    immune_serie = [stats_arg["imm"][i] for i in range(n_day_arg)]
+    immune_serie_stacked = [stats_arg["hea"][i] + stats_arg["dea"][i] + stats_arg["inf"][i] + stats_arg["hos"][i]
                             for i in range(n_day_arg)]
 
-    isolated_serie= [stats_arg[i][7] for i in range(n_day_arg)]
-    isolated_serie_stacked = [stats_arg[i][0] + stats_arg[i][1] + stats_arg[i][2] + stats_arg[i][3]+stats_arg[i][4]
-                            for i in range(n_day_arg)]
+    isolated_serie = [stats_arg["iso"][i] for i in range(n_day_arg)]
+    isolated_serie_stacked = [stats_arg["hea"][i] + stats_arg["dea"][i] + stats_arg["inf"][i] + stats_arg["imm"][i] +
+                              stats_arg["hos"][i] for i in range(n_day_arg)]
 
     indices = np.arange(n_day_arg)
     width = 0.7
@@ -125,7 +125,7 @@ def set_ax_population_state_daily(ax, stats_arg, x_tick=10):
 
     ax.set_ylabel('Total population')
     ax.set_xlabel('Days since innoculation')
-    ax.set_title('Pandemic evolution - Death percentage %.2f %%"' % (100*dead_serie[-1]/np.max(stats_arg)))
+    ax.set_title('Pandemic evolution - Death percentage %.2f %%"' % (100*dead_serie[-1]/np.max(stats_arg['hea'])))
     ax.set_xticks(np.arange(0, n_day_arg, int(n_day_arg / x_tick)),
                   tuple([(str(int(i * n_day_arg / x_tick))) for i in range(x_tick)]))
 
@@ -135,41 +135,41 @@ def set_ax_population_state_daily(ax, stats_arg, x_tick=10):
 
 
 def set_ax_mean_population_state_daily(ax, stats_arg, x_tick):
-    stats_mean = np.mean(stats_arg, axis=0)
+    stats_mean = {k: np.mean(v, axis=0) for k, v in stats_arg.items()}
     set_ax_population_state_daily(ax, stats_mean, x_tick)
 
 
 def set_ax_run_population_state_daily(ax, stats_arg, run_id, x_tick):
-    stats_run = stats_arg[run_id]
+    stats_run = {k: v[run_id] for k, v in stats_arg.items()}
     set_ax_population_state_daily(ax, stats_run, x_tick)
 
 
 def set_ax_specific_population_state_daily(ax, stats_arg, x_tick=10, style="P"):
-    n_day_arg = stats_arg.shape[1]
-    type_state = 0
+    n_day_arg = stats_arg['hea'].shape[1]
+    type_state = "hea"
     plot_color = "#3F88C5"
     name_state = "Healthy"
     if style == 'I':
-        type_state = 1
+        type_state = "iso"
         plot_color = "#A63D40"
         name_state = "Infected"
     if style == 'P':
-        type_state = 2
+        type_state = "hos"
         plot_color = "#5000FA"
         name_state = "Hospitalized"
     if style == 'D':
-        type_state = 3
+        type_state = "dea"
         plot_color = "#151515"
         name_state = "Dead"
     if style == 'M':
-        type_state = 4
+        type_state = "imm"
         plot_color = "#90A959"
         name_state = "Immune"
 
-    stats_mean_arg = np.mean(stats_arg, axis=0)
-    stats_err_arg = stats.sem(stats_arg, axis=0)
-    serie = [stats_mean_arg[i][type_state] for i in range(n_day_arg)]
-    err = [stats_err_arg[i][type_state] for i in range(n_day_arg)]
+    stats_mean_arg = {k: np.mean(v, axis=0) for k, v in stats_arg.items()}
+    stats_err_arg = {k: stats.sem(v, axis=0) for k, v in stats_arg.items()}
+    serie = [stats_mean_arg[type_state][i] for i in range(n_day_arg)]
+    err = [stats_err_arg[type_state][i] for i in range(n_day_arg)]
     indices = np.arange(n_day_arg)
     width = 0.6
 
@@ -185,15 +185,15 @@ def set_ax_specific_population_state_daily(ax, stats_arg, x_tick=10, style="P"):
     ax.legend((p[0],), (name_state, ))
 
 
-def set_ax_lockdown_state_daily(ax, stats_arg, x_tick=10):
-    n_day_arg = stats_arg.shape[1]
+def set_ax_lockdown_state_daily(ax, stats_lock, x_tick=10):
+    n_day_arg = stats_lock.shape[1]
     plot_color = "#3F88C5"
     name_state = "Lockdown state measure"
 
-    stats_mean_arg = np.mean(stats_arg, axis=0)
-    stats_err_arg = stats.sem(stats_arg, axis=0)
-    serie = [stats_mean_arg[i][6] * 100 / stats_mean_arg[0][6] for i in range(n_day_arg)]
-    err = [stats_err_arg[i][6] * 100 / stats_mean_arg[0][6] for i in range(n_day_arg)]
+    stats_mean_arg = np.mean(stats_lock, axis=0)
+    stats_err_arg = stats.sem(stats_lock, axis=0)
+    serie = [stats_mean_arg[i] * 100 / stats_mean_arg[0] for i in range(n_day_arg)]
+    err = [stats_err_arg[i] * 100 / stats_mean_arg[0] for i in range(n_day_arg)]
     indices = np.arange(n_day_arg)
 
     p = ax.errorbar(indices, serie, yerr=err, ecolor="#808080", color=plot_color)
@@ -212,11 +212,11 @@ def set_ax_lockdown_state_daily(ax, stats_arg, x_tick=10):
 
 
 def set_ax_new_daily_cases(ax, stats_arg, x_tick=10):
-    n_day_arg = stats_arg.shape[1]
-    stats_mean_arg = np.mean(stats_arg, axis=0)
-    stats_err_arg = stats.sem(stats_arg, axis=0)
-    new_cases_serie = [stats_mean_arg[i][5] for i in range(n_day_arg)]
-    err = [stats_err_arg[i][5] for i in range(n_day_arg)]
+    n_day_arg = stats_arg['new'].shape[1]
+    stats_mean_arg = np.mean(stats_arg['new'], axis=0)
+    stats_err_arg = stats.sem(stats_arg['new'], axis=0)
+    new_cases_serie = [stats_mean_arg[i] for i in range(n_day_arg)]
+    err = [stats_err_arg[i] for i in range(n_day_arg)]
 
     indices = np.arange(n_day_arg)
     width = 0.6
