@@ -13,7 +13,6 @@ class TestSimulation(unittest.TestCase):
     @classmethod
     def setUp(cls):
         random.seed(12)
-        np.random.seed(seed=12)
 
     @staticmethod
     def look_for_good_seed(self):
@@ -79,6 +78,11 @@ class TestSimulation(unittest.TestCase):
         self.assertEqual(virus_dic[STA_K][8], H)
 
     def test_decide_hospitalization_isolated_cases(self):
+        # i3 is going to be hospitalized
+        # i3 lives in house h0
+        # i1, i2 and i3 live in h0
+        # i0 is infected, thus will be tested and isolated
+        # i1 is immune and must stay like this and i2 is dead
         random.seed(89)
         env_dic = {
             HI_K: {0: [0, 1, 2, 3], 1: [4, 5, 6, 7]},
@@ -94,13 +98,18 @@ class TestSimulation(unittest.TestCase):
             STA_K: {0: F, 1: M, 2: D, 3: F, 4: F, 5: M, 6: F, 7: F}
         }
         decide_hospitalization(env_dic, virus_dic, 3)
-        # person 0 will be isolated since a member of his family(person 3)is hospitalized (what a sad story for him)
+
         self.assertEqual(virus_dic[STA_K][3], P)
         self.assertEqual(virus_dic[STA_K][0], S)
         self.assertEqual(virus_dic[STA_K][1], M)
         self.assertEqual(virus_dic[STA_K][2], D)
 
     def test_increment_pandemic_1_day_isolated_cases(self):
+        # i3 is going to be hospitalized
+        # i3 lives in house h0
+        # i1, i2 and i3 live in h0
+        # i0 is infected, thus will be tested and isolated
+        # i1 is immune and must stay like this and i2 is dead
         random.seed(14)
         env_dic = {
             HI_K: {0: [0, 1, 2, 3], 1: [4, 5, 6, 7], 2: [8, 9]},
@@ -127,6 +136,9 @@ class TestSimulation(unittest.TestCase):
         self.assertEqual(virus_dic[STA_K][3], P)
 
     def test_increment_pandemic_1_day_hospitals_empty(self):
+        # i0 and i1 are infected
+        # Hospitals are empty and their mortality rate are low
+        # They survive and become immune
         random.seed(22)
         env_dic = {
             HI_K: {0: [0, 1, 2, 3], 1: [4, 5, 6, 7], 2: [8, 9]},
@@ -152,6 +164,9 @@ class TestSimulation(unittest.TestCase):
         self.assertEqual(virus_dic[STA_K][1], M)
 
     def test_increment_pandemic_1_day_hospitals_almost_full(self):
+        # i0 and i1 are infected
+        # Hospitals are almost full but i0 and i1 are not hospitalized
+        # They survive and become immune
         random.seed(22)
         env_dic = {
             HI_K: {0: [0, 1, 2, 3], 1: [4, 5, 6, 7], 2: [8, 9]},
@@ -167,17 +182,20 @@ class TestSimulation(unittest.TestCase):
             HOS_K: {0: -5, 1: -6, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
             DEA_K: {0: 1, 1: 1, 2: 0, 3: 22, 4: 22, 5: 0, 6: 1, 7: 22, 8: -4, 9: 38},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1, 9: 55},
-            # No hospitalized people
             STA_K: {0: F, 1: F, 2: P, 3: P, 4: P, 5: P, 6: P, 7: P, 8: P, 9: P},
             FN_K: get_infection_params
         }
         env_dic[IAG_K][0] = 82
         env_dic[IAG_K][1] = 15
-        increment_pandemic_1_day(env_dic, virus_dic, 0.6)
+        increment_pandemic_1_day(env_dic, virus_dic, 0.06)
         self.assertEqual(virus_dic[STA_K][0], M)
         self.assertEqual(virus_dic[STA_K][1], M)
 
     def test_increment_pandemic_1_day_hospitals_almost_full_indiv_hospitalized(self):
+        # i0 and i1 are hospitalized
+        # i0 is 82 year old
+        # Hospitals are completely full and i0's mortality rate are high
+        # i1 survive and become immune but i0 dies
         random.seed(22)
         env_dic = {
             HI_K: {0: [0, 1, 2, 3], 1: [4, 5, 6, 7], 2: [8, 9]},
@@ -204,6 +222,9 @@ class TestSimulation(unittest.TestCase):
         self.assertEqual(virus_dic[STA_K][1], M)
 
     def test_increment_pandemic_1_day_hospitals_completely_full(self):
+        # i0 and i1 are hospitalized
+        # Hospitals are completely full
+        # They both die
         random.seed(22)
         env_dic = {
             HI_K: {0: [0, 1, 2, 3], 1: [4, 5, 6, 7], 2: [8, 9]},
@@ -224,7 +245,7 @@ class TestSimulation(unittest.TestCase):
         }
         env_dic[IAG_K][0] = 82
         env_dic[IAG_K][1] = 15
-        increment_pandemic_1_day(env_dic, virus_dic, 0.5)
+        increment_pandemic_1_day(env_dic, virus_dic, 0.005)
         self.assertEqual(virus_dic[STA_K][0], D)
         self.assertEqual(virus_dic[STA_K][1], D)
 

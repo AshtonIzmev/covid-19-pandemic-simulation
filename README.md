@@ -114,23 +114,6 @@ Each house and workplace is being assigned a geolocation in a grid. This grid ca
 When a worker goes from his house to his workplace, he goes through blocks that are shared by other workers.
 We maintain a dictionnary of this transportation relationship between workers to propagate the pandemic.
 
-# Input parameters
-* N_INDIVIDUALS : number of person involved in this simulation (default 5000)
-* N_DAYS : number of days for the simulation (default 120)
-* NB_STO_PER_HOU : number of house for each store (default 20)
-* PROB_PREFERENCE_STORE : probability to go to the nearest store (otherwise it will be the second nearest ...)
-* REMOTE_WORK_PERCENT : percentage of people doing remote work (thus not going to workplaces)
-* INITIAL_INNOCULATION_PCT : Percentage of people who get the virus at day 0
-* PROB_HOUSE_INFECTION : probability of getting infected if an infected individual lives in the same house (defaut 0.5)
-* PROB_WORK_INFECTION : probability of getting infected if an infected individual works in the same place (default 0.1)
-* PROB_STORE_INFECTION : probability of getting infected if an infected individual shops at the same store (default 0.05 since we tend to spend less time in a store)
-* PROB_TRANSPORT_INFECTION : probability of getting infected in public transportation
-* [ LOWER_CONTAGION_BOUND, UPPER_CONTAGION_BOUND ] : random number range to generate time to becoming contagious
-* [ LOWER_DECISION_BOUND, UPPER_DECISION_BOUND ] : random number range to generate time to decision (death/immunity)
-* [ LOWER_IMMUNITY_BOUND, UPPER_IMMUNITY_BOUND ] : random number range to generate time to loosing immunity
-
-All those parameters can be discussed and will be enriched as I keep enhancing this simulation model.
-
 # Some graphs
 With default parameters.
 
@@ -165,7 +148,10 @@ Using a quick and dirty kmeans, we only display the most "different" run distrib
 
 # Backlog
 - [ ]  Switch from dictionaries and list to numpy array (may be way more efficient, probably enabling some nice vectorization but huge refactors to come)
-- [ ]  Add a test-isolation stratey. Since at the end of the confinement, we assume that a part of the people will be tested and positive persons will be isolated.
+- [ ]  More tests, there are never enough tests
+- [ ]  Plot the R0 of the pandemic ? (with linear and logarithmic scale)
+- [ ]  Get rid of FN_K: get_infection_params and use a python class
+- [x]  Add a test-isolation stratey. Since at the end of the confinement, we assume that a part of the people will be tested and positive persons will be isolated.
 - [x]  When hospitals are full, mortality rates raises
 - [x]  Make contagion probability slowly raises as I assume people will get tired of the lockdown and start to be lazy at wearing masks and staying home ... (Handled in a scenario)
 - [x]  Contagion parameters depend on geographic blocks (using individual model, we achieve this)

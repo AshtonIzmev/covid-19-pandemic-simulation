@@ -23,30 +23,18 @@ class TestSimulation(unittest.TestCase):
         random.seed(12)
         np.random.seed(seed=12)
 
-    @staticmethod
-    def get_virus_dic():
-        return {
-            CON_K: {0: 4, 1: 2, 2: 2, 3: 6, 4: 4, 5: 2, 6: 5, 7: 2, 8: 4, 9: 5},
-            DEA_K: {0: 34, 1: 21, 2: 30, 3: 35, 4: 29, 5: 37, 6: 26, 7: 33, 8: 33, 9: 28},
-            IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 46, 9: 55},
-            HOS_K: {0: 12, 1: 10, 2: 14, 3: 14, 4: 17, 5: 16, 6: 15, 7: 10, 8: 20, 9: 9},
-            STA_K: {0: 0, 1: 0, 2: 0, 3: 1, 4: 1, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0},
-            NC_K: 0
+    def test_build_environment_dic(self):
+        params_test = {
+            nindividual_key: 10,
+            store_per_house_key: 2,
+            store_preference_key: 1,
+            nb_1d_block_key: 5,
+            remote_work_key: 0.5,
+            store_nb_choice_key: 3
         }
 
-    @staticmethod
-    def get_10_01_virus_dic():
-        return {
-            CON_K: {0: 4, 1: 3, 2: 2, 3: 2, 4: 6, 5: 4, 6: 4, 7: 2, 8: 6, 9: 5},
-            HOS_K: {0: 12, 1: 12, 2: 20, 3: 11, 4: 16, 5: 12, 6: 14, 7: 13, 8: 12, 9: 8},
-            DEA_K: {0: 31, 1: 23, 2: 23, 3: 22, 4: 22, 5: 27, 6: 36, 7: 22, 8: 30, 9: 38},
-            STA_K: {0: H, 1: H, 2: H, 3: H, 4: F, 5: H, 6: M, 7: H, 8: H, 9: H},
-            NC_K: 0
-        }
-
-    @staticmethod
-    def get_10_01_2_environment_new_house_map_dic():
-        return {
+        result = get_environment_simulation(params_test)
+        expected_result = {
             IH_K: {0: 0, 1: 0, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 2, 8: 2, 9: 2},
             HI_K: {0: [0, 1], 1: [2, 3, 4, 5, 6], 2: [7, 8, 9]},
             IAD_K: {0: 1, 1: 1, 2: 1, 3: 1, 4: 0, 5: 0, 6: 0, 7: 1, 8: 1, 9: 0},
@@ -63,19 +51,6 @@ class TestSimulation(unittest.TestCase):
                     8: {0, 1, 2, 3, 7, 8}
                     }
         }
-
-    def test_build_environment_dic(self):
-        params_test = {
-            nindividual_key: 10,
-            store_per_house_key: 2,
-            store_preference_key: 1,
-            nb_1d_block_key: 5,
-            remote_work_key: 0.5,
-            store_nb_choice_key: 3
-        }
-
-        result = get_environment_simulation(params_test)
-        expected_result = TestSimulation.get_10_01_2_environment_new_house_map_dic()
         self.assertTrue(IBE_K in result.keys())
         self.assertTrue(HB_K in result.keys())
         # We delete them in order to avoid including 100 values dictionnary in the test
@@ -94,16 +69,27 @@ class TestSimulation(unittest.TestCase):
             immunity_bounds_key: (35, 65),
         }
         result = get_virus_simulation_t0(params_dic)
-        expected_result = TestSimulation.get_virus_dic()
+        expected_result = {
+            CON_K: {0: 4, 1: 2, 2: 2, 3: 6, 4: 4, 5: 2, 6: 5, 7: 2, 8: 4, 9: 5},
+            DEA_K: {0: 34, 1: 21, 2: 30, 3: 35, 4: 29, 5: 37, 6: 26, 7: 33, 8: 33, 9: 28},
+            IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 46, 9: 55},
+            HOS_K: {0: 12, 1: 10, 2: 14, 3: 14, 4: 17, 5: 16, 6: 15, 7: 10, 8: 20, 9: 9},
+            STA_K: {0: 0, 1: 0, 2: 0, 3: 1, 4: 1, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0},
+            NC_K: 0
+        }
         self.assertEqual(result[CON_K], expected_result[CON_K])
         self.assertEqual(result[HOS_K], expected_result[HOS_K])
         self.assertEqual(result[DEA_K], expected_result[DEA_K])
         self.assertEqual(result[STA_K], expected_result[STA_K])
 
     def test_update_infection_period(self):
-        virus_dic = TestSimulation.get_10_01_virus_dic()
         # 4 is already infected
         # 1 and 9 are going to be infected
+        # There are going to be 2 new cases
+        virus_dic = {
+            STA_K: {0: H, 1: H, 2: H, 3: H, 4: F, 5: H, 6: M, 7: H, 8: H, 9: H},
+            NC_K: 0
+        }
         update_infection_period([1, 9, 6], virus_dic)
         self.assertEqual(virus_dic[STA_K][1], F)
         self.assertEqual(virus_dic[STA_K][2], H)
