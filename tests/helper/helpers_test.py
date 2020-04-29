@@ -3,7 +3,7 @@ import unittest
 
 from initiator.helper import invert_map, flatten, get_random_choice_list, get_infection_parameters, \
     get_mortalty_rate, get_hospitalization_rate, rec_get_manhattan_walk, invert_map_list, reduce_multiply_by_key, \
-    reduce_list_multiply_by_key, choose_weight_order
+    choose_weight_order
 
 
 class TestHelpers(unittest.TestCase):
@@ -69,16 +69,6 @@ class TestHelpers(unittest.TestCase):
             1: 2,
             'a': 5,
             99: 0
-        })
-
-    def test_reduce_list_multiply_by_key(self):
-        result = reduce_list_multiply_by_key([([1, 2, 3], 2), ([2, 3, 4], 1.5), ([3, 4, 5], 1.25)])
-        self.assertEqual(result, {
-            1: 2,
-            2: 3.0,
-            3: 3.75,
-            4: 1.875,
-            5: 1.25
         })
 
     def test_choose_weight_order(self):

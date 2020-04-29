@@ -25,6 +25,10 @@ def get_parser():
     parser.add_argument('--p-house', type=float, help='Probability of house infection', dest=house_infect_key)
     parser.add_argument('--p-store', type=float, help='Probability of store infection', dest=store_infection_key)
     parser.add_argument('--p-work', type=float, help='Probability of workplace infection', dest=work_infection_key)
+    parser.add_argument('--p-transport', type=float, help='Probability of public transportation infection',
+                        dest=transport_infection_key)
+    parser.add_argument('--transport-contact-cap', type=int,
+                        help='Number of people an individual is close when commuting', dest=transport_contact_cap_key)
 
     parser.add_argument('--contagion-bounds', type=int, nargs=2, help='Contagion bounds', dest=contagion_bounds_key)
     parser.add_argument('--hospitalization-bounds', type=int, nargs=2, help='Hospitalization bounds',

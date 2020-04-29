@@ -1,6 +1,5 @@
-from initiator.helper import get_r, get_mortalty_rate, get_hospitalization_rate, reduce_multiply_by_key, \
-    reduce_list_multiply_by_key
-from initiator.helper import get_random_choice_list, choose_weight_order
+from initiator.helper import get_r, get_mortalty_rate, get_hospitalization_rate, reduce_multiply_by_key
+from initiator.helper import get_random_choice_list, choose_weight_order, get_random_sample
 from simulator.keys import *
 
 
@@ -75,7 +74,7 @@ def increment_pandemic_1_day(env_dic, virus_dic, available_beds):
 
 
 def get_virus_carrier_people(virus_dic):
-    return [k for k, v in virus_dic[STA_K].items() if v in [ISOLATED_V, HOSPITALIZED_V, INFECTED_V]]
+    return [k for k, v in virus_dic[STA_K].items() if v == ISOLATED_V or v == HOSPITALIZED_V or v == INFECTED_V]
 
 
 def get_isolated_people(virus_dic):
@@ -125,20 +124,16 @@ def propagate_to_houses(env_dic, virus_dic, probability_home_infection_arg):
     # { 1: 1.5 * 2  ,   2: 1 }
     infected_houses_behavior_dic = reduce_multiply_by_key(infected_houses_behavior)
 
-    # We build people at those houses
+    # We build people at those houses with the house behavior
     # [ ([1, 2, 3], 1), ([4, 5, 6], 2), ([1, 2, 3], 2) ]
-    # And then we reduce_list_multiply_by_key this
-    # { 1: 1*2, 2: 1*2, 3: 1*2, 4: 2, 5: 2, 6: 2 }
-    people_in_infected_houses = reduce_list_multiply_by_key(
-        [(env_dic[HI_K][hou], beh_p) for (hou, beh_p) in infected_houses_behavior_dic.items()]
-    )
+    people_in_infected_houses = [(env_dic[HI_K][hou], beh_p) for (hou, beh_p) in infected_houses_behavior_dic.items()]
 
     # From which we designate newly infected people using weights beh_p
-    infected_athome = [i for (i, beh_p) in people_in_infected_houses.items()
+    infected_athome = [i for people, beh_p in people_in_infected_houses for i in people
                        if get_r() < probability_home_infection_arg * beh_p]
 
-    update_infection_period(infected_athome, virus_dic)
     # INFECTION STATE UPDATE
+    update_infection_period(infected_athome, virus_dic)
 
 
 def propagate_to_workplaces(env_dic, virus_dic, probability_work_infection_arg, probability_remote_work_arg):
@@ -156,39 +151,31 @@ def propagate_to_workplaces(env_dic, virus_dic, probability_work_infection_arg, 
 
     # We build people at those workplaces
     # [ ([1, 2, 3], 1), ([4, 5, 6], 2), ([1, 2, 3], 2) ]
-    # And then we reduce_list_multiply_by_key this
-    # { 1: 1*2, 2: 1*2, 3: 1*2, 4: 2, 5: 2, 6: 2 }
-    exposed_individuals_at_work = reduce_list_multiply_by_key(
-        [(env_dic[WI_K][k], beh_p) for (k, beh_p) in infected_workplaces_behavior_dic.items()]
-    )
-    # filter isolated persons from exposed_individuals
-    exposed_individuals_at_work = {k: v for k, v in exposed_individuals_at_work.items() if
-                                   not (is_isolated(k, virus_dic))}
+    exposed_individuals_at_work = [(env_dic[WI_K][k], beh_p) for (k, beh_p) in infected_workplaces_behavior_dic.items()]
 
-    # From which we designate newly infected people using weights beh_p
-    infected_backfromwork = [i for (i, beh_p) in exposed_individuals_at_work.items()
+    # People who have gone to work (not isolated) and got infected
+    infected_backfromwork = [i for people, beh_p in exposed_individuals_at_work for i in people
                              if get_r() < probability_work_infection_arg * beh_p]
 
     # INFECTION STATE UPDATE
     update_infection_period(infected_backfromwork, virus_dic)
 
 
-def propagate_to_transportation(env_dic, virus_dic, probability_transport_infection_arg, probability_remote_work_arg):
+def propagate_to_transportation(env_dic, virus_dic, probability_transport_infection_arg,
+                                probability_remote_work_arg, transportation_cap_arg):
     # Contagious people who will go to work
     # [1, 2, 3] go to work
     infected_who_goto_work = [i for i in get_infected_people(virus_dic) if i in env_dic[IW_K].keys()
                               and is_contagious(i, virus_dic) and get_r() < (1-probability_remote_work_arg)]
 
-    # Infected public transportation blocks
+    # Infected public transportation blocks with cap 2
     # individuals 1, 2, 3 are in an infected block
     # same for 4, 5, 6
-    # Reduce this : [ ({1, 2, 3}, 1), ({4, 5, 6}, 1.5) ]
-    # which gives  { 1: 1, 2: 1, 3: 2, 4: 1.5, 5: 1.5, 6: 1.5 }
-    people_sharing_transportation = reduce_list_multiply_by_key(
-        [(env_dic[ITI_K][i], env_dic[IBE_K][i]) for i in infected_who_goto_work]
-    )
+    # Result : [ ({1, 3}, 1), ({5, 6}, 1.5) ] with random sample
+    people_sharing_transportation = [(get_random_sample(env_dic[ITI_K][i], transportation_cap_arg), env_dic[IBE_K][i])
+                                     for i in infected_who_goto_work]
 
-    infected_bad_luck_transport = [i for (i, beh_p) in people_sharing_transportation.items()
+    infected_bad_luck_transport = [i for people, beh_p in people_sharing_transportation for i in people
                                    if get_r() < probability_transport_infection_arg * beh_p]
 
     # INFECTION STATE UPDATE

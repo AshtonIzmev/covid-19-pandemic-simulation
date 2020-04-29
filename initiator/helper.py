@@ -33,6 +33,10 @@ def get_random_choice_list(list_of_list_arg):
     return result
 
 
+def get_random_sample(iterable_arg, cap):
+    return random.sample(iterable_arg, min(cap, len(iterable_arg)))
+
+
 def get_infection_parameters(lower_contagion_bound, upper_contagion_bound,
                              lower_hospitalization_bound, upper_hospitalization_bound,
                              lower_death_bound, upper_death_bound,
@@ -149,14 +153,6 @@ def reduce_multiply_by_key(tuple_list):
     result_dic = {}
     for (k, v) in tuple_list:
         result_dic[k] = v * (result_dic[k] if k in result_dic else 1)
-    return result_dic
-
-
-def reduce_list_multiply_by_key(tuple_list):
-    result_dic = {}
-    for (l, v) in tuple_list:
-        for k in l:
-            result_dic[k] = v * (result_dic[k] if k in result_dic else 1)
     return result_dic
 
 

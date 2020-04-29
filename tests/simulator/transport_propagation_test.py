@@ -26,7 +26,7 @@ class TestSimulation(unittest.TestCase):
             STA_K: {0: F, 1: H, 4: H, 5: H},
             NC_K: 0
         }
-        propagate_to_transportation(env_dic, virus_dic, 1, 0.1)
+        propagate_to_transportation(env_dic, virus_dic, 1, 0.1, 10)
         self.assertEqual(virus_dic[STA_K][4], H)
         self.assertEqual(virus_dic[STA_K][5], F)
 
@@ -43,7 +43,7 @@ class TestSimulation(unittest.TestCase):
             STA_K: {0: S, 1: H, 4: H, 5: H},
             NC_K: 0
         }
-        propagate_to_transportation(env_dic, virus_dic, 1, 0.1)
+        propagate_to_transportation(env_dic, virus_dic, 1, 0.1, 10)
         self.assertEqual(virus_dic[STA_K][4], H)
         self.assertEqual(virus_dic[STA_K][5], H)
 
@@ -60,7 +60,7 @@ class TestSimulation(unittest.TestCase):
             STA_K: {0:  F, 1:  H, 4: H, 5: H},
             NC_K: 0
         }
-        propagate_to_transportation(env_dic, virus_dic, 1, 0.99)
+        propagate_to_transportation(env_dic, virus_dic, 1, 0.99, 10)
         self.assertEqual(virus_dic[STA_K][4], H)
         self.assertEqual(virus_dic[STA_K][5], H)
 
@@ -77,7 +77,7 @@ class TestSimulation(unittest.TestCase):
             STA_K: {0: F, 1: H, 4: H, 5: H},
             NC_K: 0
         }
-        propagate_to_transportation(env_dic, virus_dic, 1, 0.98)
+        propagate_to_transportation(env_dic, virus_dic, 1, 0.98, 10)
         self.assertEqual(virus_dic[STA_K][4], H)
         self.assertEqual(virus_dic[STA_K][5], H)
 
@@ -94,7 +94,7 @@ class TestSimulation(unittest.TestCase):
             STA_K: {0: F, 1: H, 4: H, 5: H},
             NC_K: 0
         }
-        propagate_to_transportation(env_dic, virus_dic, 0.001, 0.1)
+        propagate_to_transportation(env_dic, virus_dic, 0.001, 0.1, 10)
         self.assertEqual(virus_dic[STA_K][4], H)
         self.assertEqual(virus_dic[STA_K][5], F)
 

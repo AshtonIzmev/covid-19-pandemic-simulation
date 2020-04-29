@@ -151,6 +151,8 @@ Using a quick and dirty kmeans, we only display the most "different" run distrib
 - [ ]  More tests, there are never enough tests
 - [ ]  Plot the R0 of the pandemic ? (with linear and logarithmic scale)
 - [ ]  Get rid of FN_K: get_infection_params and use a python class
+- [ ]  Fix pick_age performance performance issue
+- [ ]  Fix transport propagation performance issue
 - [x]  Add a test-isolation stratey. Since at the end of the confinement, we assume that a part of the people will be tested and positive persons will be isolated.
 - [x]  When hospitals are full, mortality rates raises
 - [x]  Make contagion probability slowly raises as I assume people will get tired of the lockdown and start to be lazy at wearing masks and staying home ... (Handled in a scenario)

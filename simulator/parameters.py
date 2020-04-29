@@ -20,6 +20,7 @@ house_infect_key = "PROB_HOUSE_INFECTION"
 work_infection_key = "PROB_WORK_INFECTION"
 store_infection_key = "PROB_STORE_INFECTION"
 transport_infection_key = "PROB_TRANSPORT_INFECTION"
+transport_contact_cap_key = "TRANSPORT_CONTACT_CAP"
 # Bounds
 contagion_bounds_key = "CONTAGION_BOUNDS"
 hospitalization_bounds_key = "HOSPITALIZATION_BOUNDS"
@@ -34,7 +35,7 @@ params = {
     nrun_key: 1,  # Number of runs
     scenario_id_key: -1,  # Scenario id if running the scenario package
     random_seed_key: 42,  # Of course 42
-    draw_graph_key: ["summary"],  # By default, draw summary
+    draw_graph_key: [],  # What to draw
 
     nindividual_key: 1000,  # Number of people
     nday_key: 180,  # Number of simulated days
@@ -44,7 +45,7 @@ params = {
     store_per_house_key: 20,  # Let's say we have 20 houses for each grocerie store
     store_preference_key: 0.95,  # Probality of going to the nearest store
     store_nb_choice_key: 3,  # Number of stores that a single house can go to
-    nb_1d_block_key: 10,  # number of block on one axe to slice the grid and model public transportation contamination,
+    nb_1d_block_key: 20,  # number of block on one axe to slice the grid and model public transportation contamination,
     # total number of blocks is nb_1d_block_key^2
 
     # parameters that can change over time with lockdown loosening/removal
@@ -53,6 +54,7 @@ params = {
     work_infection_key: 0.01,  # Probabilty of infecting a random co-worker
     store_infection_key: 0.02,  # Probabilty of infecting someone who goes to the same store
     transport_infection_key: 0.01,  # Probabilty of infecting someone who goes to the same geographical block
+    transport_contact_cap_key: 10,  # Cap of people close to in transportation
 
     # https://annals.org/aim/fullarticle/2762808/incubation-period-coronavirus-disease-2019-covid-19-from-publicly-reported
     # this study show 4.5 to 5.8 days incubation period. Let's assume contagiosity starts when incubation is done

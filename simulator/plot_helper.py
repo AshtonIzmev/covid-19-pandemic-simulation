@@ -246,8 +246,6 @@ def chose_draw_plot(draw_graph_arg, stats_arg):
             draw_examples(stats_arg)
         if contains_substring("loc", draw_graph_arg):
             draw_lockdown_state_daily(stats_arg)
-    else:
-        draw_population_state_daily(stats_arg)
 
 
 def contains_substring(substr_arg, list_arg):
