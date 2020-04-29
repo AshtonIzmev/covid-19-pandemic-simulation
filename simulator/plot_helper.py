@@ -67,6 +67,12 @@ def draw_examples(stats_arg, x_tick=10):
     plt.show()
 
 
+def draw_r0_evolution(stats_arg, x_tick=10):
+    fig, ax = plt.subplots(figsize=(15, 10))
+    set_ax_r0(ax, stats_arg, x_tick=10)
+    plt.show()
+
+
 # Print iterations progress
 # https://stackoverflow.com/questions/3173320/text-progress-bar-in-the-console
 def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, length=100, fill='█', print_end ="\r"):
@@ -89,6 +95,20 @@ def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, lengt
     # Print New Line on Complete
     if iteration == total:
         print()
+
+
+def set_ax_r0(ax, stats_arg, x_tick=10):
+    n_day_arg = stats_arg['new'].shape[1]
+
+    ax.set_ylabel('Basic reproduction number(R0)')
+    ax.set_xlabel('Days since innoculation')
+    ax.set_title('Evolving of basic reproduction number in time')
+    ax.set_xticks(np.arange(0, n_day_arg, int(n_day_arg / x_tick)),
+                  tuple([(str(int(i * n_day_arg / x_tick))) for i in range(x_tick)]))
+    ax.grid()
+
+    R0 = stats_arg["R0"][0]
+    ax.plot(R0)
 
 
 def set_ax_population_state_daily(ax, stats_arg, x_tick=10):
@@ -246,6 +266,8 @@ def chose_draw_plot(draw_graph_arg, stats_arg):
             draw_examples(stats_arg)
         if contains_substring("loc", draw_graph_arg):
             draw_lockdown_state_daily(stats_arg)
+        if contains_substring("R0", draw_graph_arg):
+            draw_r0_evolution(stats_arg)
 
 
 def contains_substring(substr_arg, list_arg):

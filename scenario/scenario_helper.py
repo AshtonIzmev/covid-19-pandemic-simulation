@@ -12,6 +12,7 @@ def get_zero_stats():
         "dea": np.zeros((params[nrun_key], params[nday_key])),
         "imm": np.zeros((params[nrun_key], params[nday_key])),
         "iso": np.zeros((params[nrun_key], params[nday_key])),
+        "R0": np.zeros((params[nrun_key], params[nday_key])),
         "new": np.zeros((params[nrun_key], params[nday_key])),
         "loc": np.zeros((params[nrun_key], params[nday_key]))
     }
