@@ -54,7 +54,7 @@ params = {
     work_infection_key: 0.01,  # Probabilty of infecting a random co-worker
     store_infection_key: 0.02,  # Probabilty of infecting someone who goes to the same store
     transport_infection_key: 0.01,  # Probabilty of infecting someone who goes to the same geographical block
-    transport_contact_cap_key: 10,  # Cap of people close to in transportation
+    transport_contact_cap_key: 10,  # Cap used to limit transportation contact
 
     # https://annals.org/aim/fullarticle/2762808/incubation-period-coronavirus-disease-2019-covid-19-from-publicly-reported
     # this study show 4.5 to 5.8 days incubation period. Let's assume contagiosity starts when incubation is done

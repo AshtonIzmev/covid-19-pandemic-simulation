@@ -1,10 +1,9 @@
 import random
 
 from scipy import spatial
-
 from initiator.helper import get_r, get_moroccan_household_distribution, invert_map, pick_age, \
     get_center_squized_random, pick_random_company_size, rec_get_manhattan_walk, invert_map_list, \
-    get_lockdown_behavior_distribution
+    get_lockdown_behavior_distribution, get_random_sample
 
 
 def build_individual_houses_map(number_individual_arg):
@@ -149,10 +148,13 @@ def build_workblock_individual_map(individual_workblock_map_arg):
     return invert_map_list(individual_workblock_map_arg)
 
 
-def build_individual_individual_transport_map(individual_transport_block_map_arg, transport_block_individual_map_arg):
+def build_individual_individual_transport_map(individual_transport_block_map_arg, transport_block_individual_map_arg,
+                                              transportation_cap_arg):
     individual_individual_transport_dic = {}
     for ind, blocks in individual_transport_block_map_arg.items():
-        for block in blocks:
-            individual_individual_transport_dic[ind] = individual_individual_transport_dic.get(ind, set())
-            individual_individual_transport_dic[ind].update(set(transport_block_individual_map_arg[block]))
+        for block in get_random_sample(blocks, transportation_cap_arg):
+            if ind not in individual_individual_transport_dic:
+                individual_individual_transport_dic[ind] = set()
+            individual_individual_transport_dic[ind].update(
+                get_random_sample(set(transport_block_individual_map_arg[block]), transportation_cap_arg))
     return individual_individual_transport_dic

@@ -117,7 +117,7 @@ class TestInitiation(unittest.TestCase):
             3: [(8, 8), (8, 7), (7, 7)]
         }
         workblock_ind = invert_map_list(ind_workblock)
-        result = build_individual_individual_transport_map(ind_workblock, workblock_ind)
+        result = build_individual_individual_transport_map(ind_workblock, workblock_ind, 10)
         self.assertEqual(result, {0: {0, 1, 2}, 1: {0, 1}, 2: {0, 2}, 3: {3}})
 
     def test_build_individual_individual_transport_with_empty_bin_map(self):
@@ -128,7 +128,7 @@ class TestInitiation(unittest.TestCase):
             3: [(8, 8), (8, 7), (7, 7)]
         }
         workblock_ind = invert_map_list(ind_workblock)
-        result = build_individual_individual_transport_map(ind_workblock, workblock_ind)
+        result = build_individual_individual_transport_map(ind_workblock, workblock_ind, 10)
         self.assertEqual(result, {0: {0, 1, 2}, 1: {0, 1}, 2: {0, 2}, 3: {3}})
 
     def test_build_2d_item_behavior(self):

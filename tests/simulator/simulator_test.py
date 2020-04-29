@@ -30,7 +30,8 @@ class TestSimulation(unittest.TestCase):
             store_preference_key: 1,
             nb_1d_block_key: 5,
             remote_work_key: 0.5,
-            store_nb_choice_key: 3
+            store_nb_choice_key: 3,
+            transport_contact_cap_key: 10
         }
 
         result = get_environment_simulation(params_test)
