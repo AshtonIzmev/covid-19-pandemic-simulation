@@ -195,6 +195,10 @@ def propagate_to_transportation(env_dic, virus_dic, probability_transport_infect
     update_infection_period(infected_bad_luck_transport, virus_dic)
 
 
+def get_r0(virus_dic):
+    return virus_dic[NC_K]/(len(get_infected_people(virus_dic))+len(get_hospitalized_people(virus_dic))+len(get_isolated_people(virus_dic))-virus_dic[NC_K])
+
+
 def propagate_to_stores(env_dic, virus_dic, probability_store_infection_arg, same_store_preference):
     # Filter on living people because we have a random choice to make in each house
     # People who will go to their store (one person per house as imposed by lockdown)
@@ -242,7 +246,7 @@ def get_pandemic_statistics(virus_dic):
         "dea": len(get_deadpeople(virus_dic)),
         "imm": len(get_immune_people(virus_dic)),
         "iso": len(get_isolated_people(virus_dic)),
-        "R0": virus_dic[NC_K]/(len(get_infected_people(virus_dic))+len(get_hospitalized_people(virus_dic))+len(get_isolated_people(virus_dic))),
+        "R0": get_r0(virus_dic),
         "new": virus_dic[NC_K]
     }
     # Reset new cases counter
