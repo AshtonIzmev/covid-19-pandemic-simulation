@@ -242,6 +242,7 @@ def get_pandemic_statistics(virus_dic):
         "dea": len(get_deadpeople(virus_dic)),
         "imm": len(get_immune_people(virus_dic)),
         "iso": len(get_isolated_people(virus_dic)),
+        "R0": virus_dic[NC_K]/(len(get_infected_people(virus_dic))+len(get_hospitalized_people(virus_dic))+len(get_isolated_people(virus_dic))),
         "new": virus_dic[NC_K]
     }
     # Reset new cases counter
