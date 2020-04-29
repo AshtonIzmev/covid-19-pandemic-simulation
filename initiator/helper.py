@@ -17,7 +17,7 @@ def get_moroccan_household_distribution():
 
 
 def get_lockdown_behavior_distribution():
-    return get_clipped_gaussian_number(0.5, 2, 1, 0.25)
+    return get_clipped_gaussian_number(0.5, 1.5, 1, 0.25)
 
 
 def get_clipped_gaussian_number(lower_clip_arg, upper_clip_arg, mean_arg, std_arg):
