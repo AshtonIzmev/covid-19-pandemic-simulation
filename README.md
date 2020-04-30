@@ -108,6 +108,7 @@ So what is "life" in a pandemic lockdown situation (where almost all nations are
 7. If you are infected, you will die or recover from the disease after a period of time, based on your age (and health issues but let's forget about those for now)
 8. If hospitals are full, mortality rates raises
 9. Death or immunity will not make you anymore contagious for other individual, obviously
+10. You are isolated if one of your family members has been hospitalized
 
 # Public transportation model
 Each house and workplace is being assigned a geolocation in a grid. This grid can be cut into blocks (defined by a parameter).
@@ -150,6 +151,7 @@ Using a quick and dirty kmeans, we only display the most "different" run distrib
 - [ ]  Switch from dictionaries and list to numpy array (may be way more efficient, probably enabling some nice vectorization but huge refactors to come)
 - [ ]  More tests, there are never enough tests
 - [ ]  Get rid of FN_K: get_infection_params and use a python class
+- [ ]  Get rid of params as a global variable and use a function (probably a bad pattern)
 - [x]  Plot the R0 of the pandemic ? (with linear and logarithmic scale)
 - [x]  Fix transport propagation performance issue
 - [x]  Add a test-isolation stratey. Since at the end of the confinement, we assume that a part of the people will be tested and positive persons will be isolated.
@@ -170,7 +172,7 @@ Using a quick and dirty kmeans, we only display the most "different" run distrib
 - [x]  Handle multiple runs and add error bars to result plots
 
 ## Articles explaining the approach
-https://issam.ma/jekyll/update/2020/04/11/covid-pandemic-simulation.html
+https://issam.ma/jekyll/update/2020/04/11/covid-pandemic-simulation.html (French)
 
 # Links
 [1] https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology#The_SEIR_model

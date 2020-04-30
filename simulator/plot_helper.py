@@ -164,8 +164,9 @@ def set_ax_population_state_daily(ax, stats_arg, x_tick=10):
                   tuple([(str(int(i * n_day_arg / x_tick))) for i in range(x_tick)]))
 
     ax.set_yticks(np.arange(0, n_individual_arg, (n_individual_arg / 15)))
-    ax.legend((p1[0], p2[0], p3[0], p4[0], p5[0],p6[0]), ('Dead', 'Healthy', 'Infected', 'Hospitalized', 'Immune','isolated'),
-              framealpha=0.35)
+    ax.legend((p1[0], p2[0], p3[0], p4[0], p5[0], p6[0]),
+              ('Dead', 'Healthy', 'Infected', 'Hospitalized', 'Immune', 'Isolated'),
+              framealpha=0.35, loc="upper right")
 
 
 def set_ax_mean_population_state_daily(ax, stats_arg, x_tick):
