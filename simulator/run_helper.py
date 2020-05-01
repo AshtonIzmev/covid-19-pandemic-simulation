@@ -46,7 +46,7 @@ def get_parser():
                         dest=draw_graph_key)
 
     # Scenarios related
-    parser.add_argument('--extra-scenario-params', type=int, nargs="*", help='Additional scenario parameters',
+    parser.add_argument('--extra-scenario-params', type=float, nargs="*", help='Additional scenario parameters',
                         dest=additional_scenario_params_key)
 
     return parser

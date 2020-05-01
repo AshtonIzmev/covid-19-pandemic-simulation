@@ -25,16 +25,16 @@ def launch_run():
         params[work_infection_key] = 0.01
         params[store_infection_key] = 0.001
         params[transport_infection_key] = 0.01
-        params[innoculation_number_key] = 5
+        params[innoculation_number_key] = 50
         available_beds = params[icu_bed_per_thousand_individual_key] * params[nindividual_key] / 1000
 
         if len(params[additional_scenario_params_key]) < 3:
             raise AssertionError("Need more additional_scenario parameter")
-        lockdown_change_min_delay = params[additional_scenario_params_key][0]
-        min_nb_new_cases = params[additional_scenario_params_key][1]
-        factor_bed = params[additional_scenario_params_key][2]
-        max_lockdown = params[additional_scenario_params_key][3]
+        days_to_lockdown_loosening = params[additional_scenario_params_key][0]
+        factor_bed = params[additional_scenario_params_key][1]
+        max_lockdown = params[additional_scenario_params_key][2]
 
+        days_with_no_cases = 0
         days_to_lockdown_change = 0
         first_day_lockdown_loosening = -1
 
@@ -56,21 +56,27 @@ def launch_run():
 
             days_to_lockdown_change += 1
 
-            if stats['new'][r][day] <= min_nb_new_cases and days_to_lockdown_change >= lockdown_change_min_delay:
+            if stats['new'][r][day] == 0:
+                days_with_no_cases += 1
+            else:
+                days_with_no_cases = 0
+
+            if days_with_no_cases > days_to_lockdown_loosening and days_to_lockdown_change >= 7:
                 if first_day_lockdown_loosening == -1:
                     first_day_lockdown_loosening = day
+                days_with_no_cases = 0
                 days_to_lockdown_change = 0
                 soften_full_lockdown(params)
-            elif stats['hos'][r][day] >= available_beds/factor_bed \
-                    and days_to_lockdown_change >= lockdown_change_min_delay \
+
+            if stats['hos'][r][day] >= available_beds * factor_bed and days_to_lockdown_change >= 7 \
                     and measure_lockdown_strength(params) < max_lockdown:
                 days_to_lockdown_change = 0
                 tighten_full_lockdown(params)
 
         loosening_day[r] = first_day_lockdown_loosening
-
     loosening_day_ok = [l_v for l_v in loosening_day if l_v != -1]
     print(loosening_day)
-    print("Lockdown removal occured %d times in average after %.2f days"
-          % (len(loosening_day_ok), sum(loosening_day_ok) / (1+len(loosening_day_ok))))
+    if len(loosening_day_ok) > 0:
+        print("Lockdown removal occured %d times in average after %.2f days"
+              % (len(loosening_day_ok), sum(loosening_day_ok) / len(loosening_day_ok)))
     return stats

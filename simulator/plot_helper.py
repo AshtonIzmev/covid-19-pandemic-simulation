@@ -47,7 +47,7 @@ def draw_examples(stats_arg, x_tick=10):
     fig, axes = plt.subplots(grid_size, grid_size, figsize=(16, 10))
     if grid_size * grid_size > stats_arg['hea'].shape[0]:
         raise AssertionError("Raise the number of runs (--nrun parameter) to draw examples")
-    # Maybe I did overthink this but I was looking into the most uncommon runs
+    # Maybe I did overthink this but I was looking for the most uncommon runs
     # Prefered a kmeans over a set of pairwise kolmogorov smirnov tests
     kmeans = KMeans(n_clusters=grid_size * grid_size, random_state=0)
     kmeans.fit(stats_arg['hea'][:, :])
@@ -159,7 +159,7 @@ def set_ax_population_state_daily(ax, stats_arg, x_tick=10):
 
     ax.set_ylabel('Total population')
     ax.set_xlabel('Days since innoculation')
-    ax.set_title('Pandemic evolution - Death percentage %.2f %%"' % (100*dead_serie[-1]/np.max(stats_arg['hea'])))
+    ax.set_title('Average pandemic evolution - Death percentage %.2f %%"' % (100*dead_serie[-1]/np.max(stats_arg['hea'])))
     ax.set_xticks(np.arange(0, n_day_arg, int(n_day_arg / x_tick)),
                   tuple([(str(int(i * n_day_arg / x_tick))) for i in range(x_tick)]))
 
@@ -227,15 +227,15 @@ def set_ax_lockdown_state_daily(ax, stats_lock, x_tick=10):
 
     stats_mean_arg = np.mean(stats_lock, axis=0)
     stats_err_arg = stats.sem(stats_lock, axis=0)
-    serie = [stats_mean_arg[i] * 100 / stats_mean_arg[0] for i in range(n_day_arg)]
-    err = [stats_err_arg[i] * 100 / stats_mean_arg[0] for i in range(n_day_arg)]
+    serie = [stats_mean_arg[i] for i in range(n_day_arg)]
+    err = [stats_err_arg[i] for i in range(n_day_arg)]
     indices = np.arange(n_day_arg)
 
     p = ax.errorbar(indices, serie, yerr=err, ecolor="#808080", color=plot_color)
 
     ax.set_ylabel(name_state)
     ax.set_xlabel('Days since innoculation')
-    ax.set_title('Lockdown evolution (base 100 on day t=0)')
+    ax.set_title('Lockdown evolution : Total area %.2f units' % sum(stats_mean_arg))
 
     max_s = int(max(serie))
     min_s = int(min(serie))

@@ -24,7 +24,7 @@ def launch_run():
         params[work_infection_key] = 0.01
         params[store_infection_key] = 0.001
         params[transport_infection_key] = 0.01
-        params[innoculation_number_key] = 5
+        params[innoculation_number_key] = 50
         available_beds = params[icu_bed_per_thousand_individual_key] * params[nindividual_key] / 1000
 
         if len(params[additional_scenario_params_key]) < 1:
@@ -56,9 +56,10 @@ def launch_run():
             else:
                 days_with_no_cases = 0
 
-            if (days_with_no_cases % days_to_lockdown_loosening == 0) and days_with_no_cases > 0:
+            if days_with_no_cases > days_to_lockdown_loosening:
                 if first_day_lockdown_loosening == -1:
                     first_day_lockdown_loosening = day
+                days_with_no_cases = 0
                 soften_full_lockdown(params)
         loosening_day[r] = first_day_lockdown_loosening
 
