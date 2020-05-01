@@ -3,7 +3,7 @@ import sys
 import time
 
 from scenario.example import sc1_simple_lockdown_removal, sc2_yoyo_lockdown_removal, sc0_base_lockdown, \
-    scx_base_just_a_flu, sc3_loose_lockdown, sc4_rogue_citizen, sc5_rogue_neighborhood
+    scx_base_just_a_flu, sc3_loose_lockdown, sc4_rogue_citizen, sc5_rogue_neighborhood, sc6_travelers
 from simulator.parameters import *
 from simulator.plot_helper import chose_draw_plot
 from simulator.run_helper import get_parser
@@ -33,6 +33,8 @@ if __name__ == '__main__':
         stats_result = sc4_rogue_citizen.launch_run()
     elif params[scenario_id_key] == 5:  # Rogue block
         stats_result = sc5_rogue_neighborhood.launch_run()
+    elif params[scenario_id_key] == 6:  # Rogue block
+        stats_result = sc6_travelers.launch_run()
     else:
         sc5_rogue_neighborhood.launch_run()
         sys.exit(0)

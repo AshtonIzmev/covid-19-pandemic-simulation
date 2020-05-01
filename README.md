@@ -32,6 +32,8 @@ Scenario 1 : Lockdown loosening every 21 days without any new case
 python -m scenario.run --nrun 20  --nday 360 --nind 35000 --scenario 1 --days-lockdown-removal 21 --draw pop new hos
 ```
 
+More scenarios are available in the scenario package.
+
 # Usage
 ```bash
 usage: run.py [-h] [--nrun NRUN] [--random-seed RANDOM_SEED]
@@ -39,16 +41,19 @@ usage: run.py [-h] [--nrun NRUN] [--random-seed RANDOM_SEED]
               [--sto-house NB_STORE_PER_HOUSE] [--nblock NB_1D_GRID_BLOCK]
               [--remote-work REMOTE_WORK_PERCENT]
               [--sto-pref PROB_PREFERENCE_STORE]
+              [--sto-nb STORE_NB_CHOICE_KEY]
               [--inn-infec INITIAL_INNOCULATION_NB]
               [--p-house PROB_HOUSE_INFECTION]
               [--p-store PROB_STORE_INFECTION] [--p-work PROB_WORK_INFECTION]
+              [--p-transport PROB_TRANSPORT_INFECTION]
+              [--transport-contact-cap TRANSPORT_CONTACT_CAP]
               [--contagion-bounds CONTAGION_BOUNDS CONTAGION_BOUNDS]
               [--hospitalization-bounds HOSPITALIZATION_BOUNDS HOSPITALIZATION_BOUNDS]
               [--death-bounds DEATH_BOUNDS DEATH_BOUNDS]
               [--immunity-bounds IMMUNITY_BOUNDS IMMUNITY_BOUNDS]
-              [--scenario-id SCENARIO_ID]
+              [--nbeds-icu ICU_BED_PER_1K_INDIV] [--scenario-id SCENARIO_ID]
               [--draw [DRAW_GRAPH [DRAW_GRAPH ...]]]
-              [--days-lockdown-removal DAYS_WAIT_FOR_LOCKDOWN_REMOVAL]
+              [--extra-scenario-params [ADDITIONAL_SCENARIO_PARAMETERS [ADDITIONAL_SCENARIO_PARAMETERS ...]]]
 
 Please feed model parameters
 
@@ -67,6 +72,8 @@ optional arguments:
                         Percentage of people remote working
   --sto-pref PROB_PREFERENCE_STORE
                         Probability going to nearest store
+  --sto-nb STORE_NB_CHOICE_KEY
+                        Number of nearest stores to consider
   --inn-infec INITIAL_INNOCULATION_NB
                         Initial innoculation percentage
   --p-house PROB_HOUSE_INFECTION
@@ -75,6 +82,10 @@ optional arguments:
                         Probability of store infection
   --p-work PROB_WORK_INFECTION
                         Probability of workplace infection
+  --p-transport PROB_TRANSPORT_INFECTION
+                        Probability of public transportation infection
+  --transport-contact-cap TRANSPORT_CONTACT_CAP
+                        Number of people an individual is close when commuting
   --contagion-bounds CONTAGION_BOUNDS CONTAGION_BOUNDS
                         Contagion bounds
   --hospitalization-bounds HOSPITALIZATION_BOUNDS HOSPITALIZATION_BOUNDS
@@ -83,6 +94,8 @@ optional arguments:
                         Death bounds
   --immunity-bounds IMMUNITY_BOUNDS IMMUNITY_BOUNDS
                         Immunity bounds
+  --nbeds-icu ICU_BED_PER_1K_INDIV
+                        Number of ICU beds per thousand population
   --scenario-id SCENARIO_ID, --sce SCENARIO_ID
                         Immunity bounds
   --draw [DRAW_GRAPH [DRAW_GRAPH ...]]
@@ -90,8 +103,8 @@ optional arguments:
                         3 letters of its keys. Choose from "example",
                         "hospital", "new", "summary", "population", "lockdown"
                         and more
-  --days-lockdown-removal DAYS_WAIT_FOR_LOCKDOWN_REMOVAL
-                        Number of days to lockdown removal
+  --extra-scenario-params [ADDITIONAL_SCENARIO_PARAMETERS [ADDITIONAL_SCENARIO_PARAMETERS ...]]
+                        Additional scenario parameters
 ```
 
 # Main idea
@@ -149,6 +162,7 @@ Using a quick and dirty kmeans, we only display the most "different" run distrib
 
 # Backlog
 - [ ]  Switch from dictionaries and list to numpy array (may be way more efficient, probably enabling some nice vectorization but huge refactors to come)
+- [ ]  parallelize the runs (using for example N_proc-1 processors multithreading)
 - [ ]  More tests, there are never enough tests
 - [ ]  Get rid of FN_K: get_infection_params and use a python class
 - [ ]  Get rid of params as a global variable and use a function (probably a bad pattern)
@@ -173,6 +187,7 @@ Using a quick and dirty kmeans, we only display the most "different" run distrib
 
 ## Articles explaining the approach
 https://issam.ma/jekyll/update/2020/04/11/covid-pandemic-simulation.html (French)
+https://issam.ma/jekyll/update/2020/05/01/pandemic-lockdown-scenarios.html (French)
 
 # Links
 [1] https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology#The_SEIR_model

@@ -1,12 +1,11 @@
-import numpy as np
-
 from scenario.scenario_helper import measure_lockdown_strength, get_zero_stats
 from simulator.dynamic_helper import propagate_to_stores, propagate_to_houses, propagate_to_workplaces, \
-    increment_pandemic_1_day, is_weekend, update_stats, propagate_to_transportation
-from simulator.keys import IBE_K, HB_K, HI_K
+    increment_pandemic_1_day, is_weekend, update_stats, propagate_to_transportation, get_infected_people, \
+    get_healthy_people, update_infection_period
 from simulator.parameters import *
 from simulator.plot_helper import print_progress_bar
 from simulator.simulation_helper import get_environment_simulation, get_virus_simulation_t0
+from initiator.helper import get_random_sample
 
 
 # This scenario is the basic one with a classic dynamic
@@ -14,24 +13,9 @@ def launch_run():
     print('Preparing environment...')
     env_dic = get_environment_simulation(params)
 
-    if len(params[additional_scenario_params_key]) < 2:
+    if len(params[additional_scenario_params_key]) < 1:
         raise AssertionError("Need more additional_scenario parameter")
-    nb_bloc = int(params[additional_scenario_params_key][0])
-    rogue_factor = params[additional_scenario_params_key][1]
-
-    print("Global behavior %.2f before " % sum(env_dic[IBE_K].values()))
-    rogues_blocks_x = np.random.choice(range(params[nb_1d_block_key]), nb_bloc)
-    rogues_blocks_y = np.random.choice(range(params[nb_1d_block_key]), nb_bloc)
-    affected_people = 0
-    for b in range(nb_bloc):
-        houses = [h for h, v in enumerate(env_dic[HB_K]) if v[0] == rogues_blocks_x[b]
-                  and v[1] == rogues_blocks_y[b]]
-        for h in houses:
-            for i in env_dic[HI_K][h]:
-                affected_people += 1
-                env_dic[IBE_K][i] *= rogue_factor
-
-    print("Global behavior %.2f after with %d people" % (sum(env_dic[IBE_K].values()), affected_people))
+    nb_to_infect = int(params[additional_scenario_params_key][0])
 
     stats = get_zero_stats()
     print_progress_bar(0, params[nrun_key] * params[nday_key], prefix='Progress:', suffix='Complete', length=50)
@@ -41,7 +25,6 @@ def launch_run():
         params[remote_work_key] = 0.98
         params[house_infect_key] = 0.5
         params[work_infection_key] = 0.01
-        params[store_infection_key] = 0.001
         params[transport_infection_key] = 0.01
         params[innoculation_number_key] = 50
         available_beds = params[icu_bed_per_thousand_individual_key] * params[nindividual_key] / 1000
@@ -58,6 +41,8 @@ def launch_run():
             if is_weekend(day):
                 propagate_to_stores(env_dic, virus_dic, params[store_infection_key], params[store_preference_key])
             increment_pandemic_1_day(env_dic, virus_dic, available_beds)
+
+            update_infection_period(get_random_sample(get_healthy_people(virus_dic), nb_to_infect), virus_dic)
 
             update_stats(virus_dic, stats, r, day)
             stats["loc"][r][day] = measure_lockdown_strength(params)
