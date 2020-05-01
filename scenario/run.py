@@ -2,8 +2,8 @@ import random
 import sys
 import time
 
-from scenario.example import simple_lockdown_removal_scenario_1, yoyo_lockdown_removal_scenario_2, \
-    base_lockdown_scenario_0, base_just_a_flu_scenario_X, loose_lockdown_scenario_3
+from scenario.example import sc1_simple_lockdown_removal, sc2_yoyo_lockdown_removal, \
+    sc0_base_lockdown, scx_base_just_a_flu, sc3_loose_lockdown
 from simulator.parameters import *
 from simulator.plot_helper import chose_draw_plot
 from simulator.run_helper import get_parser
@@ -24,15 +24,15 @@ if __name__ == '__main__':
     # params[draw_graph_key] = ['examples']
 
     if params[scenario_id_key] == -1:
-        stats_result = base_just_a_flu_scenario_X.launch_run()
+        stats_result = scx_base_just_a_flu.launch_run()
     elif params[scenario_id_key] == 0:  # Total lockdown
-        stats_result = base_lockdown_scenario_0.launch_run()
+        stats_result = sc0_base_lockdown.launch_run()
     elif params[scenario_id_key] == 1:  # Lockdown removal after N days
-        stats_result = simple_lockdown_removal_scenario_1.launch_run()
+        stats_result = sc1_simple_lockdown_removal.launch_run()
     elif params[scenario_id_key] == 2:  # Yoyo lockdown removal
-        stats_result = yoyo_lockdown_removal_scenario_2.launch_run()
+        stats_result = sc2_yoyo_lockdown_removal.launch_run()
     elif params[scenario_id_key] == 3:  # Yoyo lockdown removal
-        stats_result = loose_lockdown_scenario_3.launch_run()
+        stats_result = sc3_loose_lockdown.launch_run()
     else:
         sys.exit(0)
     print("It took : %.2f seconds" % (time.time() - t_start))

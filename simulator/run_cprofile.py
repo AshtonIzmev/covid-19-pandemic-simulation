@@ -1,7 +1,7 @@
 import random
 import time
 
-from scenario.example import base_just_a_flu_scenario_X
+from scenario.example import scx_base_just_a_flu
 from simulator.parameters import *
 from simulator.plot_helper import chose_draw_plot
 from simulator.run_helper import get_parser
@@ -17,6 +17,6 @@ if __name__ == '__main__':
 
     random.seed(params[random_seed_key])
     t_start = time.time()
-    stats_result = base_just_a_flu_scenario_X.launch_run()
+    stats_result = scx_base_just_a_flu.launch_run()
     print("It took : %.2f seconds" % (time.time() - t_start))
     chose_draw_plot(params[draw_graph_key], stats_result)
