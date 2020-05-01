@@ -83,7 +83,7 @@ class TestSimulation(unittest.TestCase):
             STA_K: {1: H, 4: F, 5: H},
             NC_K: 0
         }
-        propagate_to_workplaces(env_dic, virus_dic, 0.99, 0.98)
+        propagate_to_workplaces(env_dic, virus_dic, 0.99, 0)
         self.assertEqual(virus_dic[STA_K][1], H)
         self.assertEqual(virus_dic[STA_K][4], F)
         self.assertEqual(virus_dic[STA_K][5], H)
@@ -97,11 +97,11 @@ class TestSimulation(unittest.TestCase):
             IBE_K: {1: 1, 4: 1, 5: 1}
         }
         virus_dic = {
-            CON_K: {1: -2, 4: 1, 5: 4},
+            CON_K: {1: 8, 4: 1, 5: 4},
             STA_K: {1: H, 4: F, 5: H},
             NC_K: 0
         }
-        propagate_to_workplaces(env_dic, virus_dic, 0.99, 0.98)
+        propagate_to_workplaces(env_dic, virus_dic, 0.99, 0)
         self.assertEqual(virus_dic[STA_K][1], H)
         self.assertEqual(virus_dic[STA_K][4], F)
         self.assertEqual(virus_dic[STA_K][5], H)
@@ -114,13 +114,32 @@ class TestSimulation(unittest.TestCase):
             IBE_K: {1: 1, 4: 1, 5: 1}
         }
         virus_dic = {
-            CON_K: {1: -2, 4: 1, 5: 4},
+            CON_K: {1: 8, 4: 1, 5: 4},
             STA_K: {1: H, 4: H, 5: H},
             NC_K: 0
         }
-        propagate_to_workplaces(env_dic, virus_dic, 0.99, 0.98)
+        propagate_to_workplaces(env_dic, virus_dic, 0.99, 0)
         self.assertEqual(virus_dic[STA_K][1], H)
         self.assertEqual(virus_dic[STA_K][4], H)
+        self.assertEqual(virus_dic[STA_K][5], H)
+
+    def test_propagate_to_workplaces_bad_behavior(self):
+        # Nobody should go to work (remote parameter high
+        # But i1 and i4 have bad behavior
+        # And since i1 is contagious, i4 gets infected
+        env_dic = {
+            IW_K: {1: 1, 4: 1, 5: 0},
+            WI_K: {0: [5], 1: [4, 1]},
+            IBE_K: {1: 100, 4: 100, 5: 1}
+        }
+        virus_dic = {
+            CON_K: {1: -2, 4: 1, 5: 4},
+            STA_K: {1: F, 4: H, 5: H},
+            NC_K: 0
+        }
+        propagate_to_workplaces(env_dic, virus_dic, 0.99, 0.98)
+        self.assertEqual(virus_dic[STA_K][1], F)
+        self.assertEqual(virus_dic[STA_K][4], F)
         self.assertEqual(virus_dic[STA_K][5], H)
 
 

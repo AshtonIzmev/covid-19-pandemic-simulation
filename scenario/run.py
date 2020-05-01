@@ -2,8 +2,8 @@ import random
 import sys
 import time
 
-from scenario.example import sc1_simple_lockdown_removal, sc2_yoyo_lockdown_removal, \
-    sc0_base_lockdown, scx_base_just_a_flu, sc3_loose_lockdown
+from scenario.example import sc1_simple_lockdown_removal, sc2_yoyo_lockdown_removal, sc0_base_lockdown, \
+    scx_base_just_a_flu, sc3_loose_lockdown, sc4_rogue_citizen, sc5_rogue_neighborhood
 from simulator.parameters import *
 from simulator.plot_helper import chose_draw_plot
 from simulator.run_helper import get_parser
@@ -19,10 +19,6 @@ if __name__ == '__main__':
 
     t_start = time.time()
 
-    # params[scenario_id_key] = -1
-    # params[nrun_key] = 20
-    # params[draw_graph_key] = ['examples']
-
     if params[scenario_id_key] == -1:
         stats_result = scx_base_just_a_flu.launch_run()
     elif params[scenario_id_key] == 0:  # Total lockdown
@@ -33,7 +29,12 @@ if __name__ == '__main__':
         stats_result = sc2_yoyo_lockdown_removal.launch_run()
     elif params[scenario_id_key] == 3:  # Yoyo lockdown removal
         stats_result = sc3_loose_lockdown.launch_run()
+    elif params[scenario_id_key] == 4:  # Rogue citizen
+        stats_result = sc4_rogue_citizen.launch_run()
+    elif params[scenario_id_key] == 5:  # Rogue block
+        stats_result = sc5_rogue_neighborhood.launch_run()
     else:
+        sc5_rogue_neighborhood.launch_run()
         sys.exit(0)
     print("It took : %.2f seconds" % (time.time() - t_start))
 

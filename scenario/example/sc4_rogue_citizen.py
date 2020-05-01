@@ -1,32 +1,36 @@
+import random
+
 from scenario.scenario_helper import measure_lockdown_strength, get_zero_stats
 from simulator.dynamic_helper import propagate_to_stores, propagate_to_houses, propagate_to_workplaces, \
-    increment_pandemic_1_day, is_weekend, update_stats, propagate_to_transportation
+    increment_pandemic_1_day, is_weekend, update_stats, propagate_to_transportation, get_contagious_people
+from simulator.keys import IBE_K
 from simulator.parameters import *
 from simulator.plot_helper import print_progress_bar
 from simulator.simulation_helper import get_environment_simulation, get_virus_simulation_t0
+from initiator.helper import get_random_sample
 
 
-# This scenario is a loose lockdown à la suedoise
+# This scenario is the basic one with a classic dynamic
 def launch_run():
     print('Preparing environment...')
     env_dic = get_environment_simulation(params)
 
-    if len(params[additional_scenario_params_key]) < 1:
+    if len(params[additional_scenario_params_key]) < 2:
         raise AssertionError("Need more additional_scenario parameter")
-    percent_increase = params[additional_scenario_params_key][0]
+    nb_rogue = int(params[additional_scenario_params_key][0])
+    rogue_factor = params[additional_scenario_params_key][1]
 
     stats = get_zero_stats()
     print_progress_bar(0, params[nrun_key] * params[nday_key], prefix='Progress:', suffix='Complete', length=50)
     for r in range(params[nrun_key]):
 
-        params[store_preference_key] = 0.3
-        params[remote_work_key] = 0.58
+        params[store_preference_key] = 0.95
+        params[remote_work_key] = 0.98
         params[house_infect_key] = 0.5
         params[work_infection_key] = 0.01
         params[store_infection_key] = 0.001
         params[transport_infection_key] = 0.01
         params[innoculation_number_key] = 50
-        params[icu_bed_per_thousand_individual_key] = 100
         available_beds = params[icu_bed_per_thousand_individual_key] * params[nindividual_key] / 1000
 
         virus_dic = get_virus_simulation_t0(params)
@@ -42,11 +46,11 @@ def launch_run():
                 propagate_to_stores(env_dic, virus_dic, params[store_infection_key], params[store_preference_key])
             increment_pandemic_1_day(env_dic, virus_dic, available_beds)
 
-            if day > 0 and day % 7 == 0:
-                params[work_infection_key] *= (1+percent_increase)
-                params[store_infection_key] *= (1+percent_increase)
-                params[transport_infection_key] *= (1+percent_increase)
-                params[innoculation_number_key] *= (1+percent_increase)
+            contagious_people = get_contagious_people(virus_dic)
+            if len(contagious_people) > 0:
+                rogues = get_random_sample(contagious_people, nb_rogue)
+                for rogue in rogues:
+                    env_dic[IBE_K][rogue] *= rogue_factor
 
             update_stats(virus_dic, stats, r, day)
             stats["loc"][r][day] = measure_lockdown_strength(params)
