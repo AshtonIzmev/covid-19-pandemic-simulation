@@ -3,10 +3,13 @@ import unittest
 
 import numpy as np
 
-from simulator.dynamic_helper import update_infection_period
-from simulator.keys import *
-from simulator.parameters import *
-from simulator.simulation_helper import get_environment_simulation, get_virus_simulation_t0
+from simulator.helper.dynamic import update_infection_period
+from simulator.constants.keys import *
+from simulator.constants.keys import nindividual_key, innoculation_number_key, nb_1d_block_key, remote_work_key, \
+    store_per_house_key, store_preference_key, store_nb_choice_key, transport_contact_cap_key, contagion_bounds_key, \
+    hospitalization_bounds_key, death_bounds_key, immunity_bounds_key
+from simulator.helper.simulation import get_virus_simulation_t0
+from simulator.helper.environment import get_environment_simulation
 
 H = HEALTHY_V
 F = INFECTED_V

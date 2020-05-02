@@ -1,6 +1,7 @@
-from initiator.helper import get_r, get_mortalty_rate, get_hospitalization_rate, reduce_multiply_by_key
-from initiator.helper import get_random_choice_list, choose_weight_order, get_random_sample
-from simulator.keys import *
+from simulator.constants.keys import *
+from simulator.constants.parameters import covid_mortality_rate, covid_hospitalization_rate
+from simulator.helper.utils import get_random_sample, get_r, reduce_multiply_by_key, choose_weight_order, \
+    get_random_choice_list
 
 
 # Assuming 0 is Monday
@@ -248,3 +249,13 @@ def get_pandemic_statistics(virus_dic):
 def update_stats(virus_dic, stats, r, d):
     for k, v in get_pandemic_statistics(virus_dic).items():
         stats[k][r][d] = v
+
+
+def get_mortalty_rate(age):
+    i = next(x for x in enumerate(list(covid_mortality_rate.keys())) if x[1] <= age / 10)
+    return covid_mortality_rate[i[1]]
+
+
+def get_hospitalization_rate(age):
+    i = next(x for x in enumerate(list(covid_hospitalization_rate.keys())) if x[1] <= age / 10)
+    return covid_hospitalization_rate[i[1]]

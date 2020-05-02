@@ -1,10 +1,8 @@
 import random
 import unittest
 
-import numpy as np
-
-from initiator.helper import get_infection_parameters
-from simulator.dynamic_helper import increment_pandemic_1_day, decide_hospitalization
+from simulator.helper.simulation import get_infection_parameters
+from simulator.helper.dynamic import increment_pandemic_1_day, decide_hospitalization
 from tests.constant import *
 
 

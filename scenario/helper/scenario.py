@@ -1,20 +1,22 @@
 import math
+
 import numpy as np
 
-from simulator.parameters import *
+from simulator.constants.keys import nrun_key, nday_key, remote_work_key, store_preference_key, house_infect_key, \
+    work_infection_key, store_infection_key, transport_infection_key
 
 
-def get_zero_stats():
+def get_zero_stats(params_arg):
     return {
-        "hea": np.zeros((params[nrun_key], params[nday_key])),
-        "inf": np.zeros((params[nrun_key], params[nday_key])),
-        "hos": np.zeros((params[nrun_key], params[nday_key])),
-        "dea": np.zeros((params[nrun_key], params[nday_key])),
-        "imm": np.zeros((params[nrun_key], params[nday_key])),
-        "iso": np.zeros((params[nrun_key], params[nday_key])),
-        "R0": np.zeros((params[nrun_key], params[nday_key])),
-        "new": np.zeros((params[nrun_key], params[nday_key])),
-        "loc": np.zeros((params[nrun_key], params[nday_key]))
+        "hea": np.zeros((params_arg[nrun_key], params_arg[nday_key])),
+        "inf": np.zeros((params_arg[nrun_key], params_arg[nday_key])),
+        "hos": np.zeros((params_arg[nrun_key], params_arg[nday_key])),
+        "dea": np.zeros((params_arg[nrun_key], params_arg[nday_key])),
+        "imm": np.zeros((params_arg[nrun_key], params_arg[nday_key])),
+        "iso": np.zeros((params_arg[nrun_key], params_arg[nday_key])),
+        "R0": np.zeros((params_arg[nrun_key], params_arg[nday_key])),
+        "new": np.zeros((params_arg[nrun_key], params_arg[nday_key])),
+        "loc": np.zeros((params_arg[nrun_key], params_arg[nday_key]))
     }
 
 

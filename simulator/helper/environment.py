@@ -1,9 +1,64 @@
+import math
 import random
 
 from scipy import spatial
-from initiator.helper import get_r, get_moroccan_household_distribution, invert_map, pick_age, \
-    get_center_squized_random, pick_random_company_size, rec_get_manhattan_walk, invert_map_list, \
-    get_lockdown_behavior_distribution, get_random_sample
+
+from simulator.constants.keys import nindividual_key, store_per_house_key, nb_1d_block_key, store_nb_choice_key, \
+    transport_contact_cap_key, IH_K, HI_K, IAD_K, IAG_K, IW_K, WI_K, HA_K, HS_K, ITI_K, HB_K, IBE_K
+from simulator.constants.parameters import TPE_MAX_EMPLOYEES, PME_MAX_EMPLOYEES, GE_MAX_EMPLOYEES
+from simulator.constants.parameters import age_dist_adults_cs, age_dist_adults, \
+    age_dist_children, age_dist_children_cs
+from simulator.helper.utils import invert_map, get_r, get_center_squized_random, rec_get_manhattan_walk, \
+    invert_map_list, \
+    get_random_sample, get_clipped_gaussian_number
+
+
+def get_environment_simulation(params_arg):
+    number_of_individuals_arg = params_arg[nindividual_key]
+    number_store_per_house_arg = params_arg[store_per_house_key]
+    nb_1d_block_arg = params_arg[nb_1d_block_key]
+    nb_store_choice = params_arg[store_nb_choice_key]
+    transportation_cap = params_arg[transport_contact_cap_key]
+
+    indiv_house = build_individual_houses_map(number_of_individuals_arg)
+    house_indiv = build_house_individual_map(indiv_house)
+    indiv_adult = build_individual_adult_map(indiv_house)
+    indiv_age = build_individual_age_map(indiv_house)
+
+    indiv_workplace = build_individual_work_map(indiv_adult)
+    workplace_indiv = build_workplace_individual_map(indiv_workplace)
+    house_adult = build_house_adult_map(indiv_house, indiv_adult)
+
+    geo_house = build_geo_positions_house(len(house_indiv))
+    geo_workplace = build_geo_positions_workplace(len(workplace_indiv))
+    geo_store = build_geo_positions_store(int(len(house_indiv) / number_store_per_house_arg))
+
+    house_store = build_house_store_map(geo_store, geo_house, nb_store_choice)
+
+    house_block = build_block_assignment(geo_house, nb_1d_block_arg)
+    workplace_block = build_block_assignment(geo_workplace, nb_1d_block_arg)
+
+    indiv_behavior = build_1d_item_behavior(number_of_individuals_arg)
+
+    indiv_transport_block = build_individual_workblock_map(indiv_house, indiv_workplace, house_block, workplace_block)
+    transport_block_indiv = build_workblock_individual_map(indiv_transport_block)
+
+    indiv_transport_indiv = build_individual_individual_transport_map(indiv_transport_block, transport_block_indiv,
+                                                                      transportation_cap)
+
+    return {
+        IH_K: indiv_house,
+        HI_K: house_indiv,
+        IAD_K: indiv_adult,
+        IAG_K: indiv_age,
+        IW_K: indiv_workplace,
+        WI_K: workplace_indiv,
+        HA_K: house_adult,
+        HS_K: house_store,
+        ITI_K: indiv_transport_indiv,
+        HB_K: house_block,
+        IBE_K: indiv_behavior
+    }
 
 
 def build_individual_houses_map(number_individual_arg):
@@ -158,3 +213,37 @@ def build_individual_individual_transport_map(individual_transport_block_map_arg
             individual_individual_transport_dic[ind].update(
                 get_random_sample(set(transport_block_individual_map_arg[block]), transportation_cap_arg))
     return individual_individual_transport_dic
+
+
+def get_moroccan_household_distribution():
+    return get_clipped_gaussian_number(1, 10, 4.52, math.sqrt(4.71)).astype(int)
+
+
+def pick_random_company_size():
+    p = get_r()
+    if p < 0.44:
+        # We picked a TPE
+        return int(1 + (TPE_MAX_EMPLOYEES - 1) * get_r())
+    elif p < 0.86:
+        # We picked a PME
+        return int(TPE_MAX_EMPLOYEES + (PME_MAX_EMPLOYEES - TPE_MAX_EMPLOYEES) * get_r())
+    else:
+        # We picked a PME
+        return int(PME_MAX_EMPLOYEES + (GE_MAX_EMPLOYEES - PME_MAX_EMPLOYEES) * get_r())
+
+
+def get_lockdown_behavior_distribution():
+    return get_clipped_gaussian_number(0.5, 1.5, 1, 0.25)
+
+
+def pick_age(is_child):
+    if is_child:
+        l_cs = age_dist_children_cs
+        l_dis = age_dist_children
+    else:
+        l_cs = age_dist_adults_cs
+        l_dis = age_dist_adults
+    i = next(x[0] for x in enumerate(l_cs.values) if x[1] > get_r())
+    min_age_i = l_dis.iloc[i]['min_age']
+    max_age_i = l_dis.iloc[i]['max_age']
+    return int(min_age_i + (max_age_i - min_age_i) * get_r())

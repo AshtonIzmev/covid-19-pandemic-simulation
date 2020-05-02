@@ -1,6 +1,9 @@
+import pandas as pd
+
 TPE_MAX_EMPLOYEES = 3
 PME_MAX_EMPLOYEES = 15
 GE_MAX_EMPLOYEES = 50
+
 
 # Source : https://www.worldometers.info/coronavirus/coronavirus-age-sex-demographics/
 covid_mortality_rate = {
@@ -51,3 +54,24 @@ world_age_distribution = [
     ["95-99", 1203726, 3239297],
     ["100-125", 114528, 418582]
 ]
+
+
+def get_age_distribution():
+    # Source https://www.populationpyramid.net/world/2019/
+    age_distribution = pd.DataFrame(world_age_distribution, columns=['age', 'nb_men', 'nb_women'])
+    age_distribution['nb'] = age_distribution['nb_men'] + age_distribution['nb_women']
+    age_distribution['pct'] = age_distribution['nb'] / age_distribution['nb'].sum()
+    age_distribution['min_age'] = age_distribution['age'].map(lambda s: int(s.split('-')[0]))
+    age_distribution['max_age'] = age_distribution['age'].map(lambda s: int(s.split('-')[1]))
+    # We did a cut to 25 years old for adult
+    age_distribution_children = age_distribution.iloc[:7]
+    age_distribution_adults = age_distribution.iloc[4:]
+    age_distribution_children_cumsum = \
+        age_distribution_children['pct'].cumsum() / age_distribution_children['pct'].cumsum().max()
+    age_distribution_adults_cumsum = \
+        age_distribution_adults['pct'].cumsum() / age_distribution_adults['pct'].cumsum().max()
+    return age_distribution_children, age_distribution_children_cumsum, age_distribution_adults, \
+           age_distribution_adults_cumsum
+
+
+age_dist_children, age_dist_children_cs, age_dist_adults, age_dist_adults_cs = get_age_distribution()

@@ -3,10 +3,11 @@ import unittest
 
 import numpy as np
 
-from initiator.core import build_individual_houses_map, build_individual_adult_map, build_individual_age_map, \
-    build_house_adult_map, build_house_store_map, build_individual_work_map, build_individual_workblock_map, \
-    build_individual_individual_transport_map, build_1d_item_behavior, build_2d_item_behavior
-from initiator.helper import invert_map, invert_map_list
+from simulator.helper.environment import build_individual_houses_map, build_individual_adult_map, \
+    build_individual_age_map, build_house_adult_map, build_2d_item_behavior, build_1d_item_behavior, \
+    build_house_store_map, build_individual_work_map, build_individual_workblock_map, \
+    build_individual_individual_transport_map
+from simulator.helper.utils import invert_map_list, invert_map
 
 
 class TestInitiation(unittest.TestCase):

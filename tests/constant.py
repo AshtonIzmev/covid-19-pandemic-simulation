@@ -1,4 +1,4 @@
-from simulator.keys import *
+from simulator.constants.keys import *
 
 H = HEALTHY_V
 F = INFECTED_V

@@ -1,21 +1,25 @@
-from scenario.scenario_helper import measure_lockdown_strength, get_zero_stats
-from simulator.dynamic_helper import propagate_to_stores, propagate_to_houses, propagate_to_workplaces, \
+from scenario.helper.scenario import measure_lockdown_strength, get_zero_stats
+from simulator.constants.keys import nrun_key, nindividual_key, nday_key, innoculation_number_key, remote_work_key, \
+    store_preference_key, house_infect_key, work_infection_key, store_infection_key, transport_infection_key, \
+    transport_contact_cap_key, icu_bed_per_thousand_individual_key, additional_scenario_params_key
+from simulator.helper.dynamic import propagate_to_stores, propagate_to_houses, propagate_to_workplaces, \
     increment_pandemic_1_day, is_weekend, update_stats, propagate_to_transportation
-from simulator.parameters import *
-from simulator.plot_helper import print_progress_bar
-from simulator.simulation_helper import get_environment_simulation, get_virus_simulation_t0
+from simulator.helper.environment import get_environment_simulation
+from simulator.helper.plot import print_progress_bar
+from simulator.helper.simulation import get_virus_simulation_t0, get_default_params
 
 
 # This scenario is a loose lockdown à la suedoise
 def launch_run():
     print('Preparing environment...')
+    params = get_default_params()
     env_dic = get_environment_simulation(params)
 
     if len(params[additional_scenario_params_key]) < 1:
         raise AssertionError("Need more additional_scenario parameter")
     percent_increase = params[additional_scenario_params_key][0]
 
-    stats = get_zero_stats()
+    stats = get_zero_stats(params)
     print_progress_bar(0, params[nrun_key] * params[nday_key], prefix='Progress:', suffix='Complete', length=50)
     for r in range(params[nrun_key]):
 

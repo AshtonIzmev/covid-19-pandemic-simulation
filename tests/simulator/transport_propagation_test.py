@@ -1,9 +1,7 @@
 import random
 import unittest
 
-import numpy as np
-
-from simulator.dynamic_helper import propagate_to_transportation
+from simulator.helper.dynamic import propagate_to_transportation
 from tests.constant import *
 
 

@@ -1,9 +1,10 @@
 import random
 import unittest
 
-from initiator.helper import invert_map, flatten, get_random_choice_list, get_infection_parameters, \
-    get_mortalty_rate, get_hospitalization_rate, rec_get_manhattan_walk, invert_map_list, reduce_multiply_by_key, \
-    choose_weight_order
+from simulator.helper.simulation import get_infection_parameters
+from simulator.helper.dynamic import get_mortalty_rate, get_hospitalization_rate
+from simulator.helper.utils import invert_map_list, invert_map, flatten, reduce_multiply_by_key, choose_weight_order, \
+    rec_get_manhattan_walk, get_random_choice_list
 
 
 class TestHelpers(unittest.TestCase):
