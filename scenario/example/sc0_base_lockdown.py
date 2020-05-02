@@ -4,19 +4,13 @@ from simulator.constants.keys import nrun_key, nindividual_key, nday_key, innocu
     transport_contact_cap_key, icu_bed_per_thousand_individual_key
 from simulator.helper.dynamic import propagate_to_stores, propagate_to_houses, propagate_to_workplaces, \
     increment_pandemic_1_day, is_weekend, update_stats, propagate_to_transportation
-from simulator.helper.environment import get_environment_simulation
 from simulator.helper.plot import print_progress_bar
-from simulator.helper.simulation import get_virus_simulation_t0, get_default_params
+from simulator.helper.simulation import get_virus_simulation_t0
 
 
 # This scenario is the basic one with a classic dynamic
-def launch_run():
-    print('Preparing environment...')
-    params = get_default_params()
-    env_dic = get_environment_simulation(params)
-
+def launch_run(params, env_dic, display_progress=True):
     stats = get_zero_stats(params)
-    print_progress_bar(0, params[nrun_key] * params[nday_key], prefix='Progress:', suffix='Complete', length=50)
     for r in range(params[nrun_key]):
 
         params[store_preference_key] = 0.95
@@ -26,8 +20,9 @@ def launch_run():
 
         virus_dic = get_virus_simulation_t0(params)
         for day in range(params[nday_key]):
-            print_progress_bar(r * params[nday_key] + day + 1, params[nrun_key] * params[nday_key],
-                               prefix='Progress:', suffix='Complete', length=50)
+            if display_progress:
+                print_progress_bar(r * params[nday_key] + day + 1, params[nrun_key] * params[nday_key],
+                                   prefix='Progress:', suffix='Complete', length=50)
             propagate_to_houses(env_dic, virus_dic, params[house_infect_key])
             if not is_weekend(day):
                 propagate_to_transportation(env_dic, virus_dic, params[transport_infection_key],

@@ -165,7 +165,7 @@ Using a quick and dirty kmeans, we only display the most "different" run distrib
 - [ ]  parallelize the runs (using for example N_proc-1 processors multithreading)
 - [ ]  More tests, there are never enough tests
 - [ ]  Get rid of FN_K: get_infection_params and use a python class
-- [ ]  Get rid of params as a global variable and use a function (probably a bad pattern)
+- [x]  Get rid of params as a global variable and use a function (probably a bad pattern)
 - [x]  Plot the R0 of the pandemic ? (with linear and logarithmic scale)
 - [x]  Fix transport propagation performance issue
 - [x]  Add a test-isolation stratey. Since at the end of the confinement, we assume that a part of the people will be tested and positive persons will be isolated.

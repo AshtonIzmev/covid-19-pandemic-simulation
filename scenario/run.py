@@ -8,6 +8,7 @@ from simulator.constants.keys import scenario_id_key, random_seed_key, draw_grap
 from simulator.helper.parser import get_parser
 from simulator.helper.plot import chose_draw_plot
 from simulator.helper.simulation import get_default_params
+from simulator.helper.environment import get_environment_simulation
 
 if __name__ == '__main__':
     params = get_default_params()
@@ -22,24 +23,26 @@ if __name__ == '__main__':
 
     t_start = time.time()
 
+    params = get_default_params()
+    env_dic = get_environment_simulation(params)
+
     if params[scenario_id_key] == -1:
-        stats_result = scx_base_just_a_flu.launch_run()
+        stats_result = scx_base_just_a_flu.launch_run(params, env_dic)
     elif params[scenario_id_key] == 0:  # Total lockdown
-        stats_result = sc0_base_lockdown.launch_run()
+        stats_result = sc0_base_lockdown.launch_run(params, env_dic)
     elif params[scenario_id_key] == 1:  # Lockdown removal after N days
-        stats_result = sc1_simple_lockdown_removal.launch_run()
+        stats_result = sc1_simple_lockdown_removal.launch_run(params, env_dic)
     elif params[scenario_id_key] == 2:  # Yoyo lockdown removal
-        stats_result = sc2_yoyo_lockdown_removal.launch_run()
+        stats_result = sc2_yoyo_lockdown_removal.launch_run(params, env_dic)
     elif params[scenario_id_key] == 3:  # Yoyo lockdown removal
-        stats_result = sc3_loose_lockdown.launch_run()
+        stats_result = sc3_loose_lockdown.launch_run(params, env_dic)
     elif params[scenario_id_key] == 4:  # Rogue citizen
-        stats_result = sc4_rogue_citizen.launch_run()
+        stats_result = sc4_rogue_citizen.launch_run(params, env_dic)
     elif params[scenario_id_key] == 5:  # Rogue block
-        stats_result = sc5_rogue_neighborhood.launch_run()
+        stats_result = sc5_rogue_neighborhood.launch_run(params, env_dic)
     elif params[scenario_id_key] == 6:  # Rogue block
-        stats_result = sc6_travelers.launch_run()
+        stats_result = sc6_travelers.launch_run(params, env_dic)
     else:
-        sc5_rogue_neighborhood.launch_run()
         sys.exit(0)
     print("It took : %.2f seconds" % (time.time() - t_start))
 
