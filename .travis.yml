@@ -1,0 +1,5 @@
+language: python
+install:
+  - pip install -r requirements.txt
+  - pip install .
+script:the imp module is deprecated in favour of importlibthe imp module is deprecated in favour of importlib pytest
