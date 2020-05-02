@@ -4,4 +4,19 @@ init:
 test:
 	 python -m tests.run
 
+build:
+	 python setup.py sdist bdist_wheel
+
+clean:
+	 python setup.py clean --all
+
+check:
+	 python -m twine check dist/*
+
+testdeploy:
+	  python -m twine upload --repository testpypi dist/*
+
+deploy:
+	  python -m twine upload dist/*
+
 .PHONY: init test

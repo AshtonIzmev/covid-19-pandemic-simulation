@@ -18,14 +18,11 @@ if __name__ == '__main__':
         v = getattr(args, arg)
         if arg in params and v is not None:
             params[arg] = v
-
     random.seed(params[random_seed_key])
 
     t_start = time.time()
 
-    params = get_default_params()
     env_dic = get_environment_simulation(params)
-
     if params[scenario_id_key] == -1:
         stats_result = scx_base_just_a_flu.launch_run(params, env_dic)
     elif params[scenario_id_key] == 0:  # Total lockdown

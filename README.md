@@ -4,10 +4,7 @@
 
 # Getting started
 ```bash
-pip install -r requirements.txt
-
-### To execute all the unit tests
-make test
+pip install pandemic-simulation
 
 ### To plot new daily cases
 python -m simulator.run --draw new
@@ -23,13 +20,43 @@ python -m simulator.run  --nday 500 --nind 5000 --immunity-bounds 120 150 --draw
 ```
 
 # Run a scenario
-Scenario 0 : Infinite lockdown with 35k people on 360 days (20 simulations)
+35k individuals, 20 simulations.
+
+Scenario -1 : It is just a flu
 ```bash
-python -m scenario.run --nrun 20  --nday 360 --nind 35000 --scenario 0 --draw pop new hos
+python -m scenario.run --nrun 20  --nday 180 --nind 35000 --scenario -1  --draw exa pop summ R0
 ```
-Scenario 1 : Lockdown loosening every 21 days without any new case
+Scenario 0 : Eradicate
 ```bash
-python -m scenario.run --nrun 20  --nday 360 --nind 35000 --scenario 1 --days-lockdown-removal 21 --draw pop new hos
+python -m scenario.run --nrun 40  --nday 90 --nind 35000 --scenario 0 --p-house 0.5 --p-work 0.01 --p-transport 0.01 --p-store 0.001  --draw exa pop summ R0
+```
+Scenario 1 : One shot lockdown removal
+```bash
+python -m scenario.run --nrun 20  --nday 360 --nind 35000 --scenario 1 --extra 14 --draw exa pop summ lock hos new R0
+```
+Scenario 2 : Yo-yo lockdown removal
+```bash
+python -m scenario.run --nrun 20  --nday 360 --nind 35000 --scenario 2 --extra 7 1 2  --draw exa pop summ lock hos new R0
+```
+Scenario 3 : Herd immunity
+```bash
+python -m scenario.run --nrun 20  --nday 360 --nind 35000 --scenario 3 --extra 0  --draw exa pop summ lock hos new R0
+```
+Scenario 4 : Rogue citizen
+```bash
+python -m scenario.run --nrun 20  --nday 180 --nind 35000 --scenario 4 --extra 1 10  --draw exa pop summ lock hos new R0
+```
+Scenario 5 : Rogue neighborhood
+```bash
+python -m scenario.run --nrun 20  --nday 180 --nind 35000 --scenario 5 --extra 4 10  --draw exa pop summ lock hos new R0
+```
+Scenario 6 : Infected travelers
+```bash
+python -m scenario.run --nrun 20  --nday 180 --nind 35000 --scenario 6 --p-store 0.001 --extra 5  --draw exa pop summ lock hos new R0
+```
+Scenario 7 : Temporal immunity
+```bash
+python -m scenario.run --nrun 20  --nday 720 --nind 35000 --scenario -1 --imm 30 60  --draw exa pop summ R0
 ```
 
 More scenarios are available in the scenario package.
