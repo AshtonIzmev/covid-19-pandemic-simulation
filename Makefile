@@ -4,6 +4,15 @@ init:
 test:
 	 python -m tests.run
 
+coverage:
+	 coverage run -m pytest
+
+report:
+	 coverage report
+
+codecov:
+	 codecov --token=${codecov_token}
+
 build:
 	 python setup.py sdist bdist_wheel
 
@@ -19,4 +28,4 @@ testdeploy:
 deploy:
 	  python -m twine upload dist/*
 
-.PHONY: init test
+.PHONY: init test clean

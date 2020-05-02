@@ -1,3 +1,8 @@
+[![Build Status](https://travis-ci.org/AshtonIzmev/covid-19-pandemic-simulation.svg?branch=master)](https://travis-ci.org/AshtonIzmev/covid-19-pandemic-simulation)
+[![codecov](https://codecov.io/gh/AshtonIzmev/covid-19-pandemic-simulation/branch/master/graph/badge.svg)](https://codecov.io/gh/AshtonIzmev/covid-19-pandemic-simulation)
+[![pypi](https://badge.fury.io/py/pandemic-simulation.svg)](https://badge.fury.io/py/pandemic-simulation)
+[![license](https://img.shields.io/pypi/l/pandemic-simulation.svg)](https://github.com/AshtonIzmev/covid-19-pandemic-simulation/blob/master/LICENSE)
+
 # covid-19-pandemic-simulation
 "Life simulation" of a SEIR inspired model to better understand pandemic using python.
 
