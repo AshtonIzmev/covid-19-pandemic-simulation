@@ -20,14 +20,14 @@ class TestSimulation(unittest.TestCase):
         nday = 100
         return {
             "hea": (0 if is_empty else 1000) + np.zeros((nrun, nday)),
-            "inf": np.zeros((nrun, nday)),
-            "hos": np.zeros((nrun, nday)),
-            "dea": np.zeros((nrun, nday)),
-            "imm": np.zeros((nrun, nday)),
-            "iso": np.zeros((nrun, nday)),
-            "R0": np.zeros((nrun, nday)),
-            "new": np.zeros((nrun, nday)),
-            "loc": np.zeros((nrun, nday))
+            "inf": np.random.random((nrun, nday)),
+            "hos": np.random.random((nrun, nday)),
+            "dea": np.random.random((nrun, nday)),
+            "imm": np.random.random((nrun, nday)),
+            "iso": np.random.random((nrun, nday)),
+            "R0": np.random.random((nrun, nday)),
+            "new": np.random.random((nrun, nday)),
+            "loc": np.random.random((nrun, nday))
         }
 
     @mock.patch("simulator.helper.plot.plt.show")
