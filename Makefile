@@ -11,7 +11,7 @@ report:
 	 coverage report
 
 codecov:
-	 codecov --token=${codecov_token}
+	 codecov --token=${CODECOV_TOKEN}
 
 build:
 	 python setup.py sdist bdist_wheel

@@ -29,6 +29,13 @@ def update_immunity_state(virus_dic, i):
         virus_dic[IMM_K][i] = imm
 
 
+def decide_hospitalization(env_dic, virus_dic, individual_arg):
+    if virus_dic[HOS_K][individual_arg] == 0 and get_r() < get_hospitalization_rate(env_dic[IAG_K][individual_arg]):
+        virus_dic[STA_K][individual_arg] = HOSPITALIZED_V
+        family = env_dic[HI_K][env_dic[IH_K][individual_arg]]
+        virus_dic[STA_K].update((fm, ISOLATED_V) for fm in family if (virus_dic[STA_K][fm] == INFECTED_V))
+
+
 def decide_life_immunity(env_dic, virus_dic, individual, icu_factor):
     if virus_dic[DEA_K][individual] == 0:
         # icu_factor only applies on hospitalized people
@@ -37,13 +44,6 @@ def decide_life_immunity(env_dic, virus_dic, individual, icu_factor):
             virus_dic[STA_K][individual] = DEAD_V
         else:
             virus_dic[STA_K][individual] = IMMUNE_V
-
-
-def decide_hospitalization(env_dic, virus_dic, individual_arg):
-    if virus_dic[HOS_K][individual_arg] == 0 and get_r() < get_hospitalization_rate(env_dic[IAG_K][individual_arg]):
-        virus_dic[STA_K][individual_arg] = HOSPITALIZED_V
-        family = env_dic[HI_K][env_dic[IH_K][individual_arg]]
-        virus_dic[STA_K].update((fm, ISOLATED_V) for fm in family if (virus_dic[STA_K][fm] == INFECTED_V))
 
 
 def increment_infection(virus_dic, individual_arg):

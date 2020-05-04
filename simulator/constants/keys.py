@@ -41,6 +41,7 @@ store_infection_key = "PROB_STORE_INFECTION"
 
 transport_infection_key = "PROB_TRANSPORT_INFECTION"
 transport_contact_cap_key = "TRANSPORT_CONTACT_CAP"
+
 contagion_bounds_key = "CONTAGION_BOUNDS"
 hospitalization_bounds_key = "HOSPITALIZATION_BOUNDS"
 death_bounds_key = "DEATH_BOUNDS"
