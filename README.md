@@ -193,9 +193,7 @@ python -m simulator.run --nrun 20  --nday 180 --nind 1000 --immunity-bounds 60 9
 Using a quick and dirty kmeans, we only display the most "different" run distributions to illustrate the butterfly effect of a pandemic
 
 # Backlog
-- [ ]  Switch from dictionaries and list to numpy array (may be way more efficient, probably enabling some nice vectorization but huge refactors to come)
 - [ ]  parallelize the runs (using for example N_proc-1 processors multithreading)
-- [ ]  More tests, there are never enough tests
 - [ ]  Get rid of FN_K: get_infection_params and use a python class
 - [ ]  Build a model of virus propagation in school and university (for only children vs 18-25yo people)
 - [ ]  Build an animated dataviz based on 3blue1brown video
@@ -206,6 +204,8 @@ Using a quick and dirty kmeans, we only display the most "different" run distrib
 - [ ]  Scenario : Build a random test-isolation model
 - [ ]  Scenario : A whole neighborhood can be closed if enough people are infected
 - [ ]  Add a delay between test and isolation (PCR tests can take one day)
+- [x]  FAILED : Switch from dictionaries and list to numpy array (may be way more efficient, probably enabling some nice vectorization but huge refactors to come. Turns out it was a bad idea for performance -> lonely branch)
+- [x]  More tests, there are never enough tests
 - [x]  Get rid of params as a global variable and use a function (probably a bad pattern)
 - [x]  Plot the R0 of the pandemic ? (with linear and logarithmic scale)
 - [x]  Fix transport propagation performance issue
