@@ -12,12 +12,6 @@ class TestSimulation(unittest.TestCase):
     def setUp(cls):
         random.seed(12)
 
-    @staticmethod
-    def look_for_good_seed(self):
-        for i in range(100):
-            random.seed(i)
-            print(i, random.random())
-
     def test_increment_pandemic_1_day(self):
         random.seed(22)
         env_dic = {
@@ -34,8 +28,14 @@ class TestSimulation(unittest.TestCase):
             HOS_K: {0: 12, 1: 12, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
             DEA_K: {0: 31, 1: 1, 2: 0, 3: 22, 4: 22, 5: 0, 6: 1, 7: 22, 8: -4, 9: 38},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1, 9: 55},
-            STA_K: {0: H, 1: F, 2: D, 3: F, 4: F, 5: M, 6: F, 7: F, 8: M, 9: H},
-            FN_K: get_infection_params
+
+            CON_INIT_K: {0: 4, 1: -2, 2: -5, 3: -4, 4: 6, 5: -9, 6: -3, 7: 2, 8: -9, 9: 5},
+            HOS_INIT_K: {0: 12, 1: 12, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
+            DEA_INIT_K: {0: 31, 1: 1, 2: 0, 3: 22, 4: 22, 5: 0, 6: 1, 7: 22, 8: -4, 9: 38},
+            IMM_INIT_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1, 9: 55},
+
+            STA_K: {0: H, 1: F, 2: D, 3: F, 4: F, 5: M, 6: F, 7: F, 8: M, 9: H}
+
         }
         env_dic[IAG_K][3] = 82
         increment_pandemic_1_day(env_dic, virus_dic, 100)
@@ -69,10 +69,10 @@ class TestSimulation(unittest.TestCase):
         self.assertEqual(virus_dic[STA_K][6], M)
 
         # Parameters have been reset
-        self.assertEqual(virus_dic[CON_K][8], 6)
-        self.assertEqual(virus_dic[HOS_K][8], 9)
-        self.assertEqual(virus_dic[DEA_K][8], 23)
-        self.assertEqual(virus_dic[IMM_K][8], 49)
+        self.assertEqual(virus_dic[CON_K][8], -9)
+        self.assertEqual(virus_dic[HOS_K][8], -7)
+        self.assertEqual(virus_dic[DEA_K][8], -4)
+        self.assertEqual(virus_dic[IMM_K][8], 1)
         self.assertEqual(virus_dic[STA_K][8], H)
 
     def test_decide_hospitalization_isolated_cases(self):
@@ -93,6 +93,12 @@ class TestSimulation(unittest.TestCase):
             HOS_K: {0: 1, 1: 12, 2: 20, 3: 0, 4: 16, 5: 12, 6: 14, 7: 13},
             DEA_K: {0: 31, 1: 1, 2: 0, 3: 22, 4: 22, 5: 0, 6: 1, 7: 22},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53},
+
+            CON_INIT_K: {0: 4, 1: -2, 2: -5, 3: -4, 4: 6, 5: -9, 6: -3, 7: 2},
+            HOS_INIT_K: {0: 1, 1: 12, 2: 20, 3: 0, 4: 16, 5: 12, 6: 14, 7: 13},
+            DEA_INIT_K: {0: 31, 1: 1, 2: 0, 3: 22, 4: 22, 5: 0, 6: 1, 7: 22},
+            IMM_INIT_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53},
+
             STA_K: {0: F, 1: M, 2: D, 3: F, 4: F, 5: M, 6: F, 7: F}
         }
         decide_hospitalization(env_dic, virus_dic, 3)
@@ -123,8 +129,13 @@ class TestSimulation(unittest.TestCase):
             HOS_K: {0: 2, 1: 12, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
             DEA_K: {0: 31, 1: 1, 2: 0, 3: 22, 4: 22, 5: 0, 6: 1, 7: 22, 8: -4, 9: 38},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1, 9: 55},
-            STA_K: {0: F, 1: F, 2: D, 3: F, 4: F, 5: M, 6: F, 7: F, 8: M, 9: H},
-            FN_K: get_infection_params
+
+            CON_INIT_K: {0: 4, 1: -2, 2: -5, 3: -4, 4: 6, 5: -9, 6: -3, 7: 2, 8: -9, 9: 5},
+            HOS_INIT_K: {0: 2, 1: 12, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
+            DEA_INIT_K: {0: 31, 1: 1, 2: 0, 3: 22, 4: 22, 5: 0, 6: 1, 7: 22, 8: -4, 9: 38},
+            IMM_INIT_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1, 9: 55},
+
+            STA_K: {0: F, 1: F, 2: D, 3: F, 4: F, 5: M, 6: F, 7: F, 8: M, 9: H}
         }
         increment_pandemic_1_day(env_dic, virus_dic, 100)
         # person 0 will be isolated since a member of his family(person 3)is hospitalized (what a sad story for him)
@@ -152,8 +163,13 @@ class TestSimulation(unittest.TestCase):
             HOS_K: {0: -5, 1: -6, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
             DEA_K: {0: 1, 1: 1, 2: 0, 3: 22, 4: 22, 5: 0, 6: 1, 7: 22, 8: -4, 9: 38},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1, 9: 55},
-            STA_K: {0: F, 1: F, 2: P, 3: P, 4: P, 5: P, 6: P, 7: P, 8: P, 9: P},
-            FN_K: get_infection_params
+
+            CON_INIT_K: {0: -8, 1: -9, 2: -5, 3: -4, 4: 6, 5: -9, 6: -3, 7: 2, 8: -9, 9: 5},
+            HOS_INIT_K: {0: -5, 1: -6, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
+            DEA_INIT_K: {0: 1, 1: 1, 2: 0, 3: 22, 4: 22, 5: 0, 6: 1, 7: 22, 8: -4, 9: 38},
+            IMM_INIT_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1, 9: 55},
+
+            STA_K: {0: F, 1: F, 2: P, 3: P, 4: P, 5: P, 6: P, 7: P, 8: P, 9: P}
         }
         env_dic[IAG_K][0] = 82
         env_dic[IAG_K][1] = 15
@@ -180,8 +196,13 @@ class TestSimulation(unittest.TestCase):
             HOS_K: {0: -5, 1: -6, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
             DEA_K: {0: 1, 1: 1, 2: 0, 3: 22, 4: 22, 5: 0, 6: 1, 7: 22, 8: -4, 9: 38},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1, 9: 55},
-            STA_K: {0: F, 1: F, 2: P, 3: P, 4: P, 5: P, 6: P, 7: P, 8: P, 9: P},
-            FN_K: get_infection_params
+
+            CON_INIT_K: {0: -8, 1: -9, 2: -5, 3: -4, 4: 6, 5: -9, 6: -3, 7: 2, 8: -9, 9: 5},
+            HOS_INIT_K: {0: -5, 1: -6, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
+            DEA_INIT_K: {0: 1, 1: 1, 2: 0, 3: 22, 4: 22, 5: 0, 6: 1, 7: 22, 8: -4, 9: 38},
+            IMM_INIT_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1, 9: 55},
+
+            STA_K: {0: F, 1: F, 2: P, 3: P, 4: P, 5: P, 6: P, 7: P, 8: P, 9: P}
         }
         env_dic[IAG_K][0] = 82
         env_dic[IAG_K][1] = 15
@@ -209,9 +230,14 @@ class TestSimulation(unittest.TestCase):
             HOS_K: {0: -5, 1: -6, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
             DEA_K: {0: 1, 1: 1, 2: 0, 3: 22, 4: 22, 5: 0, 6: 1, 7: 22, 8: -4, 9: 38},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1, 9: 55},
+
+            CON_INIT_K: {0: -8, 1: -9, 2: -5, 3: -4, 4: 6, 5: -9, 6: -3, 7: 2, 8: -9, 9: 5},
+            HOS_INIT_K: {0: -5, 1: -6, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
+            DEA_INIT_K: {0: 1, 1: 1, 2: 0, 3: 22, 4: 22, 5: 0, 6: 1, 7: 22, 8: -4, 9: 38},
+            IMM_INIT_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1, 9: 55},
+
             # Two hospitalized people (going to decision next day)
-            STA_K: {0: P, 1: P, 2: P, 3: P, 4: P, 5: P, 6: P, 7: P, 8: P, 9: P},
-            FN_K: get_infection_params
+            STA_K: {0: P, 1: P, 2: P, 3: P, 4: P, 5: P, 6: P, 7: P, 8: P, 9: P}
         }
         env_dic[IAG_K][0] = 82
         env_dic[IAG_K][1] = 15
@@ -238,8 +264,13 @@ class TestSimulation(unittest.TestCase):
             HOS_K: {0: -5, 1: -6, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
             DEA_K: {0: 1, 1: 1, 2: 0, 3: 22, 4: 22, 5: 0, 6: 1, 7: 22, 8: -4, 9: 38},
             IMM_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1, 9: 55},
-            STA_K: {0: P, 1: P, 2: P, 3: P, 4: P, 5: P, 6: P, 7: P, 8: P, 9: P},
-            FN_K: get_infection_params
+
+            CON_INIT_K: {0: -8, 1: -9, 2: -5, 3: -4, 4: 6, 5: -9, 6: -3, 7: 2, 8: -9, 9: 5},
+            HOS_INIT_K: {0: -5, 1: -6, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
+            DEA_INIT_K: {0: 1, 1: 1, 2: 0, 3: 22, 4: 22, 5: 0, 6: 1, 7: 22, 8: -4, 9: 38},
+            IMM_INIT_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1, 9: 55},
+
+            STA_K: {0: P, 1: P, 2: P, 3: P, 4: P, 5: P, 6: P, 7: P, 8: P, 9: P}
         }
         env_dic[IAG_K][0] = 82
         env_dic[IAG_K][1] = 15

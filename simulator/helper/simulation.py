@@ -47,8 +47,14 @@ def get_virus_simulation_t0(params_arg):
         HOS_K: time_to_hospital,
         DEA_K: time_to_death,
         IMM_K: time_to_end_immunity,
+
+        # Unchanged parameters
+        CON_INIT_K: time_to_contagion,
+        HOS_INIT_K: time_to_hospital,
+        DEA_INIT_K: time_to_death,
+        IMM_INIT_K: time_to_end_immunity,
+
         STA_K: life_state,
-        FN_K: get_infection_params,
         NC_K: 0
     }
 

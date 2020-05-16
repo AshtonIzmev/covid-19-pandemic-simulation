@@ -21,12 +21,10 @@ def update_immunity_state(virus_dic, i):
     virus_dic[IMM_K][i] = virus_dic[IMM_K][i] - 1
     if virus_dic[IMM_K][i] == 0:
         virus_dic[STA_K][i] = HEALTHY_V
-        # I am not proud of this hack, otherwise it meant changing too many APIs
-        con, hos, dea, imm = virus_dic[FN_K]()
-        virus_dic[CON_K][i] = con
-        virus_dic[HOS_K][i] = hos
-        virus_dic[DEA_K][i] = dea
-        virus_dic[IMM_K][i] = imm
+        virus_dic[CON_K][i] = virus_dic[CON_INIT_K][i]
+        virus_dic[HOS_K][i] = virus_dic[HOS_INIT_K][i]
+        virus_dic[DEA_K][i] = virus_dic[DEA_INIT_K][i]
+        virus_dic[IMM_K][i] = virus_dic[IMM_INIT_K][i]
 
 
 def decide_hospitalization(env_dic, virus_dic, individual_arg):

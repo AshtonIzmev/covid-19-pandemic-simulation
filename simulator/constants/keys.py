@@ -15,8 +15,13 @@ CON_K = "individual_to_contagion_mapping"
 HOS_K = "individual_to_hospital_mapping"
 DEA_K = "individual_to_death_mapping"
 IMM_K = "individual_to_end_immunity_mapping"
+
+CON_INIT_K = "individual_to_contagion_init_mapping"
+HOS_INIT_K = "individual_to_hospital_init_mapping"
+DEA_INIT_K = "individual_to_death_init_mapping"
+IMM_INIT_K = "individual_to_end_immunity_init_mapping"
+
 STA_K = "individual_to_state_mapping"
-FN_K = "function_get_infection_params"
 NC_K = "new_cases"
 
 nrun_key = "NRUN"
