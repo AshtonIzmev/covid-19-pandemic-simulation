@@ -1,8 +1,8 @@
 import random
 import unittest
 
-from simulator.helper.simulation import get_infection_parameters
 from simulator.helper.environment import get_mortalty_rate, get_hospitalization_rate
+from simulator.helper.simulation import get_infection_parameters
 from simulator.helper.utils import invert_map_list, invert_map, flatten, reduce_multiply_by_key, choose_weight_order, \
     rec_get_manhattan_walk, get_random_choice_list
 

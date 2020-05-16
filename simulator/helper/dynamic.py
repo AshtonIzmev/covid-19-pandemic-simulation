@@ -1,5 +1,4 @@
 from simulator.constants.keys import *
-from simulator.helper.environment import get_mortalty_rate, get_hospitalization_rate
 from simulator.helper.utils import get_random_sample, get_r, reduce_multiply_by_key, choose_weight_order, \
     get_random_choice_list
 
@@ -23,7 +22,7 @@ def update_immunity_state(virus_dic):
             virus_dic[IMM_K][i] = virus_dic[IMM_INIT_K][i]
 
 
-def decide_hospitalization(env_dic, virus_dic):
+def hospitalize_infected(env_dic, virus_dic):
     for i in get_infected_people(virus_dic):
         if virus_dic[HOS_K][i] == 0 and get_r() < env_dic[IHOS_K][i]:
             virus_dic[STA_K][i] = HOSPITALIZED_V
@@ -41,7 +40,7 @@ def decide_life_immunity(env_dic, virus_dic, icu_factor):
                 virus_dic[STA_K][i] = IMMUNE_V
 
 
-def increment_infection(virus_dic):
+def decrement_virus_carrier_periods(virus_dic):
     for i in get_virus_carrier_people(virus_dic):
         virus_dic[CON_K][i] = virus_dic[CON_K][i] - 1
         virus_dic[HOS_K][i] = virus_dic[HOS_K][i] - 1
@@ -53,11 +52,11 @@ def increment_pandemic_1_day(env_dic, virus_dic, available_beds):
     icu_factor = max(1.0, len(get_hospitalized_people(virus_dic)) / available_beds)
 
     # Contagion, decision and hospitalization periods are decremented
-    increment_infection(virus_dic)
+    decrement_virus_carrier_periods(virus_dic)
 
     # Do INFECTED -> HOSPITALIZED
     # Do INFECTED -> ISOLATED for family members
-    decide_hospitalization(env_dic, virus_dic)
+    hospitalize_infected(env_dic, virus_dic)
 
     # Do {INFECTED, ISOLATED, HOSPITALIZED} -> {DEAD, IMMUNE} decision transition
     decide_life_immunity(env_dic, virus_dic, icu_factor)

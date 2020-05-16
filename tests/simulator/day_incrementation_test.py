@@ -1,7 +1,7 @@
 import random
 import unittest
 
-from simulator.helper.dynamic import increment_pandemic_1_day, decide_hospitalization
+from simulator.helper.dynamic import increment_pandemic_1_day, hospitalize_infected
 from tests.constant import *
 
 
@@ -100,7 +100,7 @@ class TestSimulation(unittest.TestCase):
 
             STA_K: {0: F, 1: M, 2: D, 3: F, 4: F, 5: M, 6: F, 7: F}
         }
-        decide_hospitalization(env_dic, virus_dic)
+        hospitalize_infected(env_dic, virus_dic)
 
         self.assertEqual(virus_dic[STA_K][3], P)
         self.assertEqual(virus_dic[STA_K][0], S)

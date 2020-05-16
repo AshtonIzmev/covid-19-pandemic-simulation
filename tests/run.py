@@ -1,9 +1,9 @@
 import unittest
 
 from tests.helper import helpers_test
+from tests.scenario import examples_test
 from tests.simulator import simulator_test, store_propagation_test, day_incrementation_test, house_propagation_test, \
     transport_propagation_test, workplace_propagation_test, environment_test, plot_test
-from tests.scenario import examples_test
 
 if __name__ == '__main__':
     loader = unittest.TestLoader()

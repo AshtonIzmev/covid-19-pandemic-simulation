@@ -3,11 +3,10 @@ import time
 
 from scenario.example import sc0_base_lockdown
 from simulator.constants.keys import random_seed_key, draw_graph_key
+from simulator.helper.environment import get_environment_simulation
 from simulator.helper.parser import get_parser
 from simulator.helper.plot import chose_draw_plot
 from simulator.helper.simulation import get_default_params
-from simulator.helper.environment import get_environment_simulation
-
 
 if __name__ == '__main__':
     params = get_default_params()

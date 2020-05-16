@@ -5,10 +5,10 @@ import time
 from scenario.example import sc1_simple_lockdown_removal, sc2_yoyo_lockdown_removal, sc0_base_lockdown, \
     scx_base_just_a_flu, sc3_loose_lockdown, sc4_rogue_citizen, sc5_rogue_neighborhood, sc6_travelers
 from simulator.constants.keys import scenario_id_key, random_seed_key, draw_graph_key
+from simulator.helper.environment import get_environment_simulation
 from simulator.helper.parser import get_parser
 from simulator.helper.plot import chose_draw_plot
 from simulator.helper.simulation import get_default_params
-from simulator.helper.environment import get_environment_simulation
 
 if __name__ == '__main__':
     params = get_default_params()
