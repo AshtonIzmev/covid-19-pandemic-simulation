@@ -16,60 +16,60 @@ def update_infection_period(newly_infected_individuals_arg, virus_dic):
             virus_dic[NC_K] = virus_dic[NC_K] + 1
 
 
-def update_immunity_state(virus_dic, i):
-    # Losing immunity
-    virus_dic[IMM_K][i] = virus_dic[IMM_K][i] - 1
-    if virus_dic[IMM_K][i] == 0:
-        virus_dic[STA_K][i] = HEALTHY_V
-        virus_dic[CON_K][i] = virus_dic[CON_INIT_K][i]
-        virus_dic[HOS_K][i] = virus_dic[HOS_INIT_K][i]
-        virus_dic[DEA_K][i] = virus_dic[DEA_INIT_K][i]
-        virus_dic[IMM_K][i] = virus_dic[IMM_INIT_K][i]
+def update_immunity_state(virus_dic):
+    for i in get_immune_people(virus_dic):
+        # Losing immunity
+        virus_dic[IMM_K][i] = virus_dic[IMM_K][i] - 1
+        if virus_dic[IMM_K][i] == 0:
+            virus_dic[STA_K][i] = HEALTHY_V
+            virus_dic[CON_K][i] = virus_dic[CON_INIT_K][i]
+            virus_dic[HOS_K][i] = virus_dic[HOS_INIT_K][i]
+            virus_dic[DEA_K][i] = virus_dic[DEA_INIT_K][i]
+            virus_dic[IMM_K][i] = virus_dic[IMM_INIT_K][i]
 
 
-def decide_hospitalization(env_dic, virus_dic, individual_arg):
-    if virus_dic[HOS_K][individual_arg] == 0 and get_r() < get_hospitalization_rate(env_dic[IAG_K][individual_arg]):
-        virus_dic[STA_K][individual_arg] = HOSPITALIZED_V
-        family = env_dic[HI_K][env_dic[IH_K][individual_arg]]
-        virus_dic[STA_K].update((fm, ISOLATED_V) for fm in family if (virus_dic[STA_K][fm] == INFECTED_V))
+def decide_hospitalization(env_dic, virus_dic):
+    for i in get_infected_people(virus_dic):
+        if virus_dic[HOS_K][i] == 0 and get_r() < get_hospitalization_rate(env_dic[IAG_K][i]):
+            virus_dic[STA_K][i] = HOSPITALIZED_V
+            family = env_dic[HI_K][env_dic[IH_K][i]]
+            virus_dic[STA_K].update((fm, ISOLATED_V) for fm in family if (virus_dic[STA_K][fm] == INFECTED_V))
 
 
-def decide_life_immunity(env_dic, virus_dic, individual, icu_factor):
-    if virus_dic[DEA_K][individual] == 0:
-        # icu_factor only applies on hospitalized people
-        if get_r() < get_mortalty_rate(env_dic[IAG_K][individual]) * \
-                (icu_factor if (virus_dic[STA_K][individual] == HOSPITALIZED_V) else 1):
-            virus_dic[STA_K][individual] = DEAD_V
-        else:
-            virus_dic[STA_K][individual] = IMMUNE_V
+def decide_life_immunity(env_dic, virus_dic, icu_factor):
+    for i in get_virus_carrier_people(virus_dic):
+        if virus_dic[DEA_K][i] == 0:
+            # icu_factor only applies on hospitalized people
+            if get_r() < get_mortalty_rate(env_dic[IAG_K][i]) * \
+                    (icu_factor if (virus_dic[STA_K][i] == HOSPITALIZED_V) else 1):
+                virus_dic[STA_K][i] = DEAD_V
+            else:
+                virus_dic[STA_K][i] = IMMUNE_V
 
 
-def increment_infection(virus_dic, individual_arg):
-    virus_dic[CON_K][individual_arg] = virus_dic[CON_K][individual_arg] - 1
-    virus_dic[HOS_K][individual_arg] = virus_dic[HOS_K][individual_arg] - 1
-    virus_dic[DEA_K][individual_arg] = virus_dic[DEA_K][individual_arg] - 1
+def increment_infection(virus_dic):
+    for i in get_virus_carrier_people(virus_dic):
+        virus_dic[CON_K][i] = virus_dic[CON_K][i] - 1
+        virus_dic[HOS_K][i] = virus_dic[HOS_K][i] - 1
+        virus_dic[DEA_K][i] = virus_dic[DEA_K][i] - 1
 
 
 def increment_pandemic_1_day(env_dic, virus_dic, available_beds):
     # ICU factor is used to raise death probability when hospitals are saturated
     icu_factor = max(1.0, len(get_hospitalized_people(virus_dic)) / available_beds)
 
-    for individual in get_virus_carrier_people(virus_dic):
-        # Contagion, decision and hospitalization periods are decremented
-        increment_infection(virus_dic, individual)
+    # Contagion, decision and hospitalization periods are decremented
+    increment_infection(virus_dic)
 
-    for individual in get_infected_people(virus_dic):
-        # Do INFECTED -> HOSPITALIZED
-        # Do INFECTED -> ISOLATED for family members
-        decide_hospitalization(env_dic, virus_dic, individual)
+    # Do INFECTED -> HOSPITALIZED
+    # Do INFECTED -> ISOLATED for family members
+    decide_hospitalization(env_dic, virus_dic)
 
-    for individual in get_virus_carrier_people(virus_dic):
-        # Do {INFECTED, ISOLATED, HOSPITALIZED} -> {DEAD, IMMUNE} decision transition
-        decide_life_immunity(env_dic, virus_dic, individual, icu_factor)
+    # Do {INFECTED, ISOLATED, HOSPITALIZED} -> {DEAD, IMMUNE} decision transition
+    decide_life_immunity(env_dic, virus_dic, icu_factor)
 
     # Do IMMUNE -> HEALTHY for no longer immune people
-    for individual in get_immune_people(virus_dic):
-        update_immunity_state(virus_dic, individual)
+    update_immunity_state(virus_dic)
 
 
 def get_virus_carrier_people(virus_dic):
