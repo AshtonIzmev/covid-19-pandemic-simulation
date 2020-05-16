@@ -50,3 +50,8 @@ def measure_lockdown_strength(params_arg):
     return 1/(math.log(1+params_arg[house_infect_key]) + math.log(1+params_arg[transport_infection_key]) +
               math.log(1+params_arg[work_infection_key]) + math.log(1+params_arg[store_infection_key]) +
               math.log(2-params_arg[store_preference_key]) + math.log(2-params_arg[remote_work_key]))
+
+
+# Assuming 0 is Monday
+def is_weekend(i):
+    return ((i - 5) % 7 == 0) or ((i - 6) % 7 == 0)

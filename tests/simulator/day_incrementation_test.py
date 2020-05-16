@@ -1,7 +1,6 @@
 import random
 import unittest
 
-from simulator.helper.simulation import get_infection_parameters
 from simulator.helper.dynamic import increment_pandemic_1_day, decide_hospitalization
 from tests.constant import *
 
@@ -17,12 +16,10 @@ class TestSimulation(unittest.TestCase):
         env_dic = {
             HI_K: {0: [0, 1, 2, 3], 1: [4, 5, 6, 7], 2: [8, 9]},
             IAG_K: {0: 26, 1: 51, 2: 13, 3: 2, 4: 35, 5: 33, 6: 6, 7: 1, 8: 27, 9: 20},
+            IDEA_K: {0: 0.02, 1: 0.013, 2: 0.02, 3: 0, 4: 0.02, 5: 0.02, 6: 0, 7: 0, 8: 0.02, 9: 0.02},
+            IHOS_K: {0: 0.025, 1: 0.074, 2: 0.01, 3: 0.03, 4: 0.025, 5: 0.025, 6: 0.03, 7: 0.03, 8: 0.025, 9: 0.025},
             IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2},
         }
-
-        def get_infection_params():
-            return get_infection_parameters(2, 7, 7, 21, 21, 39, 30, 60)
-
         virus_dic = {
             CON_K: {0: 4, 1: -2, 2: -5, 3: -4, 4: 6, 5: -9, 6: -3, 7: 2, 8: -9, 9: 5},
             HOS_K: {0: 12, 1: 12, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
@@ -85,6 +82,8 @@ class TestSimulation(unittest.TestCase):
         env_dic = {
             HI_K: {0: [0, 1, 2, 3], 1: [4, 5, 6, 7]},
             IAG_K: {0: 26, 1: 51, 2: 13, 3: 92, 4: 35, 5: 33, 6: 6, 7: 1},
+            IDEA_K: {0: 0.02, 1: 0.013, 2: 0.02, 3: 0, 4: 0.02, 5: 0.02, 6: 0, 7: 0, 8: 0.02, 9: 0.02},
+            IHOS_K: {0: 0.025, 1: 0.074, 2: 0.01, 3: 0.73, 4: 0.025, 5: 0.025, 6: 0.03, 7: 0.03, 8: 0.025, 9: 0.025},
             IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1},
         }
 
@@ -118,12 +117,10 @@ class TestSimulation(unittest.TestCase):
         env_dic = {
             HI_K: {0: [0, 1, 2, 3], 1: [4, 5, 6, 7], 2: [8, 9]},
             IAG_K: {0: 26, 1: 51, 2: 13, 3: 82, 4: 35, 5: 33, 6: 6, 7: 1, 8: 27, 9: 20},
+            IDEA_K: {0: 0.02, 1: 0.013, 2: 0.02, 3: 0, 4: 0.02, 5: 0.02, 6: 0, 7: 0, 8: 0.02, 9: 0.02},
+            IHOS_K: {0: 0.025, 1: 0.074, 2: 0.01, 3: 0.73, 4: 0.025, 5: 0.025, 6: 0.03, 7: 0.03, 8: 0.025, 9: 0.025},
             IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2},
         }
-
-        def get_infection_params():
-            return get_infection_parameters(2, 7, 7, 21, 21, 39, 30, 60)
-
         virus_dic = {
             CON_K: {0: 4, 1: -2, 2: -5, 3: -4, 4: 6, 5: -9, 6: -3, 7: 2, 8: -9, 9: 5},
             HOS_K: {0: 2, 1: 12, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
@@ -152,12 +149,10 @@ class TestSimulation(unittest.TestCase):
         env_dic = {
             HI_K: {0: [0, 1, 2, 3], 1: [4, 5, 6, 7], 2: [8, 9]},
             IAG_K: {0: 26, 1: 51, 2: 13, 3: 2, 4: 35, 5: 33, 6: 6, 7: 1, 8: 27, 9: 20},
+            IDEA_K: {0: 0.02, 1: 0.013, 2: 0.02, 3: 0, 4: 0.02, 5: 0.02, 6: 0, 7: 0, 8: 0.02, 9: 0.02},
+            IHOS_K: {0: 0.025, 1: 0.074, 2: 0.01, 3: 0.03, 4: 0.025, 5: 0.025, 6: 0.03, 7: 0.03, 8: 0.025, 9: 0.025},
             IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2},
         }
-
-        def get_infection_params():
-            return get_infection_parameters(2, 7, 7, 21, 21, 39, 30, 60)
-
         virus_dic = {
             CON_K: {0: -8, 1: -9, 2: -5, 3: -4, 4: 6, 5: -9, 6: -3, 7: 2, 8: -9, 9: 5},
             HOS_K: {0: -5, 1: -6, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
@@ -171,8 +166,6 @@ class TestSimulation(unittest.TestCase):
 
             STA_K: {0: F, 1: F, 2: P, 3: P, 4: P, 5: P, 6: P, 7: P, 8: P, 9: P}
         }
-        env_dic[IAG_K][0] = 82
-        env_dic[IAG_K][1] = 15
         increment_pandemic_1_day(env_dic, virus_dic, 1)
         self.assertEqual(virus_dic[STA_K][0], M)
         self.assertEqual(virus_dic[STA_K][1], M)
@@ -185,12 +178,10 @@ class TestSimulation(unittest.TestCase):
         env_dic = {
             HI_K: {0: [0, 1, 2, 3], 1: [4, 5, 6, 7], 2: [8, 9]},
             IAG_K: {0: 26, 1: 51, 2: 13, 3: 2, 4: 35, 5: 33, 6: 6, 7: 1, 8: 27, 9: 20},
+            IDEA_K: {0: 0.02, 1: 0.013, 2: 0.02, 3: 0, 4: 0.02, 5: 0.02, 6: 0, 7: 0, 8: 0.02, 9: 0.02},
+            IHOS_K: {0: 0.025, 1: 0.074, 2: 0.01, 3: 0.03, 4: 0.025, 5: 0.025, 6: 0.03, 7: 0.03, 8: 0.025, 9: 0.025},
             IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2},
         }
-
-        def get_infection_params():
-            return get_infection_parameters(2, 7, 7, 21, 21, 39, 30, 60)
-
         virus_dic = {
             CON_K: {0: -8, 1: -9, 2: -5, 3: -4, 4: 6, 5: -9, 6: -3, 7: 2, 8: -9, 9: 5},
             HOS_K: {0: -5, 1: -6, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
@@ -204,8 +195,6 @@ class TestSimulation(unittest.TestCase):
 
             STA_K: {0: F, 1: F, 2: P, 3: P, 4: P, 5: P, 6: P, 7: P, 8: P, 9: P}
         }
-        env_dic[IAG_K][0] = 82
-        env_dic[IAG_K][1] = 15
         increment_pandemic_1_day(env_dic, virus_dic, 0.06)
         self.assertEqual(virus_dic[STA_K][0], M)
         self.assertEqual(virus_dic[STA_K][1], M)
@@ -218,13 +207,11 @@ class TestSimulation(unittest.TestCase):
         random.seed(22)
         env_dic = {
             HI_K: {0: [0, 1, 2, 3], 1: [4, 5, 6, 7], 2: [8, 9]},
-            IAG_K: {0: 26, 1: 51, 2: 13, 3: 2, 4: 35, 5: 33, 6: 6, 7: 1, 8: 27, 9: 20},
+            IAG_K: {0: 82, 1: 15, 2: 13, 3: 2, 4: 35, 5: 33, 6: 6, 7: 1, 8: 27, 9: 20},
+            IDEA_K: {0: 0.52, 1: 0.013, 2: 0.02, 3: 0, 4: 0.02, 5: 0.02, 6: 0, 7: 0, 8: 0.02, 9: 0.02},
+            IHOS_K: {0: 0.025, 1: 0.074, 2: 0.01, 3: 0.03, 4: 0.025, 5: 0.025, 6: 0.03, 7: 0.03, 8: 0.025, 9: 0.025},
             IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2},
         }
-
-        def get_infection_params():
-            return get_infection_parameters(2, 7, 7, 21, 21, 39, 30, 60)
-
         virus_dic = {
             CON_K: {0: -8, 1: -9, 2: -5, 3: -4, 4: 6, 5: -9, 6: -3, 7: 2, 8: -9, 9: 5},
             HOS_K: {0: -5, 1: -6, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
@@ -239,8 +226,6 @@ class TestSimulation(unittest.TestCase):
             # Two hospitalized people (going to decision next day)
             STA_K: {0: P, 1: P, 2: P, 3: P, 4: P, 5: P, 6: P, 7: P, 8: P, 9: P}
         }
-        env_dic[IAG_K][0] = 82
-        env_dic[IAG_K][1] = 15
         increment_pandemic_1_day(env_dic, virus_dic, 1.5)
         self.assertEqual(virus_dic[STA_K][0], D)
         self.assertEqual(virus_dic[STA_K][1], M)
@@ -253,12 +238,10 @@ class TestSimulation(unittest.TestCase):
         env_dic = {
             HI_K: {0: [0, 1, 2, 3], 1: [4, 5, 6, 7], 2: [8, 9]},
             IAG_K: {0: 26, 1: 51, 2: 13, 3: 2, 4: 35, 5: 33, 6: 6, 7: 1, 8: 27, 9: 20},
+            IDEA_K: {0: 0.02, 1: 0.013, 2: 0.02, 3: 0, 4: 0.02, 5: 0.02, 6: 0, 7: 0, 8: 0.02, 9: 0.02},
+            IHOS_K: {0: 0.025, 1: 0.074, 2: 0.01, 3: 0.03, 4: 0.025, 5: 0.025, 6: 0.03, 7: 0.03, 8: 0.025, 9: 0.025},
             IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2},
         }
-
-        def get_infection_params():
-            return get_infection_parameters(2, 7, 7, 21, 21, 39, 30, 60)
-
         virus_dic = {
             CON_K: {0: -8, 1: -9, 2: -5, 3: -4, 4: 6, 5: -9, 6: -3, 7: 2, 8: -9, 9: 5},
             HOS_K: {0: -5, 1: -6, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
@@ -272,8 +255,6 @@ class TestSimulation(unittest.TestCase):
 
             STA_K: {0: P, 1: P, 2: P, 3: P, 4: P, 5: P, 6: P, 7: P, 8: P, 9: P}
         }
-        env_dic[IAG_K][0] = 82
-        env_dic[IAG_K][1] = 15
         increment_pandemic_1_day(env_dic, virus_dic, 0.005)
         self.assertEqual(virus_dic[STA_K][0], D)
         self.assertEqual(virus_dic[STA_K][1], D)

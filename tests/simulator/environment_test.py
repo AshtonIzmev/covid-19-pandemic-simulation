@@ -6,8 +6,9 @@ import numpy as np
 from simulator.helper.environment import build_individual_houses_map, build_individual_adult_map, \
     build_individual_age_map, build_house_adult_map, build_2d_item_behavior, build_1d_item_behavior, \
     build_house_store_map, build_individual_work_map, build_individual_workblock_map, \
-    build_individual_individual_transport_map
+    build_individual_individual_transport_map, build_individual_death_rate_map, build_individual_hospitalization_map
 from simulator.helper.utils import invert_map_list, invert_map
+from tests.utils import g_d
 
 
 class TestInitiation(unittest.TestCase):
@@ -176,6 +177,14 @@ class TestInitiation(unittest.TestCase):
         result = build_1d_item_behavior(5000)
         mean_behavior = np.mean(list(result.values()))
         self.assertTrue(abs(mean_behavior - 1) < 0.05)
+
+    def test_build_individual_death_rate_map(self):
+        result = build_individual_death_rate_map(g_d([0, 10, 20, 30, 40, 50, 60, 70, 80]))
+        self.assertEqual(result, g_d([0, 0.02, 0.02, 0.02, 0.04, 0.013, 0.036, 0.08, 0.148]))
+
+    def test_build_individual_hospitalization_map(self):
+        result = build_individual_hospitalization_map(g_d([0, 10, 20, 30, 40, 50, 60, 70, 80]))
+        self.assertEqual(result, g_d([0.03, 0.01, 0.025, 0.025, 0.025, 0.074, 0.122, 0.158, 0.172]))
 
 
 if __name__ == '__main__':

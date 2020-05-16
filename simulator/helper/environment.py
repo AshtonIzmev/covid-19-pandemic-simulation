@@ -4,8 +4,9 @@ import random
 from scipy import spatial
 
 from simulator.constants.keys import nindividual_key, store_per_house_key, nb_1d_block_key, store_nb_choice_key, \
-    transport_contact_cap_key, IH_K, HI_K, IAD_K, IAG_K, IW_K, WI_K, HA_K, HS_K, ITI_K, HB_K, IBE_K
-from simulator.constants.parameters import TPE_MAX_EMPLOYEES, PME_MAX_EMPLOYEES, GE_MAX_EMPLOYEES
+    transport_contact_cap_key, IH_K, HI_K, IAD_K, IAG_K, IW_K, WI_K, HA_K, HS_K, ITI_K, HB_K, IBE_K, IDEA_K, IHOS_K
+from simulator.constants.parameters import TPE_MAX_EMPLOYEES, PME_MAX_EMPLOYEES, GE_MAX_EMPLOYEES, covid_mortality_rate, \
+    covid_hospitalization_rate
 from simulator.constants.parameters import age_dist_adults_cs, age_dist_adults, \
     age_dist_children, age_dist_children_cs
 from simulator.helper.utils import invert_map, get_r, get_center_squized_random, rec_get_manhattan_walk, \
@@ -24,6 +25,9 @@ def get_environment_simulation(params_arg):
     house_indiv = build_house_individual_map(indiv_house)
     indiv_adult = build_individual_adult_map(indiv_house)
     indiv_age = build_individual_age_map(indiv_house)
+
+    indiv_death_rate = build_individual_death_rate_map(indiv_age)
+    indiv_hos_rate = build_individual_hospitalization_map(indiv_age)
 
     indiv_workplace = build_individual_work_map(indiv_adult)
     workplace_indiv = build_workplace_individual_map(indiv_workplace)
@@ -51,6 +55,10 @@ def get_environment_simulation(params_arg):
         HI_K: house_indiv,
         IAD_K: indiv_adult,
         IAG_K: indiv_age,
+
+        IDEA_K: indiv_death_rate,
+        IHOS_K: indiv_hos_rate,
+
         IW_K: indiv_workplace,
         WI_K: workplace_indiv,
         HA_K: house_adult,
@@ -117,6 +125,20 @@ def build_individual_age_map(individual_house_map_arg):
         incr_ind = incr_ind + 1
         i_ind = i_ind + 1
     return all_ind_age
+
+
+def build_individual_death_rate_map(indiv_age_arg):
+    indiv_death_rate = indiv_age_arg
+    for k, v in indiv_age_arg.items():
+        indiv_death_rate[k] = get_mortalty_rate(indiv_age_arg[k])
+    return indiv_death_rate
+
+
+def build_individual_hospitalization_map(indiv_age_arg):
+    indiv_hos_rate = indiv_age_arg
+    for k, v in indiv_age_arg.items():
+        indiv_hos_rate[k] = get_hospitalization_rate(indiv_age_arg[k])
+    return indiv_hos_rate
 
 
 def build_house_adult_map(individual_house_map_arg, individual_adult_map_arg):
@@ -247,3 +269,13 @@ def pick_age(is_child):
     min_age_i = l_dis.iloc[i]['min_age']
     max_age_i = l_dis.iloc[i]['max_age']
     return int(min_age_i + (max_age_i - min_age_i) * get_r())
+
+
+def get_mortalty_rate(age):
+    i = next(x for x in enumerate(list(covid_mortality_rate.keys())) if x[1] <= age / 10)
+    return covid_mortality_rate[i[1]]
+
+
+def get_hospitalization_rate(age):
+    i = next(x for x in enumerate(list(covid_hospitalization_rate.keys())) if x[1] <= age / 10)
+    return covid_hospitalization_rate[i[1]]
