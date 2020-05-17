@@ -55,10 +55,34 @@ world_age_distribution = [
     ["100-125", 114528, 418582]
 ]
 
+# Source https://www.populationpyramid.net/morocco/2019/
+moroccan_age_pyramid = [
+    ["0-4", 1729382, 1641034],
+    ["5-9", 1734443, 1645641],
+    ["10-14", 1584070, 1501684],
+    ["15-19", 1510189, 1443267],
+    ["20-24", 1483129, 1425881],
+    ["25-29", 1521166, 1493605],
+    ["30-34", 1403124, 1443264],
+    ["35-39", 1288740, 1400801],
+    ["40-44", 1078173, 1218939],
+    ["45-49", 959441, 1095698],
+    ["50-54", 916086, 992271],
+    ["55-59", 891855, 898582],
+    ["60-64", 747289, 761406],
+    ["65-69", 539573, 541379],
+    ["70-74", 317680, 324030],
+    ["75-79", 223864, 281597],
+    ["80-84", 119508, 179777],
+    ["85-89", 37110, 72359],
+    ["90-94", 7544, 15754],
+    ["95-99", 686, 1691],
+    ["100-125", 11, 43]
+]
+
 
 def get_age_distribution():
-    # Source https://www.populationpyramid.net/world/2019/
-    age_distribution = pd.DataFrame(world_age_distribution, columns=['age', 'nb_men', 'nb_women'])
+    age_distribution = pd.DataFrame(moroccan_age_pyramid, columns=['age', 'nb_men', 'nb_women'])
     age_distribution['nb'] = age_distribution['nb_men'] + age_distribution['nb_women']
     age_distribution['pct'] = age_distribution['nb'] / age_distribution['nb'].sum()
     age_distribution['min_age'] = age_distribution['age'].map(lambda s: int(s.split('-')[0]))

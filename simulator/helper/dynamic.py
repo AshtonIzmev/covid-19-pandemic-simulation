@@ -212,7 +212,7 @@ def propagate_to_stores(env_dic, virus_dic, probability_store_infection_arg, sam
     update_infection_period(gonna_be_infected, virus_dic)
 
 
-def get_r0(virus_dic):
+def get_r0_daily(virus_dic):
     return virus_dic[NC_K] / (1 + len(get_contagious_people(virus_dic)))
 
 
@@ -224,7 +224,8 @@ def get_pandemic_statistics(virus_dic):
         "dea": len(get_deadpeople(virus_dic)),
         "imm": len(get_immune_people(virus_dic)),
         "iso": len(get_isolated_people(virus_dic)),
-        "R0": get_r0(virus_dic),
+        "con": len(get_contagious_people(virus_dic)),
+        "R0d": get_r0_daily(virus_dic),
         "new": virus_dic[NC_K]
     }
     # Reset new cases counter

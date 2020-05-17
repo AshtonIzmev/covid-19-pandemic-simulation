@@ -197,12 +197,12 @@ Using a quick and dirty kmeans, we only display the most "different" run distrib
 - [ ]  Build a model of virus propagation in school and university (for only children vs 18-25yo people)
 - [ ]  Build an animated dataviz based on 3blue1brown video
 - [ ]  Simulate a population density and allow people to go to other houses in very dense place (in poor neighborhood)
-- [ ]  Add a moroccan age pyramid
-- [ ]  Build a moving average R0 instead of the daily R0 currently used
 - [ ]  Build a new kind of individuals who do not work in workplaces but can go in every house or store (policemen for example)
+- [ ]  Add a delay between test and isolation (PCR tests can take one day)
 - [ ]  Scenario : Build a random test-isolation model
 - [ ]  Scenario : A whole neighborhood can be closed if enough people are infected
-- [ ]  Add a delay between test and isolation (PCR tests can take one day)
+- [x]  Build a moving average R0 instead of the daily R0 currently used
+- [x]  Add a moroccan age pyramid
 - [x]  Get rid of FN_K: get_infection_params and use a python class
 - [x]  FAILED : Switch from dictionaries and list to numpy array (may be way more efficient, probably enabling some nice vectorization but huge refactors to come. Turns out it was a bad idea for performance -> lonely branch)
 - [x]  More tests, there are never enough tests

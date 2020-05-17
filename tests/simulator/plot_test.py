@@ -5,7 +5,8 @@ from unittest import mock
 import numpy as np
 
 from simulator.helper.plot import draw_population_state_daily, draw_specific_population_state_daily, \
-    draw_lockdown_state_daily, draw_new_daily_cases, draw_summary, draw_examples, draw_r0_evolution, chose_draw_plot
+    draw_lockdown_state_daily, draw_new_daily_cases, draw_summary, draw_examples, draw_r0_daily_evolution, \
+    chose_draw_plot, draw_r0_evolution
 
 
 class TestSimulation(unittest.TestCase):
@@ -25,7 +26,8 @@ class TestSimulation(unittest.TestCase):
             "dea": np.random.random((nrun, nday)),
             "imm": np.random.random((nrun, nday)),
             "iso": np.random.random((nrun, nday)),
-            "R0": np.random.random((nrun, nday)),
+            "con": np.random.random((nrun, nday)),
+            "R0d": np.random.random((nrun, nday)),
             "new": np.random.random((nrun, nday)),
             "loc": np.random.random((nrun, nday))
         }
@@ -72,6 +74,11 @@ class TestSimulation(unittest.TestCase):
 
     @mock.patch("simulator.helper.plot.plt.show")
     def test_draw_r0_evolution(self, mock_plt):
+        draw_r0_daily_evolution(self.get_stats(is_empty=False))
+        assert mock_plt.called
+
+    @mock.patch("simulator.helper.plot.plt.show")
+    def test_draw_r0(self, mock_plt):
         draw_r0_evolution(self.get_stats(is_empty=False))
         assert mock_plt.called
 

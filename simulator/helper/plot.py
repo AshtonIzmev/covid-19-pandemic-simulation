@@ -69,9 +69,17 @@ def draw_examples(stats_arg, x_tick=10):
     plt.show()
 
 
-def draw_r0_evolution(stats_arg, x_tick=10):
+def draw_r0_daily_evolution(stats_arg, x_tick=10):
     fig, ax = plt.subplots(figsize=(15, 10))
-    set_ax_r0(ax, stats_arg["R0"], x_tick=10)
+    set_ax_r0(ax, stats_arg["R0d"], "R0 Daily", x_tick=10)
+    plt.show()
+
+
+def draw_r0_evolution(stats_arg, window_size=3, x_tick=10):
+    fig, ax = plt.subplots(figsize=(15, 10))
+    slid_new = np.array([np.convolve(sn, np.ones(window_size, dtype=int), 'valid') for sn in stats_arg["new"]])
+    slid_con = np.array([rolling_max(sc, window_size) for sc in 1+stats_arg["con"]])
+    set_ax_r0(ax, slid_new/slid_con, "2 weeks sliding R0", x_tick=10)
     plt.show()
 
 
@@ -99,10 +107,10 @@ def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, lengt
         print()
 
 
-def set_ax_r0(ax, stats_r0, x_tick=10):
+def set_ax_r0(ax, stats_r0, lib, x_tick=10):
     n_day_arg = stats_r0.shape[1]
     plot_color = "#3F88C5"
-    name_state = "R0"
+    name_state = lib
 
     stats_mean_arg = np.mean(stats_r0, axis=0)
     stats_err_arg = stats.sem(stats_r0, axis=0)
@@ -123,7 +131,7 @@ def set_ax_r0(ax, stats_r0, x_tick=10):
     ax.set_xticks(np.arange(0, n_day_arg, int(n_day_arg / x_tick)), tuple([(str(int(i * n_day_arg / x_tick)))
                                                                            for i in range(x_tick)]))
     ax.set_yticks(np.arange(min_s, math.ceil(max_s) + 1, 0.25))
-    ax.legend((p[0], cst_1[0], ), (name_state, "Equilibre",))
+    ax.legend((p[0], cst_1[0], ), (name_state, "Equilibrium",))
 
 
 def set_ax_population_state_daily(ax, stats_arg, x_tick=10):
@@ -282,8 +290,10 @@ def chose_draw_plot(draw_graph_arg, stats_arg):
             draw_examples(stats_arg)
         if contains_substring("loc", draw_graph_arg):
             draw_lockdown_state_daily(stats_arg)
-        if contains_substring("R0", draw_graph_arg):
-            draw_r0_evolution(stats_arg)
+        if contains_substring("R0d", draw_graph_arg):
+            draw_r0_daily_evolution(stats_arg)
+        elif contains_substring("R0", draw_graph_arg):
+            draw_r0_evolution(stats_arg, 14)
 
 
 def contains_substring(substr_arg, list_arg):
@@ -291,3 +301,24 @@ def contains_substring(substr_arg, list_arg):
         if i.startswith(substr_arg):
             return True
     return False
+
+
+# https://stackoverflow.com/a/43335059/2166220
+def rolling_max(a, window):
+    def each_value():
+        w = a[:window].copy()
+        m = w.max()
+        yield m
+        i = 0
+        j = window
+        while j < len(a):
+            old_value = w[i]
+            new_value = w[i] = a[j]
+            if new_value > m:
+                m = new_value
+            elif old_value == m:
+                m = w.max()
+            yield m
+            i = (i + 1) % window
+            j += 1
+    return np.array(list(each_value()))
