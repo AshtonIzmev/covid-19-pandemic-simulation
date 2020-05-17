@@ -34,11 +34,11 @@ class TestHelpers(unittest.TestCase):
         self.assertEqual(result, [1, 2, 0, 1, 3])
 
     def test_get_random_choice_list(self):
-        input_list_list = [[1, 2], [0], [1, 3]]
+        input_list_list = [[1, 2], [0], [1, 3], []]
         result = list(get_random_choice_list(input_list_list))
         self.assertEqual(len(result), 3)
         self.assertTrue(0 in result)
-        self.assertEqual(result, [2, 0, 3])
+        self.assertEqual(result, [1, 0, 3])
 
     def test_get_infection_parameters(self):
         result = get_infection_parameters(2, 7, 7, 21, 21, 39, 30, 60)
@@ -76,6 +76,7 @@ class TestHelpers(unittest.TestCase):
         self.assertEqual(choose_weight_order(list(range(100)), 0.001), 99)
         self.assertEqual(choose_weight_order(list(range(100)), 0.999), 0)
         self.assertEqual(choose_weight_order(list(range(100)), 0.021), 45)
+        self.assertEqual(choose_weight_order(list(range(100)), 200), 0)
 
 
 if __name__ == '__main__':

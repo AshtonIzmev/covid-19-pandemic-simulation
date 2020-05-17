@@ -70,11 +70,7 @@ def rec_get_manhattan_walk(result, p1, p2):
 
 
 def get_random_choice_list(list_of_list_arg):
-    result = []
-    for list_arg in list_of_list_arg:
-        if len(list_arg) > 0:
-            result.append(random.choice(list_arg))
-    return result
+    return [li[int(get_r()*len(li))] for li in list_of_list_arg if len(li) > 0]
 
 
 def get_clipped_gaussian_number(lower_clip_arg, upper_clip_arg, mean_arg, std_arg):

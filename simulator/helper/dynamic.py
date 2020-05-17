@@ -97,24 +97,19 @@ def get_immune_people(virus_dic):
     return [k for k, v in virus_dic[STA_K].items() if v == IMMUNE_V]
 
 
-def is_isolated(individual_arg, virus_dic):
-    return virus_dic[STA_K][individual_arg] == ISOLATED_V
+def is_eligible_tostore(virus_dic, individual_arg):
+    return virus_dic[STA_K][individual_arg] not in [ISOLATED_V, DEAD_V]
 
 
 def is_contagious(individual_arg, virus_dic):
     return virus_dic[STA_K][individual_arg] == INFECTED_V and virus_dic[CON_K][individual_arg] < 0
 
 
-def is_alive(individual_arg, virus_dic):
-    return virus_dic[STA_K][individual_arg] != DEAD_V
-
-
 def propagate_to_houses(env_dic, virus_dic, probability_home_infection_arg):
     # Houses that contain an infected and contagious person with an associated behavior weight
     # ( (1, 1.5), (1, 2), (2, 1) )
     # House 1 with 1.5 and 2 weights and House 2 with weight 1
-    infected_houses_behavior = [(env_dic[IH_K][i], env_dic[IBE_K][i]) for i in get_infected_people(virus_dic)
-                                if is_contagious(i, virus_dic)]
+    infected_houses_behavior = [(env_dic[IH_K][i], env_dic[IBE_K][i]) for i in get_contagious_people(virus_dic)]
 
     # We reduce_multiply_by_key multiply it to get
     # { 1: 1.5 * 2  ,   2: 1 }
@@ -183,7 +178,7 @@ def propagate_to_stores(env_dic, virus_dic, probability_store_infection_arg, sam
     # People who will go to their store (one person per house as imposed by lockdown)
     # [1, 2, 3, 4, 5, 6] go to the store
     individuals_gotostore = get_random_choice_list([
-        [i for i in env_dic[HA_K][h] if (is_alive(i, virus_dic) and not (is_isolated(i, virus_dic)))] for h in
+        [i for i in env_dic[HA_K][h] if (is_eligible_tostore(virus_dic, i))] for h in
         range(len(env_dic[HA_K]))
     ])
 
