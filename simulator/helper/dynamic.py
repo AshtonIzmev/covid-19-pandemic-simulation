@@ -7,13 +7,13 @@ def update_infection_period(newly_infected_individuals_arg, virus_dic):
     for i in newly_infected_individuals_arg:
         if virus_dic[STA_K][i] == HEALTHY_V:
             virus_dic[STA_K][i] = INFECTED_V
-            virus_dic[NC_K] = virus_dic[NC_K] + 1
+            virus_dic[NC_K] += 1
 
 
 def update_immunity_state(virus_dic):
     for i in get_immune_people(virus_dic):
         # Losing immunity
-        virus_dic[IMM_K][i] = virus_dic[IMM_K][i] - 1
+        virus_dic[IMM_K][i] -= 1
         if virus_dic[IMM_K][i] == 0:
             virus_dic[STA_K][i] = HEALTHY_V
             virus_dic[CON_K][i] = virus_dic[CON_INIT_K][i]
@@ -42,9 +42,9 @@ def decide_life_immunity(env_dic, virus_dic, icu_factor):
 
 def decrement_virus_carrier_periods(virus_dic):
     for i in get_virus_carrier_people(virus_dic):
-        virus_dic[CON_K][i] = virus_dic[CON_K][i] - 1
-        virus_dic[HOS_K][i] = virus_dic[HOS_K][i] - 1
-        virus_dic[DEA_K][i] = virus_dic[DEA_K][i] - 1
+        virus_dic[CON_K][i] -= 1
+        virus_dic[HOS_K][i] -= 1
+        virus_dic[DEA_K][i] -= 1
 
 
 def increment_pandemic_1_day(env_dic, virus_dic, available_beds):
@@ -189,14 +189,14 @@ def propagate_to_stores(env_dic, virus_dic, probability_store_infection_arg, sam
     # [(2, 0), (3, 1), (6, 2)]  2, 3 and 6 are infected and going to the stores 0, 1 and 2
     # we divide same_store_preference by behavior since high behavior value is bad behavior
     individuals_healthy_gotostore = [
-        (i, choose_weight_order(env_dic[HS_K][env_dic[IH_K][i]], same_store_preference / env_dic[IBE_K][i]))
+        (i, choose_weight_order(env_dic[IS_K][i], same_store_preference / env_dic[IBE_K][i]))
         for i in individuals_gotostore if not is_contagious(i, virus_dic)
     ]
 
     # Stores that will be visited by a contagious person
     # [ (0, 1), (0, 1.3), (2, 1.2)] where stores 0 and 2 are infected with 1, 1.3 and 1.2 weights
     infected_stores = [
-        (choose_weight_order(env_dic[HS_K][env_dic[IH_K][i]], same_store_preference / env_dic[IBE_K][i]), env_dic[IBE_K][i])
+        (choose_weight_order(env_dic[IS_K][i], same_store_preference / env_dic[IBE_K][i]), env_dic[IBE_K][i])
         for i in individuals_infected_gotostore
     ]
 

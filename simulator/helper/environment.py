@@ -4,7 +4,8 @@ import random
 from scipy import spatial
 
 from simulator.constants.keys import nindividual_key, store_per_house_key, nb_1d_block_key, store_nb_choice_key, \
-    transport_contact_cap_key, IH_K, HI_K, IAD_K, IAG_K, IW_K, WI_K, HA_K, HS_K, ITI_K, HB_K, IBE_K, IDEA_K, IHOS_K
+    transport_contact_cap_key, IH_K, HI_K, IAD_K, IAG_K, IW_K, WI_K, HA_K, HS_K, ITI_K, HB_K, IBE_K, IDEA_K, IHOS_K, \
+    IS_K, SI_K
 from simulator.constants.parameters import TPE_MAX_EMPLOYEES, PME_MAX_EMPLOYEES, GE_MAX_EMPLOYEES, covid_mortality_rate, \
     covid_hospitalization_rate
 from simulator.constants.parameters import age_dist_adults_cs, age_dist_adults, \
@@ -38,6 +39,8 @@ def get_environment_simulation(params_arg):
     geo_store = build_geo_positions_store(int(len(house_indiv) / number_store_per_house_arg))
 
     house_store = build_house_store_map(geo_store, geo_house, nb_store_choice)
+    indiv_store = build_individual_store_map(indiv_house, house_store)
+    store_indiv = build_store_individual_map(indiv_store)
 
     house_block = build_block_assignment(geo_house, nb_1d_block_arg)
     workplace_block = build_block_assignment(geo_workplace, nb_1d_block_arg)
@@ -63,6 +66,8 @@ def get_environment_simulation(params_arg):
         WI_K: workplace_indiv,
         HA_K: house_adult,
         HS_K: house_store,
+        IS_K: indiv_store,
+        SI_K: store_indiv,
         ITI_K: indiv_transport_indiv,
         HB_K: house_block,
         IBE_K: indiv_behavior
@@ -186,6 +191,17 @@ def build_house_store_map(geo_position_store_arg, geo_position_house_arg, nb_sto
     _, indexes = spatial.KDTree(geo_position_store_arg).query(geo_position_house_arg, k=nb_store_choice)
     all_hou_sto = dict(zip(range(len(geo_position_house_arg)), [list(i) for i in indexes]))
     return all_hou_sto
+
+
+def build_individual_store_map(indiv_house_arg, house_store_arg):
+    all_ind_sto = {}
+    for i in range(len(indiv_house_arg)):
+        all_ind_sto[i] = house_store_arg[indiv_house_arg[i]]
+    return all_ind_sto
+
+
+def build_store_individual_map(indiv_store_arg):
+    return invert_map_list(indiv_store_arg)
 
 
 def build_individual_work_map(individual_adult_map_arg):

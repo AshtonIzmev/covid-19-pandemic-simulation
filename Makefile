@@ -5,7 +5,7 @@ test:
 	 python -m tests.run
 
 coverage:
-	 coverage run -m pytest
+	 coverage run -m pytest && coverage xml
 
 report:
 	 coverage report

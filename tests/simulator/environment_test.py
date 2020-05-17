@@ -5,8 +5,9 @@ import numpy as np
 
 from simulator.helper.environment import build_individual_houses_map, build_individual_adult_map, \
     build_individual_age_map, build_house_adult_map, build_2d_item_behavior, build_1d_item_behavior, \
-    build_house_store_map, build_individual_work_map, build_individual_workblock_map, \
-    build_individual_individual_transport_map, build_individual_death_rate_map, build_individual_hospitalization_map
+    build_house_store_map, build_individual_work_map, build_individual_workblock_map, build_individual_store_map, \
+    build_individual_individual_transport_map, build_individual_death_rate_map, build_individual_hospitalization_map, \
+    build_store_individual_map
 from simulator.helper.utils import invert_map_list, invert_map
 from tests.utils import g_d
 
@@ -87,6 +88,31 @@ class TestInitiation(unittest.TestCase):
                                   3: [3, 2, 4],
                                   4: [4, 3, 5],
                                   5: [5, 4, 3]})
+
+    def test_build_indiv_store_map(self):
+        ind_hou = g_d([0, 0, 0, 0, 1, 1, 1, 1, 2, 2])
+        hou_sto = g_d([[0, 1, 2], [1, 2, 3], [4, 5, 3]])
+        result = build_individual_store_map(ind_hou, hou_sto)
+        self.assertEqual(result, {0: [0, 1, 2],
+                                  1: [0, 1, 2],
+                                  2: [0, 1, 2],
+                                  3: [0, 1, 2],
+                                  4: [1, 2, 3],
+                                  5: [1, 2, 3],
+                                  6: [1, 2, 3],
+                                  7: [1, 2, 3],
+                                  8: [4, 5, 3],
+                                  9: [4, 5, 3]})
+
+    def test_build_store_individual_map(self):
+        ind_sto = {0: [0, 1, 2], 1: [2, 3, 4]}
+        result = build_store_individual_map(ind_sto)
+        self.assertEqual(result, {0: [0], 1: [0], 2: [0, 1], 3: [1], 4: [1]})
+
+    def test_build_store_individual_map2(self):
+        ind_sto = {0: [0, 1], 1: [3, 4]}
+        result = build_store_individual_map(ind_sto)
+        self.assertEqual(result, {0: [0], 1: [0], 3: [1], 4: [1]})
 
     def test_build_individual_work_map(self):
         input_individual_adult_map = {
