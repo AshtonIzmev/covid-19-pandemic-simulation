@@ -5,7 +5,7 @@ from simulator.constants.keys import nrun_key, scenario_id_key, random_seed_key,
     innoculation_number_key, nb_1d_block_key, remote_work_key, store_per_house_key, store_preference_key, \
     store_nb_choice_key, house_infect_key, work_infection_key, store_infection_key, transport_infection_key, \
     transport_contact_cap_key, contagion_bounds_key, hospitalization_bounds_key, death_bounds_key, immunity_bounds_key, \
-    icu_bed_per_thousand_individual_key, additional_scenario_params_key
+    icu_bed_per_thousand_individual_key, additional_scenario_params_key, ncpu_key
 
 
 def get_parser():
@@ -13,6 +13,8 @@ def get_parser():
 
     parser.add_argument('--nrun', type=int, help='Number of simulations', dest=nrun_key)
     parser.add_argument('--random-seed', type=int, help='Random seed', dest=random_seed_key)
+
+    parser.add_argument('--ncpu', type=int, help='Number of cpus to use (-1 is all but one)', dest=ncpu_key)
 
     parser.add_argument('--nind', type=int, help='Number of individuals', dest=nindividual_key)
     parser.add_argument('--nday', type=int, help='Number of days', dest=nday_key)

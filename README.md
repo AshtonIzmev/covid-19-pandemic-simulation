@@ -25,11 +25,11 @@ python -m simulator.run  --nday 500 --nind 5000 --immunity-bounds 120 150 --draw
 ```
 
 # Run a scenario
-35k individuals, 20 simulations.
+35k individuals (--nind), 20 simulations (--nrun).
 
-Scenario -1 : It is just a flu
+Scenario -1 : It is just a flu (using 3 cpu in parallel)
 ```bash
-python -m scenario.run --nrun 20  --nday 180 --nind 35000 --scenario -1  --draw exa pop summ R0
+python -m scenario.run --nrun 20  --nday 180 --nind 35000 --scenario -1  --draw exa pop summ R0 --ncpu 3
 ```
 Scenario 0 : Eradicate
 ```bash
@@ -68,24 +68,27 @@ More scenarios are available in the scenario package.
 
 # Usage
 ```bash
-usage: run.py [-h] [--nrun NRUN] [--random-seed RANDOM_SEED]
-              [--nind N_INDIVIDUALS] [--nday N_DAYS]
-              [--sto-house NB_STORE_PER_HOUSE] [--nblock NB_1D_GRID_BLOCK]
-              [--remote-work REMOTE_WORK_PERCENT]
-              [--sto-pref PROB_PREFERENCE_STORE]
-              [--sto-nb STORE_NB_CHOICE_KEY]
-              [--inn-infec INITIAL_INNOCULATION_NB]
-              [--p-house PROB_HOUSE_INFECTION]
-              [--p-store PROB_STORE_INFECTION] [--p-work PROB_WORK_INFECTION]
-              [--p-transport PROB_TRANSPORT_INFECTION]
-              [--transport-contact-cap TRANSPORT_CONTACT_CAP]
-              [--contagion-bounds CONTAGION_BOUNDS CONTAGION_BOUNDS]
-              [--hospitalization-bounds HOSPITALIZATION_BOUNDS HOSPITALIZATION_BOUNDS]
-              [--death-bounds DEATH_BOUNDS DEATH_BOUNDS]
-              [--immunity-bounds IMMUNITY_BOUNDS IMMUNITY_BOUNDS]
-              [--nbeds-icu ICU_BED_PER_1K_INDIV] [--scenario-id SCENARIO_ID]
-              [--draw [DRAW_GRAPH [DRAW_GRAPH ...]]]
-              [--extra-scenario-params [ADDITIONAL_SCENARIO_PARAMETERS [ADDITIONAL_SCENARIO_PARAMETERS ...]]]
+usage: run_benchmark.py [-h] [--nrun NRUN] [--random-seed RANDOM_SEED]
+                        [--ncpu NUM_CPU] [--nind N_INDIVIDUALS]
+                        [--nday N_DAYS] [--sto-house NB_STORE_PER_HOUSE]
+                        [--nblock NB_1D_GRID_BLOCK]
+                        [--remote-work REMOTE_WORK_PERCENT]
+                        [--sto-pref PROB_PREFERENCE_STORE]
+                        [--sto-nb STORE_NB_CHOICE_KEY]
+                        [--inn-infec INITIAL_INNOCULATION_NB]
+                        [--p-house PROB_HOUSE_INFECTION]
+                        [--p-store PROB_STORE_INFECTION]
+                        [--p-work PROB_WORK_INFECTION]
+                        [--p-transport PROB_TRANSPORT_INFECTION]
+                        [--transport-contact-cap TRANSPORT_CONTACT_CAP]
+                        [--contagion-bounds CONTAGION_BOUNDS CONTAGION_BOUNDS]
+                        [--hospitalization-bounds HOSPITALIZATION_BOUNDS HOSPITALIZATION_BOUNDS]
+                        [--death-bounds DEATH_BOUNDS DEATH_BOUNDS]
+                        [--immunity-bounds IMMUNITY_BOUNDS IMMUNITY_BOUNDS]
+                        [--nbeds-icu ICU_BED_PER_1K_INDIV]
+                        [--scenario-id SCENARIO_ID]
+                        [--draw [DRAW_GRAPH [DRAW_GRAPH ...]]]
+                        [--extra-scenario-params [ADDITIONAL_SCENARIO_PARAMETERS [ADDITIONAL_SCENARIO_PARAMETERS ...]]]
 
 Please feed model parameters
 
@@ -94,6 +97,7 @@ optional arguments:
   --nrun NRUN           Number of simulations
   --random-seed RANDOM_SEED
                         Random seed
+  --ncpu NUM_CPU        Number of cpus to use (-1 is all but one)
   --nind N_INDIVIDUALS  Number of individuals
   --nday N_DAYS         Number of days
   --sto-house NB_STORE_PER_HOUSE
@@ -193,7 +197,6 @@ python -m simulator.run --nrun 20  --nday 180 --nind 1000 --immunity-bounds 60 9
 Using a quick and dirty kmeans, we only display the most "different" run distributions to illustrate the butterfly effect of a pandemic
 
 # Backlog
-- [ ]  parallelize the runs (using for example N_proc-1 processors multithreading)
 - [ ]  Build a model of virus propagation in school and university (for only children vs 18-25yo people)
 - [ ]  Build an animated dataviz based on 3blue1brown video
 - [ ]  Simulate a population density and allow people to go to other houses in very dense place (in poor neighborhood)
@@ -201,6 +204,7 @@ Using a quick and dirty kmeans, we only display the most "different" run distrib
 - [ ]  Add a delay between test and isolation (PCR tests can take one day)
 - [ ]  Scenario : Build a random test-isolation model
 - [ ]  Scenario : A whole neighborhood can be closed if enough people are infected
+- [x]  parallelize the runs (using for example N_proc-1 processors multithreading)
 - [x]  Build a moving average R0 instead of the daily R0 currently used
 - [x]  Add a moroccan age pyramid
 - [x]  Get rid of FN_K: get_infection_params and use a python class

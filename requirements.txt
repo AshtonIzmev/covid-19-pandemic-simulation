@@ -5,3 +5,5 @@ scipy
 numpy
 argparse
 sklearn
+ray
+psutil

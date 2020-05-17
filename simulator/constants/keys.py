@@ -31,6 +31,7 @@ STA_K = "individual_to_state_mapping"
 NC_K = "new_cases"
 
 nrun_key = "NRUN"
+ncpu_key = "NUM_CPU"
 scenario_id_key = "SCENARIO_ID"
 random_seed_key = "RANDOM_SEED"
 draw_graph_key = "DRAW_GRAPH"

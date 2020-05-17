@@ -236,3 +236,13 @@ def get_pandemic_statistics(virus_dic):
 def update_stats(virus_dic, stats, r, d):
     for k, v in get_pandemic_statistics(virus_dic).items():
         stats[k][r][d] = v
+
+
+def update_run_stat(virus_dic, stats, d):
+    for k, v in get_pandemic_statistics(virus_dic).items():
+        stats[k][d] = v
+
+
+def merge_run_stat(stats, run_stats_arg, run_arg):
+    for k, v in run_stats_arg.items():
+        stats[k][run_arg] = v

@@ -4,7 +4,8 @@ import time
 
 from scenario.example import sc1_simple_lockdown_removal, sc2_yoyo_lockdown_removal, sc0_base_lockdown, \
     scx_base_just_a_flu, sc3_loose_lockdown, sc4_rogue_citizen, sc5_rogue_neighborhood, sc6_travelers
-from simulator.constants.keys import scenario_id_key, random_seed_key, draw_graph_key
+from scenario.helper.ray import launch_parallel_run
+from simulator.constants.keys import scenario_id_key, random_seed_key, draw_graph_key, ncpu_key
 from simulator.helper.environment import get_environment_simulation
 from simulator.helper.parser import get_parser
 from simulator.helper.plot import chose_draw_plot
@@ -23,24 +24,23 @@ if __name__ == '__main__':
     t_start = time.time()
 
     env_dic = get_environment_simulation(params)
-    if params[scenario_id_key] == -1:
-        stats_result = scx_base_just_a_flu.launch_run(params, env_dic)
-    elif params[scenario_id_key] == 0:  # Total lockdown
-        stats_result = sc0_base_lockdown.launch_run(params, env_dic)
-    elif params[scenario_id_key] == 1:  # Lockdown removal after N days
-        stats_result = sc1_simple_lockdown_removal.launch_run(params, env_dic)
-    elif params[scenario_id_key] == 2:  # Yoyo lockdown removal
-        stats_result = sc2_yoyo_lockdown_removal.launch_run(params, env_dic)
-    elif params[scenario_id_key] == 3:  # Yoyo lockdown removal
-        stats_result = sc3_loose_lockdown.launch_run(params, env_dic)
-    elif params[scenario_id_key] == 4:  # Rogue citizen
-        stats_result = sc4_rogue_citizen.launch_run(params, env_dic)
-    elif params[scenario_id_key] == 5:  # Rogue block
-        stats_result = sc5_rogue_neighborhood.launch_run(params, env_dic)
-    elif params[scenario_id_key] == 6:  # Rogue block
-        stats_result = sc6_travelers.launch_run(params, env_dic)
+
+    launch_fun = launch_parallel_run
+
+    scenario_dic = {
+        -1: scx_base_just_a_flu.do_parallel_run,
+        0:  sc0_base_lockdown.do_parallel_run,
+        1:  sc1_simple_lockdown_removal.do_parallel_run,
+        2:  sc2_yoyo_lockdown_removal.do_parallel_run,
+        3:  sc3_loose_lockdown.do_parallel_run,
+        4:  sc4_rogue_citizen.do_parallel_run,
+        5:  sc5_rogue_neighborhood.do_parallel_run,
+        6:  sc6_travelers.do_parallel_run
+    }
+
+    if params[scenario_id_key] in scenario_dic:
+        stats_result = launch_parallel_run(params, env_dic, scenario_dic[params[scenario_id_key]], params[ncpu_key])
+        print("It took : %.2f seconds" % (time.time() - t_start))
+        chose_draw_plot(params[draw_graph_key], stats_result)
     else:
         sys.exit(0)
-    print("It took : %.2f seconds" % (time.time() - t_start))
-
-    chose_draw_plot(params[draw_graph_key], stats_result)
