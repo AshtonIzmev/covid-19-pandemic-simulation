@@ -5,7 +5,7 @@ from scipy import spatial
 
 from simulator.constants.keys import nindividual_key, store_per_house_key, nb_1d_block_key, store_nb_choice_key, \
     transport_contact_cap_key, IH_K, HI_K, IAD_K, IAG_K, IW_K, WI_K, HA_K, HS_K, ITI_K, HB_K, IBE_K, IDEA_K, IHOS_K, \
-    IS_K, SI_K
+    IS_K, SI_K, ITB_K
 from simulator.constants.parameters import TPE_MAX_EMPLOYEES, PME_MAX_EMPLOYEES, GE_MAX_EMPLOYEES, covid_mortality_rate, \
     covid_hospitalization_rate
 from simulator.constants.parameters import age_dist_adults_cs, age_dist_adults, \
@@ -68,6 +68,7 @@ def get_environment_simulation(params_arg):
         HS_K: house_store,
         IS_K: indiv_store,
         SI_K: store_indiv,
+        ITB_K: indiv_transport_block,
         ITI_K: indiv_transport_indiv,
         HB_K: house_block,
         IBE_K: indiv_behavior
@@ -232,7 +233,7 @@ def build_individual_workblock_map(individual_house_map_arg, individual_workplac
     for ind, work in individual_workplace_map_arg.items():
         house_block = house_block_map_arg[individual_house_map_arg[ind]]
         workplace_block = workplace_block_map_arg[individual_workplace_map_arg[ind]]
-        intermediate_blocks[ind] = list(set(rec_get_manhattan_walk([], house_block, workplace_block)))
+        intermediate_blocks[ind] = rec_get_manhattan_walk([], house_block, workplace_block)
     return intermediate_blocks
 
 

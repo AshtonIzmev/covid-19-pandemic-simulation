@@ -12,6 +12,7 @@ HA_K = "house_to_adult_mapping"
 HS_K = "house_to_store_mapping"
 IS_K = "individual_to_store_mapping"
 SI_K = "store_to_individual_mapping"
+ITB_K = "individual_transport_block_mapping"
 ITI_K = "individual_transport_individual_mapping"
 
 HB_K = "house_to_block_mapping"

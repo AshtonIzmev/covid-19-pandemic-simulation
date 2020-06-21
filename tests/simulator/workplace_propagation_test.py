@@ -30,6 +30,24 @@ class TestSimulation(unittest.TestCase):
         self.assertEqual(virus_dic[STA_K][4], F)
         self.assertEqual(virus_dic[STA_K][5], H)
 
+    def test_propagate_to_workplaces_contagious_carefull(self):
+        # i4 is infected and works at w1 like i1
+        # i1 does not get infected because he is carefull
+        env_dic = {
+            IW_K: {1: 1, 4: 1, 5: 0},
+            WI_K: {0: [5], 1: [4, 1]},
+            IBE_K: {1: 0.00001, 4: 1, 5: 1}
+        }
+        virus_dic = {
+            CON_K: {1: -2, 4: -5, 5: 4},
+            STA_K: {1: H, 4: F, 5: H},
+            NC_K: 0
+        }
+        propagate_to_workplaces(env_dic, virus_dic, 1, -100000)
+        self.assertEqual(virus_dic[STA_K][1], H)
+        self.assertEqual(virus_dic[STA_K][4], F)
+        self.assertEqual(virus_dic[STA_K][5], H)
+
     def test_propagate_to_workplaces_contagious_remote_work(self):
         # i4 is infected and works at w1 like i1
         # But both are working remote
@@ -139,6 +157,25 @@ class TestSimulation(unittest.TestCase):
         propagate_to_workplaces(env_dic, virus_dic, 0.99, 0.98)
         self.assertEqual(virus_dic[STA_K][1], F)
         self.assertEqual(virus_dic[STA_K][4], F)
+        self.assertEqual(virus_dic[STA_K][5], H)
+
+    def test_propagate_to_workplaces_good_behavior(self):
+        # Nobody should go to work (remote parameter high
+        # i1 have bad behavior but i4 a good behavior
+        # And i4 does not get infected
+        env_dic = {
+            IW_K: {1: 1, 4: 1, 5: 0},
+            WI_K: {0: [5], 1: [4, 1]},
+            IBE_K: {1: 100, 4: 0.01, 5: 1}
+        }
+        virus_dic = {
+            CON_K: {1: -2, 4: 1, 5: 4},
+            STA_K: {1: F, 4: H, 5: H},
+            NC_K: 0
+        }
+        propagate_to_workplaces(env_dic, virus_dic, 0.99, 0.98)
+        self.assertEqual(virus_dic[STA_K][1], F)
+        self.assertEqual(virus_dic[STA_K][4], H)
         self.assertEqual(virus_dic[STA_K][5], H)
 
     def test_propagate_to_workplaces_contagious2(self):

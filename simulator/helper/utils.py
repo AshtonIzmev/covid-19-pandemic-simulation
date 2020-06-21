@@ -59,14 +59,14 @@ def rec_get_manhattan_walk(result, p1, p2):
         return result + [p1]
     if j == l:
         if i < k:
-            return rec_get_manhattan_walk(result + [p1, p2], (k, l), (i + 1, j))
+            return rec_get_manhattan_walk(result + [p1], (i + 1, j), (k, l))
         else:
-            return rec_get_manhattan_walk(result + [p1, p2], (k + 1, l), (i, j))
+            return rec_get_manhattan_walk(result + [p1], (i - 1, j), (k, l))
     else:
         if j < l:
-            return rec_get_manhattan_walk(result + [p1, p2], (i, j + 1), (k, l))
+            return rec_get_manhattan_walk(result + [p1], (i, j + 1), (k, l))
         else:
-            return rec_get_manhattan_walk(result + [p1, p2], (k, l + 1), (i, j))
+            return rec_get_manhattan_walk(result + [p1], (i, j - 1), (k, l))
 
 
 def get_random_choice_list(list_of_list_arg):

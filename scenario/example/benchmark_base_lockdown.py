@@ -37,11 +37,11 @@ def launch_run(params, env_dic):
             prof_stats[1] += time.time() - time_init
             prof_nstats[1] += 1
             time_init = time.time()
-            propagate_to_workplaces(env_dic, virus_dic, params[work_infection_key], params[remote_work_key])
+            ind_work = propagate_to_workplaces(env_dic, virus_dic, params[work_infection_key], params[remote_work_key])
             prof_stats[2] += time.time() - time_init
             prof_nstats[2] += 1
             time_init = time.time()
-            propagate_to_stores(env_dic, virus_dic, params[store_infection_key], params[store_preference_key])
+            ind_sto = propagate_to_stores(env_dic, virus_dic, params[store_infection_key], params[store_preference_key])
             prof_stats[3] += time.time() - time_init
             prof_nstats[3] += 1
             time_init = time.time()

@@ -129,9 +129,12 @@ def propagate_to_houses(env_dic, virus_dic, probability_home_infection_arg):
 
 def propagate_to_workplaces(env_dic, virus_dic, probability_work_infection_arg, probability_remote_work_arg):
     # [1, 2, 3] go to work
+    all_gotowork = [i for i in env_dic[IW_K].keys() if get_r() < (1-probability_remote_work_arg) * env_dic[IBE_K][i]]
+
     # Contagious people who will go to work
-    infected_gotowork = [i for i in get_contagious_people(virus_dic) if i in env_dic[IW_K].keys()
-                         and get_r() < (1-probability_remote_work_arg) * env_dic[IBE_K][i]]
+    infected_gotowork = [i for i in all_gotowork if is_contagious(i, virus_dic)]
+    healthy_gotowork = [i for i in all_gotowork if not is_contagious(i, virus_dic)]
+
     # Infected workplaces
     # [ (1, 1.1), (2, 1), (1, 1.4) ]
     infected_workplaces_behavior = [(env_dic[IW_K][i], env_dic[IBE_K][i]) for i in infected_gotowork]
@@ -142,14 +145,18 @@ def propagate_to_workplaces(env_dic, virus_dic, probability_work_infection_arg, 
 
     # We build people at those workplaces
     # [ ([1, 2, 3], 1), ([4, 5, 6], 2), ([1, 2, 3], 2) ]
-    exposed_individuals_at_work = [(env_dic[WI_K][k], beh_p) for (k, beh_p) in infected_workplaces_behavior_dic.items()]
+    exposed_individuals_at_work = [
+        (env_dic[WI_K][k], beh_p) for (k, beh_p) in infected_workplaces_behavior_dic.items()
+    ]
 
     # People who have gone to work (not isolated) and got infected
-    infected_backfromwork = [i for people, beh_p in exposed_individuals_at_work for i in people
-                             if get_r() < probability_work_infection_arg * beh_p]
+    infected_backfromwork = [i for people, beh_work in exposed_individuals_at_work for i in people
+                             if get_r() < probability_work_infection_arg * beh_work * env_dic[IBE_K][i]
+                             and i in healthy_gotowork]
 
     # INFECTION STATE UPDATE
     update_infection_period(infected_backfromwork, virus_dic)
+    return all_gotowork
 
 
 def propagate_to_transportation(env_dic, virus_dic, probability_transport_infection_arg,
@@ -166,8 +173,8 @@ def propagate_to_transportation(env_dic, virus_dic, probability_transport_infect
     people_sharing_transportation = [(get_random_sample(env_dic[ITI_K][i], transportation_cap_arg), env_dic[IBE_K][i])
                                      for i in infected_who_goto_work]
 
-    infected_bad_luck_transport = [i for people, beh_p in people_sharing_transportation for i in people
-                                   if get_r() < probability_transport_infection_arg * beh_p]
+    infected_bad_luck_transport = [i for people, beh_trans in people_sharing_transportation for i in people
+                                   if get_r() < probability_transport_infection_arg * beh_trans]
 
     # INFECTION STATE UPDATE
     update_infection_period(infected_bad_luck_transport, virus_dic)
@@ -182,34 +189,34 @@ def propagate_to_stores(env_dic, virus_dic, probability_store_infection_arg, sam
         range(len(env_dic[HA_K]))
     ])
 
-    # Contagious people who will go to their store
-    # [1, 4, 5] are infected and going to the store
-    individuals_infected_gotostore = [i for i in individuals_gotostore if is_contagious(i, virus_dic)]
-
     # [(2, 0), (3, 1), (6, 2)]  2, 3 and 6 are infected and going to the stores 0, 1 and 2
     # we divide same_store_preference by behavior since high behavior value is bad behavior
-    individuals_healthy_gotostore = [
+    individuals_with_store = [
         (i, choose_weight_order(env_dic[IS_K][i], same_store_preference / env_dic[IBE_K][i]))
-        for i in individuals_gotostore if not is_contagious(i, virus_dic)
+        for i in individuals_gotostore
+    ]
+
+    individuals_healthy_with_store = [
+        (ind, store) for ind, store in individuals_with_store if not is_contagious(ind, virus_dic)
     ]
 
     # Stores that will be visited by a contagious person
     # [ (0, 1), (0, 1.3), (2, 1.2)] where stores 0 and 2 are infected with 1, 1.3 and 1.2 weights
-    infected_stores = [
-        (choose_weight_order(env_dic[IS_K][i], same_store_preference / env_dic[IBE_K][i]), env_dic[IBE_K][i])
-        for i in individuals_infected_gotostore
+    infected_infected_with_store = [
+        (store, env_dic[IBE_K][ind]) for ind, store in individuals_with_store if is_contagious(ind, virus_dic)
     ]
 
     # { 0: 1*1.3, 2: 1.2 } are the weights of each infected store
-    infected_stores_dic = reduce_multiply_by_key(infected_stores)
+    infected_stores_dic = reduce_multiply_by_key(infected_infected_with_store)
 
     # We get the list of people who are healty + have chosen an infected store + get bad luck with get_r
     # [2, 6] got infected
-    gonna_be_infected = [ind for (ind, s) in individuals_healthy_gotostore if s in infected_stores_dic.keys()
+    gonna_be_infected = [ind for (ind, s) in individuals_healthy_with_store if s in infected_stores_dic.keys()
                          and get_r() < probability_store_infection_arg * env_dic[IBE_K][ind] * infected_stores_dic[s]]
 
     # INFECTION STATE UPDATE
     update_infection_period(gonna_be_infected, virus_dic)
+    return individuals_with_store
 
 
 def get_r0_daily(virus_dic):
