@@ -1,3 +1,4 @@
+import random
 import time
 
 import numpy as np
@@ -6,6 +7,7 @@ from scenario.helper.scenario import measure_lockdown_strength, get_zero_stats
 from simulator.constants.keys import nrun_key, nindividual_key, nday_key, innoculation_number_key, remote_work_key, \
     store_preference_key, house_infect_key, work_infection_key, store_infection_key, transport_infection_key, \
     transport_contact_cap_key, icu_bed_per_thousand_individual_key
+from simulator.constants.keys import random_seed_key
 from simulator.helper.dynamic import propagate_to_stores, propagate_to_houses, propagate_to_workplaces, \
     increment_pandemic_1_day, update_stats, propagate_to_transportation
 from simulator.helper.simulation import get_virus_simulation_t0

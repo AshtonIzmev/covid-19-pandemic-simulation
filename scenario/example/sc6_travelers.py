@@ -1,3 +1,6 @@
+import random
+
+import numpy as np
 import ray
 
 from scenario.helper.scenario import measure_lockdown_strength, get_zero_run_stats, is_weekend
@@ -13,12 +16,14 @@ from simulator.helper.utils import get_random_sample
 
 @ray.remote
 # This scenario is the basic one with a classic dynamic
-def do_parallel_run(env_dic, params, run_id):
+def do_parallel_run(env_dic, params, run_id, specific_seed):
+    run_stats = get_zero_run_stats(params)
+    random.seed(specific_seed)
+    np.random.seed(specific_seed)
 
     if len(params[additional_scenario_params_key]) < 1:
         raise AssertionError("Need more additional_scenario parameter")
 
-    run_stats = get_zero_run_stats(params)
     nb_to_infect = int(params[additional_scenario_params_key][0])
 
     params[store_preference_key] = 0.95

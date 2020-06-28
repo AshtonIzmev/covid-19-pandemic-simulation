@@ -1,3 +1,5 @@
+import random
+
 import psutil
 import ray
 
@@ -21,7 +23,7 @@ def launch_parallel_run(params, env_dic, fun, ncpu, display_progress=True):
     stats_l = []
     for run_id in range(params[nrun_key]):
         # TODO : add a ray progress bar with ray.wait(...) function
-        stats_l.append(fun.remote(ray_env_dic, ray_params, run_id))
+        stats_l.append(fun.remote(ray_env_dic, ray_params, run_id, random.randint(0, 10000)))
     for run_id, run_stats in ray.get(stats_l):
         merge_run_stat(stats, run_stats, run_id)
     return stats

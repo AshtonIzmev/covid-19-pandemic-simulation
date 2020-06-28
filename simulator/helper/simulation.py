@@ -63,7 +63,7 @@ def get_default_params():
     return {
         nrun_key: 1,  # Number of runs
         ncpu_key: 1,  # Should we parallelize runs
-        scenario_id_key: -1,  # Scenario id if running the scenario package
+        scenario_id_key: 8,  # Scenario id if running the scenario package
         random_seed_key: 42,  # Of course 42
         draw_graph_key: [],  # What to draw
 

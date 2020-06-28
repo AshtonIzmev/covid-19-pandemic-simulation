@@ -1,3 +1,5 @@
+import random
+
 import numpy as np
 import ray
 
@@ -13,12 +15,14 @@ from simulator.helper.simulation import get_virus_simulation_t0
 
 @ray.remote
 # This scenario is the basic one with a classic dynamic
-def do_parallel_run(env_dic, params, run_id):
+def do_parallel_run(env_dic, params, run_id, specific_seed):
+    run_stats = get_zero_run_stats(params)
+    random.seed(specific_seed)
+    np.random.seed(specific_seed)
 
     if len(params[additional_scenario_params_key]) < 2:
         raise AssertionError("Need more additional_scenario parameter")
 
-    run_stats = get_zero_run_stats(params)
     nb_bloc = int(params[additional_scenario_params_key][0])
     rogue_factor = params[additional_scenario_params_key][1]
 

@@ -1,3 +1,6 @@
+import random
+
+import numpy as np
 import ray
 
 from scenario.helper.scenario import measure_lockdown_strength, get_zero_run_stats, is_weekend
@@ -10,8 +13,10 @@ from simulator.helper.simulation import get_virus_simulation_t0
 
 
 @ray.remote
-def do_parallel_run(env_dic, params, run_id):
+def do_parallel_run(env_dic, params, run_id, specific_seed):
     run_stats = get_zero_run_stats(params)
+    random.seed(specific_seed)
+    np.random.seed(specific_seed)
 
     params[store_preference_key] = 0.95
     params[remote_work_key] = 0.98
