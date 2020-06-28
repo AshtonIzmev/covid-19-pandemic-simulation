@@ -255,7 +255,7 @@ def build_individual_individual_transport_map(individual_transport_block_map_arg
 
 
 def get_moroccan_household_distribution():
-    return get_clipped_gaussian_number(1, 10, 4.52, math.sqrt(4.71)).astype(int)
+    return math.floor(get_clipped_gaussian_number(1, 10, 4.52, math.sqrt(4.71)))
 
 
 def pick_random_company_size():
