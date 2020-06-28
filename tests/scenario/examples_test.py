@@ -28,7 +28,7 @@ class TestScenarios(unittest.TestCase):
         env_dic = get_environment_simulation(params)
         ray_params = ray.put(params)
         ray_env_dic = ray.put(env_dic)
-        stats_l = [scx_base_just_a_flu.do_parallel_run.remote(ray_env_dic, ray_params, 0)]
+        stats_l = [scx_base_just_a_flu.do_parallel_run.remote(ray_env_dic, ray_params, 0, 0)]
         self.assertTrue(len(stats_l) > 0)
 
     def test_sc0_base_lockdown(self):
@@ -38,7 +38,7 @@ class TestScenarios(unittest.TestCase):
         env_dic = get_environment_simulation(params)
         ray_params = ray.put(params)
         ray_env_dic = ray.put(env_dic)
-        stats_l = [sc0_base_lockdown.do_parallel_run.remote(ray_env_dic, ray_params, 0)]
+        stats_l = [sc0_base_lockdown.do_parallel_run.remote(ray_env_dic, ray_params, 0, 0)]
         self.assertTrue(len(stats_l) > 0)
 
     def test_sc1_simple_lockdown_removal(self):
@@ -49,7 +49,7 @@ class TestScenarios(unittest.TestCase):
         env_dic = get_environment_simulation(params)
         ray_params = ray.put(params)
         ray_env_dic = ray.put(env_dic)
-        stats_l = [sc1_simple_lockdown_removal.do_parallel_run.remote(ray_env_dic, ray_params, 0)]
+        stats_l = [sc1_simple_lockdown_removal.do_parallel_run.remote(ray_env_dic, ray_params, 0, 0)]
         self.assertTrue(len(stats_l) > 0)
 
     def test_sc2_yoyo_lockdown_removal(self):
@@ -60,7 +60,7 @@ class TestScenarios(unittest.TestCase):
         env_dic = get_environment_simulation(params)
         ray_params = ray.put(params)
         ray_env_dic = ray.put(env_dic)
-        stats_l = [sc2_yoyo_lockdown_removal.do_parallel_run.remote(ray_env_dic, ray_params, 0)]
+        stats_l = [sc2_yoyo_lockdown_removal.do_parallel_run.remote(ray_env_dic, ray_params, 0, 0)]
         self.assertTrue(len(stats_l) > 0)
 
     def test_sc3_loose_lockdown(self):
@@ -71,7 +71,7 @@ class TestScenarios(unittest.TestCase):
         env_dic = get_environment_simulation(params)
         ray_params = ray.put(params)
         ray_env_dic = ray.put(env_dic)
-        stats_l = [sc3_loose_lockdown.do_parallel_run.remote(ray_env_dic, ray_params, 0)]
+        stats_l = [sc3_loose_lockdown.do_parallel_run.remote(ray_env_dic, ray_params, 0, 0)]
         self.assertTrue(len(stats_l) > 0)
 
     def test_sc4_rogue_citizen(self):
@@ -82,7 +82,7 @@ class TestScenarios(unittest.TestCase):
         env_dic = get_environment_simulation(params)
         ray_params = ray.put(params)
         ray_env_dic = ray.put(env_dic)
-        stats_l = [sc4_rogue_citizen.do_parallel_run.remote(ray_env_dic, ray_params, 0)]
+        stats_l = [sc4_rogue_citizen.do_parallel_run.remote(ray_env_dic, ray_params, 0, 0)]
         self.assertTrue(len(stats_l) > 0)
 
     def test_sc5_rogue_neighborhood(self):
@@ -93,7 +93,7 @@ class TestScenarios(unittest.TestCase):
         env_dic = get_environment_simulation(params)
         ray_params = ray.put(params)
         ray_env_dic = ray.put(env_dic)
-        stats_l = [sc5_rogue_neighborhood.do_parallel_run.remote(ray_env_dic, ray_params, 0)]
+        stats_l = [sc5_rogue_neighborhood.do_parallel_run.remote(ray_env_dic, ray_params, 0, 0)]
         self.assertTrue(len(stats_l) > 0)
 
     def test_sc6_travelers(self):
@@ -104,7 +104,7 @@ class TestScenarios(unittest.TestCase):
         env_dic = get_environment_simulation(params)
         ray_params = ray.put(params)
         ray_env_dic = ray.put(env_dic)
-        stats_l = [sc6_travelers.do_parallel_run.remote(ray_env_dic, ray_params, 0)]
+        stats_l = [sc6_travelers.do_parallel_run.remote(ray_env_dic, ray_params, 0, 0)]
         self.assertTrue(len(stats_l) > 0)
 
 
