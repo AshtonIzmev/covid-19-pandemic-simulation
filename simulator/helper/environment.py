@@ -82,7 +82,7 @@ def build_individual_houses_map(number_individual_arg):
     i_ind = 0
     while i_ind < number_individual_arg:
         family_members = get_moroccan_household_distribution()
-        individulas = list(range(i_ind, i_ind+family_members))
+        individulas = range(i_ind, i_ind+family_members)
         index_house = [i_hou]*family_members
         one_house = dict(zip(individulas, index_house))
         all_ind_hou.update(one_house)
