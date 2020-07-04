@@ -66,6 +66,7 @@ def get_default_params():
         scenario_id_key: 8,  # Scenario id if running the scenario package
         random_seed_key: 42,  # Of course 42
         draw_graph_key: [],  # What to draw
+        show_plot_key: False,  # Wether to show the plots
 
         nindividual_key: 1000,  # Number of people
         nday_key: 180,  # Number of simulated days

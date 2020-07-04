@@ -35,7 +35,7 @@ class TestSimulation(unittest.TestCase):
     @mock.patch("simulator.helper.plot.plt.show")
     def test_error_in_stats(self, mock_plt):
         try:
-            draw_population_state_daily(self.get_stats())
+            draw_population_state_daily(self.get_stats(), True)
         except ValueError:
             self.assertTrue(True)
             return
@@ -44,57 +44,57 @@ class TestSimulation(unittest.TestCase):
 
     @mock.patch("simulator.helper.plot.plt.show")
     def test_draw_population_state_daily(self, mock_plt):
-        draw_population_state_daily(self.get_stats(is_empty=False))
+        draw_population_state_daily(self.get_stats(is_empty=False), True)
         assert mock_plt.called
 
     @mock.patch("simulator.helper.plot.plt.show")
     def test_draw_specific_population_state_daily(self, mock_plt):
-        draw_specific_population_state_daily(self.get_stats(is_empty=False))
+        draw_specific_population_state_daily(self.get_stats(is_empty=False), True)
         assert mock_plt.called
 
     @mock.patch("simulator.helper.plot.plt.show")
     def test_draw_lockdown_state_daily(self, mock_plt):
-        draw_lockdown_state_daily(self.get_stats(is_empty=False))
+        draw_lockdown_state_daily(self.get_stats(is_empty=False), True)
         assert mock_plt.called
 
     @mock.patch("simulator.helper.plot.plt.show")
     def test_draw_new_daily_cases(self, mock_plt):
-        draw_new_daily_cases(self.get_stats(is_empty=False))
+        draw_new_daily_cases(self.get_stats(is_empty=False), True)
         assert mock_plt.called
 
     @mock.patch("simulator.helper.plot.plt.show")
     def test_draw_summary(self, mock_plt):
-        draw_summary(self.get_stats(is_empty=False))
+        draw_summary(self.get_stats(is_empty=False), True)
         assert mock_plt.called
 
     @mock.patch("simulator.helper.plot.plt.show")
     def test_draw_examples(self, mock_plt):
-        draw_examples(self.get_stats(is_empty=False))
+        draw_examples(self.get_stats(is_empty=False), True)
         assert mock_plt.called
 
     @mock.patch("simulator.helper.plot.plt.show")
     def test_draw_r0_evolution(self, mock_plt):
-        draw_r0_daily_evolution(self.get_stats(is_empty=False))
+        draw_r0_daily_evolution(self.get_stats(is_empty=False), True)
         assert mock_plt.called
 
     @mock.patch("simulator.helper.plot.plt.show")
     def test_draw_r0(self, mock_plt):
-        draw_r0_evolution(self.get_stats(is_empty=False))
+        draw_r0_evolution(self.get_stats(is_empty=False), True)
         assert mock_plt.called
 
     @mock.patch("simulator.helper.plot.plt.show")
     def test_chose_draw_plot(self, mock_plt):
-        chose_draw_plot(["pop"], self.get_stats(is_empty=False))
+        chose_draw_plot(["pop"], self.get_stats(is_empty=False), True)
         assert mock_plt.called
-        chose_draw_plot(["R0"], self.get_stats(is_empty=False))
+        chose_draw_plot(["R0"], self.get_stats(is_empty=False), True)
         assert mock_plt.called
-        chose_draw_plot(["summ"], self.get_stats(is_empty=False))
+        chose_draw_plot(["summ"], self.get_stats(is_empty=False), True)
         assert mock_plt.called
-        chose_draw_plot(["lock"], self.get_stats(is_empty=False))
+        chose_draw_plot(["lock"], self.get_stats(is_empty=False), True)
         assert mock_plt.called
-        chose_draw_plot(["new"], self.get_stats(is_empty=False))
+        chose_draw_plot(["new"], self.get_stats(is_empty=False), True)
         assert mock_plt.called
-        chose_draw_plot(["hos"], self.get_stats(is_empty=False))
+        chose_draw_plot(["hos"], self.get_stats(is_empty=False), True)
         assert mock_plt.called
 
 

@@ -1,3 +1,4 @@
+import datetime
 import math
 
 import matplotlib.pyplot as plt
@@ -6,32 +7,47 @@ from scipy import stats
 from sklearn.cluster import KMeans
 from sklearn.metrics import pairwise_distances_argmin_min
 
+ts = int(datetime.datetime.now().timestamp())
 
-def draw_population_state_daily(stats_arg, x_tick=10):
+
+def draw_population_state_daily(stats_arg, show_plot, x_tick=10):
     fig, ax = plt.subplots(figsize=(15, 10))
     set_ax_mean_population_state_daily(ax, stats_arg, x_tick)
-    plt.show()
+    if show_plot:
+        plt.show()
+    else:
+        plt.savefig("images/output/%d-pop-%d-%d.png" % (ts, stats_arg['hea'].shape[0], np.max(stats_arg['hea'])))
 
 
-def draw_specific_population_state_daily(stats_arg, x_tick=10, style="P"):
+def draw_specific_population_state_daily(stats_arg, show_plot, x_tick=10, style="P"):
     fig, ax = plt.subplots(figsize=(15, 10))
     set_ax_specific_population_state_daily(ax, stats_arg, x_tick, style)
-    plt.show()
+    if show_plot:
+        plt.show()
+    else:
+        plt.savefig("images/output/%d-style-%s-%d-%d.png" % (ts, style, stats_arg['hea'].shape[0],
+                                                             np.max(stats_arg['hea'])))
 
 
-def draw_lockdown_state_daily(stats_arg, x_tick=10):
+def draw_lockdown_state_daily(stats_arg, show_plot, x_tick=10):
     fig, ax = plt.subplots(figsize=(15, 10))
     set_ax_lockdown_state_daily(ax, stats_arg["loc"], x_tick)
-    plt.show()
+    if show_plot:
+        plt.show()
+    else:
+        plt.savefig("images/output/%d-lock-%d-%d.png" % (ts, stats_arg['hea'].shape[0], np.max(stats_arg['hea'])))
 
 
-def draw_new_daily_cases(stats_arg, x_tick=10):
+def draw_new_daily_cases(stats_arg, show_plot, x_tick=10):
     fig, ax = plt.subplots(figsize=(15, 10))
     set_ax_new_daily_cases(ax, stats_arg, x_tick)
-    plt.show()
+    if show_plot:
+        plt.show()
+    else:
+        plt.savefig("images/output/%d-new-%d-%d.png" % (ts, stats_arg['hea'].shape[0], np.max(stats_arg['hea'])))
 
 
-def draw_summary(stats_arg, x_tick=10):
+def draw_summary(stats_arg, show_plot, x_tick=10):
     fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(16, 10))
     set_ax_mean_population_state_daily(ax1, stats_arg, x_tick)
     set_ax_new_daily_cases(ax2, stats_arg, x_tick)
@@ -40,10 +56,13 @@ def draw_summary(stats_arg, x_tick=10):
     ax2.set_xlabel('')
     ax2.set_title('')
     ax3.set_title('')
-    plt.show()
+    if show_plot:
+        plt.show()
+    else:
+        plt.savefig("images/output/%d-summ-%d-%d.png" % (ts, stats_arg['hea'].shape[0], np.max(stats_arg['hea'])))
 
 
-def draw_examples(stats_arg, x_tick=10):
+def draw_examples(stats_arg, show_plot, x_tick=10):
     grid_size = 3
     fig, axes = plt.subplots(grid_size, grid_size, figsize=(16, 10))
     if grid_size * grid_size > stats_arg['hea'].shape[0]:
@@ -66,21 +85,30 @@ def draw_examples(stats_arg, x_tick=10):
                 ax.set_ylabel("")
             ax.set_title("Run n°%d - Death percentage %.2f %%" % (run_id, death_pct))
             run_index += 1
-    plt.show()
+    if show_plot:
+        plt.show()
+    else:
+        plt.savefig("images/output/%d-examples-%d-%d.png" % (ts, stats_arg['hea'].shape[0], np.max(stats_arg['hea'])))
 
 
-def draw_r0_daily_evolution(stats_arg, x_tick=10):
+def draw_r0_daily_evolution(stats_arg, show_plot, x_tick=10):
     fig, ax = plt.subplots(figsize=(15, 10))
     set_ax_r0(ax, stats_arg["R0d"], "R0 Daily", x_tick=10)
-    plt.show()
+    if show_plot:
+        plt.show()
+    else:
+        plt.savefig("images/output/%d-R0-daily-%d-%d.png" % (ts, stats_arg['hea'].shape[0], np.max(stats_arg['hea'])))
 
 
-def draw_r0_evolution(stats_arg, window_size=3, x_tick=10):
+def draw_r0_evolution(stats_arg, show_plot, window_size=3, x_tick=10):
     fig, ax = plt.subplots(figsize=(15, 10))
     slid_new = np.array([np.convolve(sn, np.ones(window_size, dtype=int), 'valid') for sn in stats_arg["new"]])
     slid_con = np.array([rolling_max(sc, window_size) for sc in 1+stats_arg["con"]])
     set_ax_r0(ax, slid_new/slid_con, "2 weeks sliding R0", x_tick=10)
-    plt.show()
+    if show_plot:
+        plt.show()
+    else:
+        plt.savefig("images/output/%d-R0-evo-%d-%d.png" % (ts, stats_arg['hea'].shape[0], np.max(stats_arg['hea'])))
 
 
 # Print iterations progress
@@ -276,24 +304,24 @@ def set_ax_new_daily_cases(ax, stats_arg, x_tick=10):
     ax.legend((p1[0],), ('New cases',))
 
 
-def chose_draw_plot(draw_graph_arg, stats_arg):
+def chose_draw_plot(draw_graph_arg, stats_arg, show_plot=False):
     if draw_graph_arg:
         if contains_substring("pop", draw_graph_arg):
-            draw_population_state_daily(stats_arg)
+            draw_population_state_daily(stats_arg, show_plot)
         if contains_substring("new", draw_graph_arg):
-            draw_new_daily_cases(stats_arg)
+            draw_new_daily_cases(stats_arg, show_plot)
         if contains_substring("hos", draw_graph_arg):
-            draw_specific_population_state_daily(stats_arg, style="P")
+            draw_specific_population_state_daily(stats_arg, show_plot, style="P")
         if contains_substring("sum", draw_graph_arg):
-            draw_summary(stats_arg)
+            draw_summary(stats_arg, show_plot)
         if contains_substring("ex", draw_graph_arg):
-            draw_examples(stats_arg)
+            draw_examples(stats_arg, show_plot)
         if contains_substring("loc", draw_graph_arg):
-            draw_lockdown_state_daily(stats_arg)
+            draw_lockdown_state_daily(stats_arg, show_plot)
         if contains_substring("R0d", draw_graph_arg):
-            draw_r0_daily_evolution(stats_arg)
+            draw_r0_daily_evolution(stats_arg, show_plot)
         elif contains_substring("R0", draw_graph_arg):
-            draw_r0_evolution(stats_arg, 14)
+            draw_r0_evolution(stats_arg, show_plot, 14)
 
 
 def contains_substring(substr_arg, list_arg):

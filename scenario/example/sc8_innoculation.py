@@ -3,7 +3,7 @@ import random
 import numpy as np
 import ray
 
-from scenario.helper.scenario import get_zero_run_stats, is_weekend
+from scenario.helper.scenario import get_zero_run_stats, is_weekend, measure_lockdown_strength
 from simulator.constants.keys import nindividual_key, nday_key, innoculation_number_key, remote_work_key, \
     store_preference_key, house_infect_key, work_infection_key, store_infection_key, transport_infection_key, \
     transport_contact_cap_key, icu_bed_per_thousand_individual_key, STA_K, \
@@ -27,11 +27,9 @@ def do_parallel_run(env_dic, params, run_id, specific_seed):
     params[innoculation_number_key] = 5
 
     days_to_lockdown_change = 0
-    days_to_lockdown_loosening = 14
     unlock_progress = 0
 
     pcn = (0.98, 0.5, 0.01, 0.01, 0.02, 0.95)
-    #pcn = (0.78, 0.5, 0.05, 0.05, 0.1, 0.55)
     pvn = (0.58, 0.5, 0.05, 0.05, 0.1, 0.30)
 
     params[remote_work_key] = pcn[0] * unlock_progress + (pvn[0] - pcn[0]) * unlock_progress
@@ -68,8 +66,9 @@ def do_parallel_run(env_dic, params, run_id, specific_seed):
 
         young_healthy = [k for k, v in virus_dic[STA_K].items() if v == HEALTHY_V
                          and env_dic[IAD_K][k] == 1 and env_dic[IAG_K][k] <= age_cutoff]
+
         young_unlucky = np.random.choice(young_healthy,
-                                         size=int(min(len(young_healthy), params[nindividual_key]/360)),
+                                         size=int(min(len(young_healthy), params[nindividual_key]/1000)),
                                          replace=False)
         virus_dic[STA_K].update((y, ISOLATED_V) for y in young_unlucky)
 
@@ -82,6 +81,14 @@ def do_parallel_run(env_dic, params, run_id, specific_seed):
             unlock_progress = max(0, unlock_progress - 0.2)
 
         update_run_stat(virus_dic, run_stats, day)
-        run_stats["loc"][day] = (1-unlock_progress)  # measure_lockdown_strength(params)
+        # Override isolation to calculate
+        run_stats['iso'][day] = len(young_unlucky)
+        run_stats["loc"][day] = (1-unlock_progress)
 
     return run_id, run_stats
+
+# print(stats["loc"].sum(axis=1).mean())
+# print(stats["iso"].sum(axis=1).mean())
+# print(stats["dea"].max(axis=1).mean())
+# print((248000 * (535 - stats["dea"].max(axis=1).mean()) + 1000000 * (140-stats["loc"].sum(axis=1).mean())) /  stats["iso"].sum(axis=1).mean() )
+

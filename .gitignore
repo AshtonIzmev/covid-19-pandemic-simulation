@@ -1,4 +1,6 @@
-notebook/tmp_covid_simulation.ipynb
+env_models/env*
+images/output/*
+
 .idea
 
 # Byte-compiled / optimized / DLL files

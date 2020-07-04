@@ -36,6 +36,7 @@ ncpu_key = "NUM_CPU"
 scenario_id_key = "SCENARIO_ID"
 random_seed_key = "RANDOM_SEED"
 draw_graph_key = "DRAW_GRAPH"
+show_plot_key = "SHOW_PLOT"
 nindividual_key = "N_INDIVIDUALS"
 nday_key = "N_DAYS"
 

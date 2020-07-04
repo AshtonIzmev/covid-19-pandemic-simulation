@@ -15,12 +15,32 @@ from simulator.helper.utils import invert_map, get_r, get_center_squized_random,
     get_random_sample, get_clipped_gaussian_number
 
 
+def get_clean_env_params(params_arg):
+    return {
+            "number_of_individuals": params_arg[nindividual_key],
+            "number_store_per_house": params_arg[store_per_house_key],
+            "nb_1d_block": params_arg[nb_1d_block_key],
+            "nb_store_choice": params_arg[store_nb_choice_key],
+            "transportation_cap": params_arg[transport_contact_cap_key]
+        }, "%d-%d-%d-%d-%d" % (
+        params_arg[nindividual_key],
+        params_arg[store_per_house_key],
+        params_arg[nb_1d_block_key],
+        params_arg[store_nb_choice_key],
+        params_arg[transport_contact_cap_key]
+    )
+
+
 def get_environment_simulation(params_arg):
-    number_of_individuals_arg = params_arg[nindividual_key]
-    number_store_per_house_arg = params_arg[store_per_house_key]
-    nb_1d_block_arg = params_arg[nb_1d_block_key]
-    nb_store_choice = params_arg[store_nb_choice_key]
-    transportation_cap = params_arg[transport_contact_cap_key]
+    return get_environment_simulation_p(get_clean_env_params(params_arg)[0])
+
+
+def get_environment_simulation_p(params_env_arg):
+    number_of_individuals_arg = params_env_arg["number_of_individuals"]
+    number_store_per_house_arg = params_env_arg["number_store_per_house"]
+    nb_1d_block_arg = params_env_arg["nb_1d_block"]
+    nb_store_choice = params_env_arg["nb_store_choice"]
+    transportation_cap = params_env_arg["transportation_cap"]
 
     indiv_house = build_individual_houses_map(number_of_individuals_arg)
     house_indiv = build_house_individual_map(indiv_house)
@@ -134,14 +154,14 @@ def build_individual_age_map(individual_house_map_arg):
 
 
 def build_individual_death_rate_map(indiv_age_arg):
-    indiv_death_rate = indiv_age_arg
+    indiv_death_rate = {}
     for k, v in indiv_age_arg.items():
         indiv_death_rate[k] = get_mortalty_rate(indiv_age_arg[k])
     return indiv_death_rate
 
 
 def build_individual_hospitalization_map(indiv_age_arg):
-    indiv_hos_rate = indiv_age_arg
+    indiv_hos_rate = {}
     for k, v in indiv_age_arg.items():
         indiv_hos_rate[k] = get_hospitalization_rate(indiv_age_arg[k])
     return indiv_hos_rate

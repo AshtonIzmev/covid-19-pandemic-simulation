@@ -5,7 +5,7 @@ from simulator.constants.keys import nrun_key, scenario_id_key, random_seed_key,
     innoculation_number_key, nb_1d_block_key, remote_work_key, store_per_house_key, store_preference_key, \
     store_nb_choice_key, house_infect_key, work_infection_key, store_infection_key, transport_infection_key, \
     transport_contact_cap_key, contagion_bounds_key, hospitalization_bounds_key, death_bounds_key, immunity_bounds_key, \
-    icu_bed_per_thousand_individual_key, additional_scenario_params_key, ncpu_key
+    icu_bed_per_thousand_individual_key, additional_scenario_params_key, ncpu_key, show_plot_key
 
 
 def get_parser():
@@ -51,6 +51,8 @@ def get_parser():
                         help='Draw a kind of graph by specifying at least the first 3 letters of its keys. '
                              'Choose from "example", "hospital", "new", "summary", "population", "lockdown" and more',
                         dest=draw_graph_key)
+    parser.add_argument('--show-plot', help='Show the plots instead of persistings them to files', dest=show_plot_key,
+                        action='store_true')
 
     # Scenarios related
     parser.add_argument('--extra-scenario-params', type=float, nargs="*", help='Additional scenario parameters',
