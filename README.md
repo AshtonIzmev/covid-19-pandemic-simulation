@@ -12,20 +12,20 @@
 pip install pandemic-simulation
 
 ### To plot new daily cases
-python -m simulator.run --draw new
+python -m simulator.run --draw new --show-plot
 
 ### To plot daily state with 150 days and other parameters kept default
-python -m simulator.run --nday 150  --draw pop
+python -m simulator.run --nday 150  --draw pop --show-plot
 
 ### To plot hospitalization state with 5000 individuals
-python -m simulator.run --nday 200 --nind 5000 --draw hos
+python -m simulator.run --nday 200 --nind 5000 --draw hos --show-plot
 
 ### To plot a summary of the pandemic (with short immunity time)
-python -m simulator.run  --nday 500 --nind 5000 --immunity-bounds 120 150 --draw sum new
+python -m simulator.run  --nday 500 --nind 5000 --immunity-bounds 120 150 --draw sum new --show-plot
 ```
 
 # Run a scenario
-35k individuals (--nind), 20 simulations (--nrun).
+35k individuals (--nind), 20 simulations (--nrun). Add --show-plot if you want plots to be displayed in a pop-up instead of written to images/output folder
 
 Scenario -1 : It is just a flu (using 3 cpu in parallel)
 ```bash
@@ -139,6 +139,7 @@ optional arguments:
                         3 letters of its keys. Choose from "example",
                         "hospital", "new", "summary", "population", "lockdown"
                         and more
+  --show-plot           Show the plots instead of persistings them to files
   --extra-scenario-params [ADDITIONAL_SCENARIO_PARAMETERS [ADDITIONAL_SCENARIO_PARAMETERS ...]]
                         Additional scenario parameters
 ```

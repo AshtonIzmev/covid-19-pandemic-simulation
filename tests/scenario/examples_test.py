@@ -19,7 +19,7 @@ class TestScenarios(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        ray.init(include_webui=False, logging_level=logging.ERROR)
+        ray.init(include_dashboard=False, logging_level=logging.ERROR)
 
     def test_scx_base_just_a_flu(self):
         params = get_default_params()

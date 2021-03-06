@@ -11,6 +11,7 @@ ind_works = []
 ind_stos = []
 stas = []
 
+
 # This scenario is the basic one with a classic dynamic
 def launch_run(params, env_dic):
     params[store_preference_key] = 0.95
