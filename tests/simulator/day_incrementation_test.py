@@ -1,7 +1,7 @@
 import random
 import unittest
 
-from simulator.helper.dynamic import increment_pandemic_1_day, hospitalize_infected
+from simulator.helper.dynamic import increment_pandemic_1_day, hospitalize_infected, isolate_infected
 from tests.constant import *
 
 
@@ -18,6 +18,7 @@ class TestSimulation(unittest.TestCase):
             IAG_K: {0: 26, 1: 51, 2: 13, 3: 2, 4: 35, 5: 33, 6: 6, 7: 1, 8: 27, 9: 20},
             IDEA_K: {0: 0.02, 1: 0.013, 2: 0.02, 3: 0, 4: 0.02, 5: 0.02, 6: 0, 7: 0, 8: 0.02, 9: 0.02},
             IHOS_K: {0: 0.025, 1: 0.074, 2: 0.01, 3: 0.03, 4: 0.025, 5: 0.025, 6: 0.03, 7: 0.03, 8: 0.025, 9: 0.025},
+            ISYM_K: {0: 0.0, 1: 0.02, 2: 0.05, 3: 0.08, 4: 0.13, 5: 0.13, 6: 0.23, 7: 0.26, 8: 0.55},
             IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2},
         }
         virus_dic = {
@@ -28,7 +29,7 @@ class TestSimulation(unittest.TestCase):
 
             CON_INIT_K: {0: 4, 1: -2, 2: -5, 3: -4, 4: 6, 5: -9, 6: -3, 7: 2, 8: -9, 9: 5},
             HOS_INIT_K: {0: 12, 1: 12, 2: 20, 3: 1, 4: 16, 5: 12, 6: 14, 7: 13, 8: -7, 9: 8},
-            DEA_INIT_K: {0: 31, 1: 1, 2: 0, 3: 22, 4: 22, 5: 0, 6: 1, 7: 22, 8: -4, 9: 38},
+            DEA_INIT_K: {0: 31, 1: 1, 2: 0, 3: 2, 4: 22, 5: 0, 6: 1, 7: 22, 8: -4, 9: 38},
             IMM_INIT_K: {0: 53, 1: 47, 2: 52, 3: 51, 4: 58, 5: 58, 6: 44, 7: 53, 8: 1, 9: 55},
 
             STA_K: {0: H, 1: F, 2: D, 3: F, 4: F, 5: M, 6: F, 7: F, 8: M, 9: H}
@@ -54,7 +55,7 @@ class TestSimulation(unittest.TestCase):
         self.assertEqual(virus_dic[CON_K][3], -5)
         self.assertEqual(virus_dic[HOS_K][3], 0)
         self.assertEqual(virus_dic[DEA_K][3], 21)
-        self.assertEqual(virus_dic[STA_K][3], F)
+        self.assertEqual(virus_dic[STA_K][3], S)
 
         self.assertEqual(virus_dic[CON_K][5], -9)
         self.assertEqual(virus_dic[DEA_K][5], 0)
@@ -84,6 +85,7 @@ class TestSimulation(unittest.TestCase):
             IAG_K: {0: 26, 1: 51, 2: 13, 3: 92, 4: 35, 5: 33, 6: 6, 7: 1},
             IDEA_K: {0: 0.02, 1: 0.013, 2: 0.02, 3: 0, 4: 0.02, 5: 0.02, 6: 0, 7: 0, 8: 0.02, 9: 0.02},
             IHOS_K: {0: 0.025, 1: 0.074, 2: 0.01, 3: 0.73, 4: 0.025, 5: 0.025, 6: 0.03, 7: 0.03, 8: 0.025, 9: 0.025},
+            ISYM_K: {0: 0.0, 1: 0.02, 2: 0.05, 3: 0.08, 4: 0.13, 5: 0.13, 6: 0.23, 7: 0.26, 8: 0.55},
             IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1},
         }
 
@@ -107,6 +109,30 @@ class TestSimulation(unittest.TestCase):
         self.assertEqual(virus_dic[STA_K][1], M)
         self.assertEqual(virus_dic[STA_K][2], D)
 
+    def test_decide_isolation_cases(self):
+        # i0 has no symptoms, no isolation but still infected
+        # i1 has tons of symptoms. Will be isolated
+        # Others are not Infected status, no isolation
+        # Except i8 who is infected and has symptoms but did not notice them (and has 99 others days to decide)
+        random.seed(42)
+        env_dic = {ISYM_K: {0: 0, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1}}
+        virus_dic = {
+            STA_K: {0: F, 1: F, 2: M, 3: D, 4: S, 5: H, 6: P, 7: P, 8: F},
+            DEA_INIT_K: {0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 50}
+        }
+
+        isolate_infected(env_dic, virus_dic)
+
+        self.assertEqual(virus_dic[STA_K][0], F)
+        self.assertEqual(virus_dic[STA_K][1], S)
+        self.assertEqual(virus_dic[STA_K][2], M)
+        self.assertEqual(virus_dic[STA_K][3], D)
+        self.assertEqual(virus_dic[STA_K][4], S)
+        self.assertEqual(virus_dic[STA_K][5], H)
+        self.assertEqual(virus_dic[STA_K][6], P)
+        self.assertEqual(virus_dic[STA_K][7], P)
+        self.assertEqual(virus_dic[STA_K][8], F)
+
     def test_increment_pandemic_1_day_isolated_cases(self):
         # i3 is going to be hospitalized
         # i3 lives in house h0
@@ -119,6 +145,7 @@ class TestSimulation(unittest.TestCase):
             IAG_K: {0: 26, 1: 51, 2: 13, 3: 82, 4: 35, 5: 33, 6: 6, 7: 1, 8: 27, 9: 20},
             IDEA_K: {0: 0.02, 1: 0.013, 2: 0.02, 3: 0, 4: 0.02, 5: 0.02, 6: 0, 7: 0, 8: 0.02, 9: 0.02},
             IHOS_K: {0: 0.025, 1: 0.074, 2: 0.01, 3: 0.73, 4: 0.025, 5: 0.025, 6: 0.03, 7: 0.03, 8: 0.025, 9: 0.025},
+            ISYM_K: {0: 0.0, 1: 0.02, 2: 0.05, 3: 0.08, 4: 0.13, 5: 0.13, 6: 0.23, 7: 0.26, 8: 0.55},
             IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2},
         }
         virus_dic = {
@@ -151,6 +178,7 @@ class TestSimulation(unittest.TestCase):
             IAG_K: {0: 26, 1: 51, 2: 13, 3: 2, 4: 35, 5: 33, 6: 6, 7: 1, 8: 27, 9: 20},
             IDEA_K: {0: 0.02, 1: 0.013, 2: 0.02, 3: 0, 4: 0.02, 5: 0.02, 6: 0, 7: 0, 8: 0.02, 9: 0.02},
             IHOS_K: {0: 0.025, 1: 0.074, 2: 0.01, 3: 0.03, 4: 0.025, 5: 0.025, 6: 0.03, 7: 0.03, 8: 0.025, 9: 0.025},
+            ISYM_K: {0: 0.0, 1: 0.02, 2: 0.05, 3: 0.08, 4: 0.13, 5: 0.13, 6: 0.23, 7: 0.26, 8: 0.55},
             IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2},
         }
         virus_dic = {
@@ -180,6 +208,7 @@ class TestSimulation(unittest.TestCase):
             IAG_K: {0: 26, 1: 51, 2: 13, 3: 2, 4: 35, 5: 33, 6: 6, 7: 1, 8: 27, 9: 20},
             IDEA_K: {0: 0.02, 1: 0.013, 2: 0.02, 3: 0, 4: 0.02, 5: 0.02, 6: 0, 7: 0, 8: 0.02, 9: 0.02},
             IHOS_K: {0: 0.025, 1: 0.074, 2: 0.01, 3: 0.03, 4: 0.025, 5: 0.025, 6: 0.03, 7: 0.03, 8: 0.025, 9: 0.025},
+            ISYM_K: {0: 0.0, 1: 0.02, 2: 0.05, 3: 0.08, 4: 0.13, 5: 0.13, 6: 0.23, 7: 0.26, 8: 0.55},
             IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2},
         }
         virus_dic = {
@@ -210,6 +239,7 @@ class TestSimulation(unittest.TestCase):
             IAG_K: {0: 82, 1: 15, 2: 13, 3: 2, 4: 35, 5: 33, 6: 6, 7: 1, 8: 27, 9: 20},
             IDEA_K: {0: 0.52, 1: 0.013, 2: 0.02, 3: 0, 4: 0.02, 5: 0.02, 6: 0, 7: 0, 8: 0.02, 9: 0.02},
             IHOS_K: {0: 0.025, 1: 0.074, 2: 0.01, 3: 0.03, 4: 0.025, 5: 0.025, 6: 0.03, 7: 0.03, 8: 0.025, 9: 0.025},
+            ISYM_K: {0: 0.0, 1: 0.02, 2: 0.05, 3: 0.08, 4: 0.13, 5: 0.13, 6: 0.23, 7: 0.26, 8: 0.55},
             IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2},
         }
         virus_dic = {
@@ -240,6 +270,7 @@ class TestSimulation(unittest.TestCase):
             IAG_K: {0: 26, 1: 51, 2: 13, 3: 2, 4: 35, 5: 33, 6: 6, 7: 1, 8: 27, 9: 20},
             IDEA_K: {0: 0.02, 1: 0.013, 2: 0.02, 3: 0, 4: 0.02, 5: 0.02, 6: 0, 7: 0, 8: 0.02, 9: 0.02},
             IHOS_K: {0: 0.025, 1: 0.074, 2: 0.01, 3: 0.03, 4: 0.025, 5: 0.025, 6: 0.03, 7: 0.03, 8: 0.025, 9: 0.025},
+            ISYM_K: {0: 0.0, 1: 0.02, 2: 0.05, 3: 0.08, 4: 0.13, 5: 0.13, 6: 0.23, 7: 0.26, 8: 0.55},
             IH_K: {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2},
         }
         virus_dic = {

@@ -22,8 +22,12 @@ def do_parallel_run(env_dic, params, run_id, specific_seed, pba: ActorHandle):
 
     if len(params[additional_scenario_params_key]) < 1:
         raise AssertionError("Need more additional_scenario parameter")
+    else:
+        rate_daily_vaccinated = int(params[additional_scenario_params_key][0])
 
-    vaccination_ratio = int(params[additional_scenario_params_key][0])
+    if rate_daily_vaccinated < 0:
+        # Morrocan daily rate of vaccination
+        rate_daily_vaccinated = 0.00428
 
     params[store_preference_key] = 0.8
     params[remote_work_key] = 0.8
@@ -33,8 +37,6 @@ def do_parallel_run(env_dic, params, run_id, specific_seed, pba: ActorHandle):
     params[store_infection_key] = 0.02
     params[transport_infection_key] = 0.01
 
-    rate_daily_vaccinated = 0.00428
-
     params[innoculation_number_key] = 5
     available_beds = params[icu_bed_per_thousand_individual_key] * params[nindividual_key] / 1000
     virus_dic = get_virus_simulation_t0(params)
@@ -42,8 +44,7 @@ def do_parallel_run(env_dic, params, run_id, specific_seed, pba: ActorHandle):
     for day in range(params[nday_key]):
         pba.update.remote(1)
         old_healthy = [(k, env_dic[IAG_K][k]) for k, v in virus_dic[STA_K].items() if v == HEALTHY_V]
-        nb_indiv_vaccinated = max(0, int(params[nindividual_key] * rate_daily_vaccinated * (1-day/100) *
-                                         vaccination_ratio))
+        nb_indiv_vaccinated = max(0, int(params[nindividual_key] * rate_daily_vaccinated * (1-day/100)))
         if len(old_healthy) > nb_indiv_vaccinated:
             old_sorted = sorted(old_healthy, key=lambda kv: -kv[1])
             old_lucky = [o[0] for o in old_sorted[:nb_indiv_vaccinated]]

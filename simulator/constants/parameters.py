@@ -31,16 +31,17 @@ covid_hospitalization_rate = {
 }
 
 # Source : https://arxiv.org/pdf/2006.08471.pdf
+# Multiplied by an "adoption rate" growing in age
 covid_symptom_rate = {
-    8: 0.6456,
-    7: 0.3546,
-    6: 0.3546,
-    5: 0.3054,
-    4: 0.3054,
-    3: 0.2241,
-    2: 0.2241,
-    1: 0.1809,
-    0: 0.1809
+    8: 0.6456 * 0.4,
+    7: 0.3546 * 0.35,
+    6: 0.3546 * 0.35,
+    5: 0.3054 * 0.25,
+    4: 0.3054 * 0.2,
+    3: 0.2241 * 0.15,
+    2: 0.2241 * 0.1,
+    1: 0.1809 * 0.05,
+    0: 0.1809 * 0
 }
 
 # Source https://www.populationpyramid.net/world/2019/

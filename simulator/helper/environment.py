@@ -5,9 +5,9 @@ from scipy import spatial
 
 from simulator.constants.keys import nindividual_key, store_per_house_key, nb_1d_block_key, store_nb_choice_key, \
     transport_contact_cap_key, IH_K, HI_K, IAD_K, IAG_K, IW_K, WI_K, HA_K, HS_K, ITI_K, HB_K, IBE_K, IDEA_K, IHOS_K, \
-    IS_K, SI_K, ITB_K
+    IS_K, SI_K, ITB_K, ISYM_K
 from simulator.constants.parameters import TPE_MAX_EMPLOYEES, PME_MAX_EMPLOYEES, GE_MAX_EMPLOYEES, covid_mortality_rate, \
-    covid_hospitalization_rate
+    covid_hospitalization_rate, covid_symptom_rate
 from simulator.constants.parameters import age_dist_adults_cs, age_dist_adults, \
     age_dist_children, age_dist_children_cs
 from simulator.helper.utils import invert_map, get_r, get_center_squized_random, rec_get_manhattan_walk, \
@@ -49,6 +49,7 @@ def get_environment_simulation_p(params_env_arg):
 
     indiv_death_rate = build_individual_death_rate_map(indiv_age)
     indiv_hos_rate = build_individual_hospitalization_map(indiv_age)
+    indiv_sym_rate = build_individual_symptom_map(indiv_age)
 
     indiv_workplace = build_individual_work_map(indiv_adult)
     workplace_indiv = build_workplace_individual_map(indiv_workplace)
@@ -81,6 +82,7 @@ def get_environment_simulation_p(params_env_arg):
 
         IDEA_K: indiv_death_rate,
         IHOS_K: indiv_hos_rate,
+        ISYM_K: indiv_sym_rate,
 
         IW_K: indiv_workplace,
         WI_K: workplace_indiv,
@@ -165,6 +167,13 @@ def build_individual_hospitalization_map(indiv_age_arg):
     for k, v in indiv_age_arg.items():
         indiv_hos_rate[k] = get_hospitalization_rate(indiv_age_arg[k])
     return indiv_hos_rate
+
+
+def build_individual_symptom_map(indiv_age_arg):
+    indiv_sym_rate = {}
+    for k, v in indiv_age_arg.items():
+        indiv_sym_rate[k] = get_symptom_rate(indiv_age_arg[k])
+    return indiv_sym_rate
 
 
 def build_house_adult_map(individual_house_map_arg, individual_adult_map_arg):
@@ -316,3 +325,8 @@ def get_mortalty_rate(age):
 def get_hospitalization_rate(age):
     i = next(x for x in enumerate(list(covid_hospitalization_rate.keys())) if x[1] <= age / 10)
     return covid_hospitalization_rate[i[1]]
+
+
+def get_symptom_rate(age):
+    i = next(x for x in enumerate(list(covid_symptom_rate.keys())) if x[1] <= age / 10)
+    return covid_symptom_rate[i[1]]

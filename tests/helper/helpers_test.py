@@ -1,7 +1,7 @@
 import random
 import unittest
 
-from simulator.helper.environment import get_mortalty_rate, get_hospitalization_rate
+from simulator.helper.environment import get_mortalty_rate, get_hospitalization_rate, get_symptom_rate
 from simulator.helper.simulation import get_infection_parameters
 from simulator.helper.utils import invert_map_list, invert_map, flatten, reduce_multiply_by_key, choose_weight_order, \
     rec_get_manhattan_walk, get_random_choice_list
@@ -50,10 +50,12 @@ class TestHelpers(unittest.TestCase):
     def test_get_mortalty_rate(self):
         self.assertEqual(get_mortalty_rate(62), 0.036)
         self.assertEqual(get_mortalty_rate(31), 0.02)
-
-    def test_get_mortalty_rate2(self):
         self.assertEqual(get_hospitalization_rate(44), 0.025)
         self.assertEqual(get_hospitalization_rate(19), 0.01)
+
+    def test_get_symptom_rate(self):
+        self.assertEqual(get_symptom_rate(44), 0.06108)
+        self.assertEqual(get_symptom_rate(19), 0.009045000000000001)
 
     def test_rec_get_manhattan_walk(self):
         result = rec_get_manhattan_walk([], (1, 1), (3, 3))

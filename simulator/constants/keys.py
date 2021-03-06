@@ -5,6 +5,7 @@ IAG_K = "individual_to_age_mapping"
 
 IDEA_K = "individual_to_death_mapping"
 IHOS_K = "individual_to_hospitalization_mapping"
+ISYM_K = "individual_to_symptom_mapping"
 
 IW_K = "individual_to_work_mapping"
 WI_K = "work_to_individual_mapping"

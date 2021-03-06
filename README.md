@@ -201,6 +201,7 @@ Using a quick and dirty kmeans, we only display the most "different" run distrib
 - [ ]  Simulate a population density and allow people to go to other houses in very dense place (in poor neighborhood)
 - [ ]  Build a new kind of individuals who do not work in workplaces but can go in every house or store (policemen for example)
 - [ ]  Add a delay between test and isolation (PCR tests can take one day)
+- [x]  Self-isolation of individuals based on symptoms probability of appearance
 - [x]  Add a tqdm progress bar to ray parallelized code execution
 - [x]  parallelize the runs (using for example N_proc-1 processors multithreading)
 - [x]  Build a moving average R0 instead of the daily R0 currently used

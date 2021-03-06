@@ -30,6 +30,12 @@ def hospitalize_infected(env_dic, virus_dic):
             virus_dic[STA_K].update((fm, ISOLATED_V) for fm in family if (virus_dic[STA_K][fm] == INFECTED_V))
 
 
+def isolate_infected(env_dic, virus_dic):
+    for i in get_infected_people(virus_dic):
+        if get_r() * virus_dic[DEA_INIT_K][i] < env_dic[ISYM_K][i]:
+            virus_dic[STA_K][i] = ISOLATED_V
+
+
 def decide_life_immunity(env_dic, virus_dic, icu_factor):
     for i in get_virus_carrier_people(virus_dic):
         if virus_dic[DEA_K][i] == 0:
@@ -57,6 +63,9 @@ def increment_pandemic_1_day(env_dic, virus_dic, available_beds):
     # Do INFECTED -> HOSPITALIZED
     # Do INFECTED -> ISOLATED for family members
     hospitalize_infected(env_dic, virus_dic)
+
+    # Do INFECTED -> ISOLATED for a fraction of symptomatic people
+    isolate_infected(env_dic, virus_dic)
 
     # Do {INFECTED, ISOLATED, HOSPITALIZED} -> {DEAD, IMMUNE} decision transition
     decide_life_immunity(env_dic, virus_dic, icu_factor)

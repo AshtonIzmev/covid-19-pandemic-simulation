@@ -6,6 +6,7 @@ from simulator.constants.keys import nrun_key, scenario_id_key, random_seed_key,
     transport_infection_key, transport_contact_cap_key, contagion_bounds_key, hospitalization_bounds_key, \
     death_bounds_key, immunity_bounds_key, icu_bed_per_thousand_individual_key, additional_scenario_params_key
 from simulator.helper.utils import get_r
+import copy
 
 
 def get_virus_simulation_t0(params_arg):
@@ -49,10 +50,10 @@ def get_virus_simulation_t0(params_arg):
         IMM_K: time_to_end_immunity,
 
         # Unchanged parameters
-        CON_INIT_K: time_to_contagion,
-        HOS_INIT_K: time_to_hospital,
-        DEA_INIT_K: time_to_death,
-        IMM_INIT_K: time_to_end_immunity,
+        CON_INIT_K: copy.deepcopy(time_to_contagion),
+        HOS_INIT_K: copy.deepcopy(time_to_hospital),
+        DEA_INIT_K: copy.deepcopy(time_to_death),
+        IMM_INIT_K: copy.deepcopy(time_to_end_immunity),
 
         STA_K: life_state,
         NC_K: 0

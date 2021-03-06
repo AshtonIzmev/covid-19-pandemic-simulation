@@ -7,7 +7,7 @@ from simulator.helper.environment import build_individual_houses_map, build_indi
     build_individual_age_map, build_house_adult_map, build_2d_item_behavior, build_1d_item_behavior, \
     build_house_store_map, build_individual_work_map, build_individual_workblock_map, build_individual_store_map, \
     build_individual_individual_transport_map, build_individual_death_rate_map, build_individual_hospitalization_map, \
-    build_store_individual_map
+    build_store_individual_map, build_individual_symptom_map
 from simulator.helper.utils import invert_map_list, invert_map
 from tests.utils import g_d
 
@@ -211,6 +211,11 @@ class TestInitiation(unittest.TestCase):
     def test_build_individual_hospitalization_map(self):
         result = build_individual_hospitalization_map(g_d([0, 10, 20, 30, 40, 50, 60, 70, 80]))
         self.assertEqual(result, g_d([0.03, 0.01, 0.025, 0.025, 0.025, 0.074, 0.122, 0.158, 0.172]))
+
+    def test_build_individual_symptom_map(self):
+        result = build_individual_symptom_map(g_d([0, 10, 20, 30, 40, 50, 60, 70, 80]))
+        self.assertEqual(result, g_d([0.0, 0.009045000000000001, 0.02241, 0.033615, 0.06108, 0.07635,
+                                      0.12411, 0.12411, 0.25823999999999997]))
 
 
 if __name__ == '__main__':
