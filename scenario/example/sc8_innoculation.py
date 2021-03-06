@@ -82,13 +82,7 @@ def do_parallel_run(env_dic, params, run_id, specific_seed):
 
         update_run_stat(virus_dic, run_stats, day)
         # Override isolation to calculate
-        run_stats['iso'][day] = len(young_unlucky)
+        run_stats["iso"][day] = len(young_unlucky)
         run_stats["loc"][day] = (1-unlock_progress)
 
     return run_id, run_stats
-
-# print(stats["loc"].sum(axis=1).mean())
-# print(stats["iso"].sum(axis=1).mean())
-# print(stats["dea"].max(axis=1).mean())
-# print((248000 * (535 - stats["dea"].max(axis=1).mean()) + 1000000 * (140-stats["loc"].sum(axis=1).mean())) /  stats["iso"].sum(axis=1).mean() )
-

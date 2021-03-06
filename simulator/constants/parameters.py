@@ -30,6 +30,19 @@ covid_hospitalization_rate = {
     0: 0.03
 }
 
+# Source : https://arxiv.org/pdf/2006.08471.pdf
+covid_symptom_rate = {
+    8: 0.6456,
+    7: 0.3546,
+    6: 0.3546,
+    5: 0.3054,
+    4: 0.3054,
+    3: 0.2241,
+    2: 0.2241,
+    1: 0.1809,
+    0: 0.1809
+}
+
 # Source https://www.populationpyramid.net/world/2019/
 world_age_distribution = [
     ["0-4", 349247348, 328119059],
