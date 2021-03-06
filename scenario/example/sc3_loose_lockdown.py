@@ -10,11 +10,12 @@ from simulator.constants.keys import nindividual_key, nday_key, innoculation_num
 from simulator.helper.dynamic import propagate_to_stores, propagate_to_houses, propagate_to_workplaces, \
     increment_pandemic_1_day, update_run_stat, propagate_to_transportation
 from simulator.helper.simulation import get_virus_simulation_t0
+from ray.actor import ActorHandle
 
 
 @ray.remote
 # This scenario is a loose lockdown à la suedoise
-def do_parallel_run(env_dic, params, run_id, specific_seed):
+def do_parallel_run(env_dic, params, run_id, specific_seed, pba: ActorHandle):
     run_stats = get_zero_run_stats(params)
     random.seed(specific_seed)
     np.random.seed(specific_seed)
@@ -36,6 +37,7 @@ def do_parallel_run(env_dic, params, run_id, specific_seed):
 
     virus_dic = get_virus_simulation_t0(params)
     for day in range(params[nday_key]):
+        pba.update.remote(1)
         propagate_to_houses(env_dic, virus_dic, params[house_infect_key])
         if not is_weekend(day):
             propagate_to_transportation(env_dic, virus_dic, params[transport_infection_key],

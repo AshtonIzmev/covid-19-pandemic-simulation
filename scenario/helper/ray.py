@@ -4,9 +4,10 @@ import psutil
 import ray
 
 from scenario.helper.scenario import get_zero_stats
-from simulator.constants.keys import nrun_key
+from simulator.constants.keys import nrun_key, nday_key
 from simulator.helper.dynamic import merge_run_stat
 from simulator.helper.plot import print_progress_bar
+from scenario.helper.progressbar import ProgressBar
 
 
 def launch_parallel_run(params, env_dic, fun, ncpu, display_progress=True):
@@ -17,13 +18,15 @@ def launch_parallel_run(params, env_dic, fun, ncpu, display_progress=True):
     else:
         num_cpus = min(ncpu, psutil.cpu_count(logical=False))
     ray.init(num_cpus=num_cpus)
+    pb = ProgressBar(params[nrun_key]*params[nday_key])
+    actor = pb.actor
     stats = get_zero_stats(params)
     ray_params = ray.put(params)
     ray_env_dic = ray.put(env_dic)
     stats_l = []
     for run_id in range(params[nrun_key]):
-        # TODO : add a ray progress bar with ray.wait(...) function
-        stats_l.append(fun.remote(ray_env_dic, ray_params, run_id, random.randint(0, 10000)))
+        stats_l.append(fun.remote(ray_env_dic, ray_params, run_id, random.randint(0, 10000), actor))
+    pb.print_until_done()
     for run_id, run_stats in ray.get(stats_l):
         merge_run_stat(stats, run_stats, run_id)
     return stats

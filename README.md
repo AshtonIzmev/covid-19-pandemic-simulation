@@ -198,13 +198,10 @@ python -m simulator.run --nrun 20  --nday 180 --nind 1000 --immunity-bounds 60 9
 Using a quick and dirty kmeans, we only display the most "different" run distributions to illustrate the butterfly effect of a pandemic
 
 # Backlog
-- [ ]  Build a model of virus propagation in school and university (for only children vs 18-25yo people)
-- [ ]  Build an animated dataviz based on 3blue1brown video
 - [ ]  Simulate a population density and allow people to go to other houses in very dense place (in poor neighborhood)
 - [ ]  Build a new kind of individuals who do not work in workplaces but can go in every house or store (policemen for example)
 - [ ]  Add a delay between test and isolation (PCR tests can take one day)
-- [ ]  Scenario : Build a random test-isolation model
-- [ ]  Scenario : A whole neighborhood can be closed if enough people are infected
+- [x]  Add a tqdm progress bar to ray parallelized code execution
 - [x]  parallelize the runs (using for example N_proc-1 processors multithreading)
 - [x]  Build a moving average R0 instead of the daily R0 currently used
 - [x]  Add a moroccan age pyramid
