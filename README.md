@@ -233,6 +233,7 @@ Using a quick and dirty kmeans, we only display the most "different" run distrib
 ## Articles explaining the approach
 https://issam.ma/jekyll/update/2020/04/11/covid-pandemic-simulation.html (French)
 https://issam.ma/jekyll/update/2020/05/01/pandemic-lockdown-scenarios.html (French)
+https://issam.ma/jekyll/update/2020/07/04/macro-economic-immunity.html (French)
 
 # Links
 [1] https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology#The_SEIR_model
