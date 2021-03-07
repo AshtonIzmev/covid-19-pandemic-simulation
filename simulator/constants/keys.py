@@ -63,6 +63,9 @@ death_bounds_key = "DEATH_BOUNDS"
 immunity_bounds_key = "IMMUNITY_BOUNDS"
 icu_bed_per_thousand_individual_key = "ICU_BED_PER_1K_INDIV"
 
+variant_mortality_k = "VARIANT_DEATH_FACTOR"
+variant_hospitalization_k = "VARIANT_HOSPITALIZATION_FACTOR"
+
 additional_scenario_params_key = "ADDITIONAL_SCENARIO_PARAMETERS"
 
 HEALTHY_V = 0

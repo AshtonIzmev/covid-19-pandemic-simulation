@@ -24,7 +24,7 @@ def update_immunity_state(virus_dic):
 
 def hospitalize_infected(env_dic, virus_dic):
     for i in get_infected_people(virus_dic):
-        if virus_dic[HOS_K][i] == 0 and get_r() < env_dic[IHOS_K][i]:
+        if virus_dic[HOS_K][i] == 0 and get_r() < env_dic[IHOS_K][i] * virus_dic[variant_hospitalization_k]:
             virus_dic[STA_K][i] = HOSPITALIZED_V
             family = env_dic[HI_K][env_dic[IH_K][i]]
             virus_dic[STA_K].update((fm, ISOLATED_V) for fm in family if (virus_dic[STA_K][fm] == INFECTED_V))
@@ -40,7 +40,8 @@ def decide_life_immunity(env_dic, virus_dic, icu_factor):
     for i in get_virus_carrier_people(virus_dic):
         if virus_dic[DEA_K][i] == 0:
             # icu_factor only applies on hospitalized people
-            if get_r() < env_dic[IDEA_K][i] * (icu_factor if (virus_dic[STA_K][i] == HOSPITALIZED_V) else 1):
+            if get_r() < env_dic[IDEA_K][i] * virus_dic[variant_mortality_k] \
+                    * (icu_factor if (virus_dic[STA_K][i] == HOSPITALIZED_V) else 1):
                 virus_dic[STA_K][i] = DEAD_V
             else:
                 virus_dic[STA_K][i] = IMMUNE_V

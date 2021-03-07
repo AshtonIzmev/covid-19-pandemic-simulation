@@ -4,10 +4,7 @@ import numpy as np
 import ray
 
 from scenario.helper.scenario import get_zero_run_stats, is_weekend
-from simulator.constants.keys import nindividual_key, nday_key, innoculation_number_key, remote_work_key, \
-    store_preference_key, house_infect_key, work_infection_key, store_infection_key, transport_infection_key, \
-    transport_contact_cap_key, icu_bed_per_thousand_individual_key, STA_K, \
-    IAG_K, HEALTHY_V, IMMUNE_V, additional_scenario_params_key
+from simulator.constants.keys import *
 from simulator.helper.dynamic import propagate_to_stores, propagate_to_houses, propagate_to_workplaces, \
     increment_pandemic_1_day, update_run_stat, propagate_to_transportation
 from simulator.helper.simulation import get_virus_simulation_t0
@@ -29,14 +26,20 @@ def do_parallel_run(env_dic, params, run_id, specific_seed, pba: ActorHandle):
         # Morrocan daily rate of vaccination
         rate_daily_vaccinated = 0.00428
 
-    params[store_preference_key] = 0.8
-    params[remote_work_key] = 0.8
+    params[store_preference_key] = 0.5
+    params[remote_work_key] = 0.5
 
-    params[house_infect_key] = 0.5
-    params[work_infection_key] = 0.01
-    params[store_infection_key] = 0.02
-    params[transport_infection_key] = 0.01
+    # Variant parameters
+    variant_contagiosity = 1
+    variant_mortality = 1
+    variant_hospitalization = 1
 
+    params[house_infect_key] = 0.5 * variant_contagiosity
+    params[work_infection_key] = 0.05 * variant_contagiosity
+    params[store_infection_key] = 0.02 * variant_contagiosity
+    params[transport_infection_key] = 0.01 * variant_contagiosity
+    params[variant_mortality_k] = variant_mortality
+    params[variant_hospitalization_k] = variant_hospitalization
     params[innoculation_number_key] = 5
     available_beds = params[icu_bed_per_thousand_individual_key] * params[nindividual_key] / 1000
     virus_dic = get_virus_simulation_t0(params)
