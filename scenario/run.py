@@ -8,7 +8,7 @@ import numpy
 
 from scenario.example import sc1_simple_lockdown_removal, sc2_yoyo_lockdown_removal, sc0_base_lockdown, \
     scx_base_just_a_flu, sc3_loose_lockdown, sc4_rogue_citizen, sc5_rogue_neighborhood, sc6_travelers, \
-    sc7_nominal_lockdown_removal, sc8_innoculation, sc9_variant
+    sc7_nominal_lockdown_removal, sc8_innoculation, sc9_vaccination, sc10_variant
 from scenario.helper.ray import launch_parallel_byday, launch_parallel_byvariant
 from simulator.constants.keys import scenario_id_key, random_seed_key, draw_graph_key, ncpu_key, show_plot_key
 from simulator.helper.environment import get_environment_simulation_p, get_clean_env_params
@@ -50,11 +50,12 @@ if __name__ == '__main__':
         5:  sc5_rogue_neighborhood.do_parallel_run,
         6:  sc6_travelers.do_parallel_run,
         7:  sc7_nominal_lockdown_removal.do_parallel_run,
-        8:  sc8_innoculation.do_parallel_run
+        8:  sc8_innoculation.do_parallel_run,
+        9:  sc9_vaccination.do_parallel_run
     }
 
     scenario_variant_dic = {
-        9: sc9_variant.do_parallel_run
+        10: sc10_variant.do_parallel_run
     }
 
     if params[scenario_id_key] in scenario_day_dic:

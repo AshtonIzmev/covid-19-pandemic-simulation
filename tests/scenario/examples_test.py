@@ -4,7 +4,7 @@ import ray
 import numpy as np
 import logging
 from scenario.example import scx_base_just_a_flu, sc0_base_lockdown, sc1_simple_lockdown_removal, \
-    sc2_yoyo_lockdown_removal, sc3_loose_lockdown, sc4_rogue_citizen, sc5_rogue_neighborhood, sc6_travelers, sc9_variant
+    sc2_yoyo_lockdown_removal, sc3_loose_lockdown, sc4_rogue_citizen, sc5_rogue_neighborhood, sc6_travelers, sc9_vaccination
 from simulator.constants.keys import nindividual_key, nday_key, additional_scenario_params_key
 from simulator.helper.environment import get_environment_simulation
 from simulator.helper.simulation import get_default_params
@@ -134,7 +134,7 @@ class TestScenarios(unittest.TestCase):
         ray_env_dic = ray.put(env_dic)
         pb = ProgressBar(params[nday_key])
         actor = pb.actor
-        stats_l = [sc9_variant.do_parallel_run.remote(ray_env_dic, ray_params, 0, 0, actor)]
+        stats_l = [sc9_vaccination.do_parallel_run.remote(ray_env_dic, ray_params, 0, 0, actor)]
         self.assertTrue(len(stats_l) > 0)
 
 

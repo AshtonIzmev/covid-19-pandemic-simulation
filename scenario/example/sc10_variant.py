@@ -6,7 +6,7 @@ import ray
 from scenario.helper.scenario import get_zero_run_stats, is_weekend
 from simulator.constants.keys import *
 from simulator.helper.dynamic import propagate_to_stores, propagate_to_houses, propagate_to_workplaces, \
-    increment_pandemic_1_day, update_run_stat, propagate_to_transportation
+    increment_pandemic_1_day, update_run_stat, propagate_to_transportation, get_deadpeople
 from simulator.helper.simulation import get_virus_simulation_t0
 from ray.actor import ActorHandle
 
@@ -28,6 +28,8 @@ def do_parallel_run(env_dic, params, run_id, specific_seed, pba: ActorHandle):
 
     params[store_preference_key] = 0.5
     params[remote_work_key] = 0.5
+    params[innoculation_number_key] = 5
+    available_beds = params[icu_bed_per_thousand_individual_key] * params[nindividual_key] / 1000
 
     # Variant parameters
     variant_contagiosity = 1
@@ -41,7 +43,7 @@ def do_parallel_run(env_dic, params, run_id, specific_seed, pba: ActorHandle):
         run_stats = get_zero_run_stats(params)
         # Update parameters
         # Range [0.5, 1.5] with a 1/param stem (+/- 50%)
-        variant_contagiosity = 0.5 + param_variant_iter/params[nvariant_key]
+        variant_hospital = 0.5 + param_variant_iter/params[nvariant_key]
 
         if restrict_genetic_cost:
             variant_total_cost = variant_contagiosity + variant_immunization + variant_mortality + variant_hospital
@@ -57,8 +59,6 @@ def do_parallel_run(env_dic, params, run_id, specific_seed, pba: ActorHandle):
         params[variant_mortality_k] = variant_mortality
         params[variant_hospitalization_k] = variant_hospital
         params[immunity_bounds_key] = (270, 450) * variant_immunization  # assuming about a year of immunity (~flu)
-        params[innoculation_number_key] = 5
-        available_beds = params[icu_bed_per_thousand_individual_key] * params[nindividual_key] / 1000
         virus_dic = get_virus_simulation_t0(params)
 
         for day in range(params[nday_key]):
@@ -79,6 +79,5 @@ def do_parallel_run(env_dic, params, run_id, specific_seed, pba: ActorHandle):
                 propagate_to_stores(env_dic, virus_dic, params[store_infection_key], params[store_preference_key])
             increment_pandemic_1_day(env_dic, virus_dic, available_beds)
 
-            update_run_stat(virus_dic, run_stats, day)
-        death_stat.append(run_stats['dea'].sum())
+        death_stat.append(len(get_deadpeople(virus_dic)))
     return run_id, {"dea": np.array(death_stat)}

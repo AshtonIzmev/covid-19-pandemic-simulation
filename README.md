@@ -9,7 +9,12 @@
 
 # Getting started
 ```bash
-pip install pandemic-simulation
+pip install pandemic-simulation  # Last stable version
+# or
+python3 -m venv ./venv
+source ./venv/bin/activate
+pip install --upgrade -r requirements.txt
+
 
 ### To plot new daily cases
 python -m simulator.run --draw new --show-plot
@@ -100,6 +105,7 @@ optional arguments:
   --ncpu NUM_CPU        Number of cpus to use (-1 is all but one)
   --nind N_INDIVIDUALS  Number of individuals
   --nday N_DAYS         Number of days
+  --nvariant N_VARIANT  Number of variants
   --sto-house NB_STORE_PER_HOUSE
                         Number of store per house
   --nblock NB_1D_GRID_BLOCK

@@ -13,7 +13,7 @@ def get_parser():
 
     parser.add_argument('--nind', type=int, help='Number of individuals', dest=nindividual_key)
     parser.add_argument('--nday', type=int, help='Number of days', dest=nday_key)
-    parser.add_argument('--nvariant', type=int, help='Number of days', dest=nvariant_key)
+    parser.add_argument('--nvariant', type=int, help='Number of variants', dest=nvariant_key)
 
     parser.add_argument('--sto-house', type=int, help='Number of store per house', dest=store_per_house_key)
     parser.add_argument('--nblock', type=int, help='Number of blocks in the grid', dest=nb_1d_block_key)

@@ -53,7 +53,7 @@ def draw_meta_simulation(death_stat_arg, show_plot):
     if show_plot:
         plt.show()
     else:
-        plt.savefig("images/output/%d-meta-%d-%d.png" % (ts, death_stat_arg.shape[0], np.max(death_stat_arg)))
+        plt.savefig("images/output/%d-meta-%d-%d.png" % (ts, death_stat_arg['dea'].shape[0], np.max(death_stat_arg['dea'])))
 
 
 def draw_summary(stats_arg, show_plot, x_tick=10):
