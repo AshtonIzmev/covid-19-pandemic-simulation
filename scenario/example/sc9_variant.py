@@ -31,8 +31,8 @@ def do_parallel_run(env_dic, params, run_id, specific_seed, pba: ActorHandle):
 
     # Variant parameters
     variant_contagiosity = 1
-    variant_mortality = 1
-    variant_hospitalization = 1
+    variant_mortality = 1  # tradeoff parameter
+    variant_hospitalization = 1  # tradeoff parameter
 
     params[house_infect_key] = 0.5 * variant_contagiosity
     params[work_infection_key] = 0.05 * variant_contagiosity

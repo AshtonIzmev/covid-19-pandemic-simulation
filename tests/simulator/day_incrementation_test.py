@@ -128,7 +128,8 @@ class TestSimulation(unittest.TestCase):
         env_dic = {ISYM_K: {0: 0, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1}}
         virus_dic = {
             STA_K: {0: F, 1: F, 2: M, 3: D, 4: S, 5: H, 6: P, 7: P, 8: F},
-            DEA_INIT_K: {0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 50}
+            DEA_INIT_K: {0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 50},
+            variant_hospitalization_k: 10
         }
 
         isolate_infected(env_dic, virus_dic)
@@ -142,6 +143,24 @@ class TestSimulation(unittest.TestCase):
         self.assertEqual(virus_dic[STA_K][6], P)
         self.assertEqual(virus_dic[STA_K][7], P)
         self.assertEqual(virus_dic[STA_K][8], F)
+
+    def test_decide_isolation_litte_symptoms(self):
+        # i0 has no symptoms, no isolation but still infected
+        # i1 has tons of symptoms. Will be isolated
+        # Others are not Infected status, no isolation
+        # Except i8 who is infected and has symptoms but did not notice them (and has 99 others days to decide)
+        random.seed(42)
+        env_dic = {ISYM_K: {0: 0, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1}}
+        virus_dic = {
+            STA_K: {0: F, 1: F, 2: M, 3: D, 4: S, 5: H, 6: P, 7: P, 8: F},
+            DEA_INIT_K: {0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 50},
+            variant_hospitalization_k: 0.001
+        }
+
+        isolate_infected(env_dic, virus_dic)
+
+        self.assertEqual(virus_dic[STA_K][1], F)
+        self.assertEqual(virus_dic[STA_K][4], S)
 
     def test_increment_pandemic_1_day_isolated_cases(self):
         # i3 is going to be hospitalized

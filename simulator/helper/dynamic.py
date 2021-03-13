@@ -32,7 +32,9 @@ def hospitalize_infected(env_dic, virus_dic):
 
 def isolate_infected(env_dic, virus_dic):
     for i in get_infected_people(virus_dic):
-        if get_r() * virus_dic[DEA_INIT_K][i] < env_dic[ISYM_K][i]:
+        # Hospitalization risk are linked to more symptoms thus self-isolation
+        # isolate_infected is tested every day, so we need to divide get_r with DEA_INIT_K day to decision
+        if get_r() * virus_dic[DEA_INIT_K][i] < env_dic[ISYM_K][i] * virus_dic[variant_hospitalization_k]:
             virus_dic[STA_K][i] = ISOLATED_V
 
 
