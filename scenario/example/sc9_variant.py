@@ -13,7 +13,7 @@ from ray.actor import ActorHandle
 
 @ray.remote
 def do_parallel_run(env_dic, params, run_id, specific_seed, pba: ActorHandle):
-    run_stats = get_zero_run_stats(params)
+
     random.seed(specific_seed)
     np.random.seed(specific_seed)
 
@@ -31,37 +31,54 @@ def do_parallel_run(env_dic, params, run_id, specific_seed, pba: ActorHandle):
 
     # Variant parameters
     variant_contagiosity = 1
+    variant_immunization = 1
     variant_mortality = 1  # tradeoff parameter
-    variant_hospitalization = 1  # tradeoff parameter
+    variant_hospital = 1  # tradeoff parameter
+    restrict_genetic_cost = False
+    death_stat = []
 
-    params[house_infect_key] = 0.5 * variant_contagiosity
-    params[work_infection_key] = 0.05 * variant_contagiosity
-    params[store_infection_key] = 0.02 * variant_contagiosity
-    params[transport_infection_key] = 0.01 * variant_contagiosity
-    params[variant_mortality_k] = variant_mortality
-    params[variant_hospitalization_k] = variant_hospitalization
-    params[innoculation_number_key] = 5
-    available_beds = params[icu_bed_per_thousand_individual_key] * params[nindividual_key] / 1000
-    virus_dic = get_virus_simulation_t0(params)
+    for param_variant_iter in range(params[nvariant_key]):
+        run_stats = get_zero_run_stats(params)
+        # Update parameters
+        # Range [0.5, 1.5] with a 1/param stem (+/- 50%)
+        variant_contagiosity = 0.5 + param_variant_iter/params[nvariant_key]
 
-    for day in range(params[nday_key]):
-        pba.update.remote(1)
-        old_healthy = [(k, env_dic[IAG_K][k]) for k, v in virus_dic[STA_K].items() if v == HEALTHY_V]
-        nb_indiv_vaccinated = max(0, int(params[nindividual_key] * rate_daily_vaccinated * (1-day/100)))
-        if len(old_healthy) > nb_indiv_vaccinated:
-            old_sorted = sorted(old_healthy, key=lambda kv: -kv[1])
-            old_lucky = [o[0] for o in old_sorted[:nb_indiv_vaccinated]]
-            virus_dic[STA_K].update((o, IMMUNE_V) for o in old_lucky)
+        if restrict_genetic_cost:
+            variant_total_cost = variant_contagiosity + variant_immunization + variant_mortality + variant_hospital
+            variant_contagiosity /= variant_total_cost
+            variant_immunization /= variant_total_cost
+            variant_mortality /= variant_total_cost
+            variant_hospital /= variant_total_cost
 
-        propagate_to_houses(env_dic, virus_dic, params[house_infect_key])
-        if not is_weekend(day):
-            propagate_to_transportation(env_dic, virus_dic, params[transport_infection_key],
-                                        params[remote_work_key], params[transport_contact_cap_key])
-            propagate_to_workplaces(env_dic, virus_dic, params[work_infection_key], params[remote_work_key])
-        if is_weekend(day):
-            propagate_to_stores(env_dic, virus_dic, params[store_infection_key], params[store_preference_key])
-        increment_pandemic_1_day(env_dic, virus_dic, available_beds)
+        params[house_infect_key] = 0.5 * variant_contagiosity
+        params[work_infection_key] = 0.05 * variant_contagiosity
+        params[store_infection_key] = 0.02 * variant_contagiosity
+        params[transport_infection_key] = 0.01 * variant_contagiosity
+        params[variant_mortality_k] = variant_mortality
+        params[variant_hospitalization_k] = variant_hospital
+        params[immunity_bounds_key] = (270, 450) * variant_immunization  # assuming about a year of immunity (~flu)
+        params[innoculation_number_key] = 5
+        available_beds = params[icu_bed_per_thousand_individual_key] * params[nindividual_key] / 1000
+        virus_dic = get_virus_simulation_t0(params)
 
-        update_run_stat(virus_dic, run_stats, day)
+        for day in range(params[nday_key]):
+            pba.update.remote(1)
+            old_healthy = [(k, env_dic[IAG_K][k]) for k, v in virus_dic[STA_K].items() if v == HEALTHY_V]
+            nb_indiv_vaccinated = max(0, int(params[nindividual_key] * rate_daily_vaccinated * (1-day/100)))
+            if len(old_healthy) > nb_indiv_vaccinated:
+                old_sorted = sorted(old_healthy, key=lambda kv: -kv[1])
+                old_lucky = [o[0] for o in old_sorted[:nb_indiv_vaccinated]]
+                virus_dic[STA_K].update((o, IMMUNE_V) for o in old_lucky)
 
-    return run_id, run_stats
+            propagate_to_houses(env_dic, virus_dic, params[house_infect_key])
+            if not is_weekend(day):
+                propagate_to_transportation(env_dic, virus_dic, params[transport_infection_key],
+                                            params[remote_work_key], params[transport_contact_cap_key])
+                propagate_to_workplaces(env_dic, virus_dic, params[work_infection_key], params[remote_work_key])
+            if is_weekend(day):
+                propagate_to_stores(env_dic, virus_dic, params[store_infection_key], params[store_preference_key])
+            increment_pandemic_1_day(env_dic, virus_dic, available_beds)
+
+            update_run_stat(virus_dic, run_stats, day)
+        death_stat.append(run_stats['dea'].sum())
+    return run_id, {"dea": np.array(death_stat)}

@@ -2,8 +2,7 @@ import math
 
 import numpy as np
 
-from simulator.constants.keys import nrun_key, nday_key, remote_work_key, store_preference_key, house_infect_key, \
-    work_infection_key, store_infection_key, transport_infection_key
+from simulator.constants.keys import *
 
 
 def get_zero_stats(params_arg):
@@ -18,6 +17,12 @@ def get_zero_stats(params_arg):
         "R0d": np.zeros((params_arg[nrun_key], params_arg[nday_key])),
         "new": np.zeros((params_arg[nrun_key], params_arg[nday_key])),
         "loc": np.zeros((params_arg[nrun_key], params_arg[nday_key]))
+    }
+
+
+def get_zero_stats_variant(params_arg):
+    return {
+        "dea": np.zeros((params_arg[nrun_key], params_arg[nvariant_key])),
     }
 
 

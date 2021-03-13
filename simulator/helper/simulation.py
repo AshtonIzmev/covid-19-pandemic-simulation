@@ -74,14 +74,15 @@ def get_default_params():
 
         nindividual_key: 1000,  # Number of people
         nday_key: 180,  # Number of simulated days
+        nvariant_key: 5,  # Number of variants studied
         innoculation_number_key: 5,  # Number of people innoculated at day 0
 
         # structure parameters
         store_per_house_key: 20,  # Let's say we have 20 houses for each grocerie store
         store_preference_key: 0.95,  # Probality of going to the nearest store
         store_nb_choice_key: 3,  # Number of stores that a single house can go to
-        nb_1d_block_key: 20,  # number of block on one axe to slice the grid and model public transportation contamination,
-        # total number of blocks is nb_1d_block_key^2
+        nb_1d_block_key: 20,  # number of block on one axe to slice the grid and model public
+        # transportation contamination, total number of blocks is nb_1d_block_key^2
 
         # parameters that can change over time with lockdown loosening/removal
         remote_work_key: 0.98,  # Percentage of people doing remote work

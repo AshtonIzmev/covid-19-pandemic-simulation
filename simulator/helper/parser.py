@@ -1,11 +1,6 @@
 import argparse
 
-from simulator.constants.keys import nrun_key, scenario_id_key, random_seed_key, draw_graph_key, nindividual_key, \
-    nday_key, \
-    innoculation_number_key, nb_1d_block_key, remote_work_key, store_per_house_key, store_preference_key, \
-    store_nb_choice_key, house_infect_key, work_infection_key, store_infection_key, transport_infection_key, \
-    transport_contact_cap_key, contagion_bounds_key, hospitalization_bounds_key, death_bounds_key, immunity_bounds_key, \
-    icu_bed_per_thousand_individual_key, additional_scenario_params_key, ncpu_key, show_plot_key
+from simulator.constants.keys import *
 
 
 def get_parser():
@@ -18,6 +13,7 @@ def get_parser():
 
     parser.add_argument('--nind', type=int, help='Number of individuals', dest=nindividual_key)
     parser.add_argument('--nday', type=int, help='Number of days', dest=nday_key)
+    parser.add_argument('--nvariant', type=int, help='Number of days', dest=nvariant_key)
 
     parser.add_argument('--sto-house', type=int, help='Number of store per house', dest=store_per_house_key)
     parser.add_argument('--nblock', type=int, help='Number of blocks in the grid', dest=nb_1d_block_key)

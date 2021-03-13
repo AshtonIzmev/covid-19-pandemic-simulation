@@ -9,7 +9,7 @@ import numpy
 from scenario.example import sc1_simple_lockdown_removal, sc2_yoyo_lockdown_removal, sc0_base_lockdown, \
     scx_base_just_a_flu, sc3_loose_lockdown, sc4_rogue_citizen, sc5_rogue_neighborhood, sc6_travelers, \
     sc7_nominal_lockdown_removal, sc8_innoculation, sc9_variant
-from scenario.helper.ray import launch_parallel_run
+from scenario.helper.ray import launch_parallel_byday, launch_parallel_byvariant
 from simulator.constants.keys import scenario_id_key, random_seed_key, draw_graph_key, ncpu_key, show_plot_key
 from simulator.helper.environment import get_environment_simulation_p, get_clean_env_params
 from simulator.helper.parser import get_parser
@@ -40,9 +40,7 @@ if __name__ == '__main__':
         env_dic = get_environment_simulation_p(params_env)
         joblib.dump(env_dic, env_file)
 
-    launch_fun = launch_parallel_run
-
-    scenario_dic = {
+    scenario_day_dic = {
         -1: scx_base_just_a_flu.do_parallel_run,
         0:  sc0_base_lockdown.do_parallel_run,
         1:  sc1_simple_lockdown_removal.do_parallel_run,
@@ -52,13 +50,20 @@ if __name__ == '__main__':
         5:  sc5_rogue_neighborhood.do_parallel_run,
         6:  sc6_travelers.do_parallel_run,
         7:  sc7_nominal_lockdown_removal.do_parallel_run,
-        8:  sc8_innoculation.do_parallel_run,
-        9:  sc9_variant.do_parallel_run
+        8:  sc8_innoculation.do_parallel_run
     }
 
-    if params[scenario_id_key] in scenario_dic:
-        stats_result = launch_parallel_run(params, env_dic, scenario_dic[params[scenario_id_key]], params[ncpu_key])
-        print("It took : %.2f seconds" % (time.time() - t_start))
-        chose_draw_plot(params[draw_graph_key], stats_result, params[show_plot_key])
+    scenario_variant_dic = {
+        9: sc9_variant.do_parallel_run
+    }
+
+    if params[scenario_id_key] in scenario_day_dic:
+        stats_result = launch_parallel_byday(params, env_dic, scenario_day_dic[params[scenario_id_key]],
+                                             params[ncpu_key])
+    elif params[scenario_id_key] in scenario_variant_dic:
+        stats_result = launch_parallel_byvariant(params, env_dic, scenario_variant_dic[params[scenario_id_key]],
+                                                 params[ncpu_key])
     else:
         sys.exit(0)
+    print("It took : %.2f seconds" % (time.time() - t_start))
+    chose_draw_plot(params[draw_graph_key], stats_result, params[show_plot_key])

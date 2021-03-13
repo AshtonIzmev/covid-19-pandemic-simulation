@@ -47,6 +47,15 @@ def draw_new_daily_cases(stats_arg, show_plot, x_tick=10):
         plt.savefig("images/output/%d-new-%d-%d.png" % (ts, stats_arg['hea'].shape[0], np.max(stats_arg['hea'])))
 
 
+def draw_meta_simulation(death_stat_arg, show_plot):
+    fig, ax = plt.subplots(figsize=(15, 10))
+    set_ax_meta_simulation(ax, death_stat_arg)
+    if show_plot:
+        plt.show()
+    else:
+        plt.savefig("images/output/%d-meta-%d-%d.png" % (ts, death_stat_arg.shape[0], np.max(death_stat_arg)))
+
+
 def draw_summary(stats_arg, show_plot, x_tick=10):
     fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(16, 10))
     set_ax_mean_population_state_daily(ax1, stats_arg, x_tick)
@@ -304,6 +313,27 @@ def set_ax_new_daily_cases(ax, stats_arg, x_tick=10):
     ax.legend((p1[0],), ('New cases',))
 
 
+def set_ax_meta_simulation(ax, death_stat_arg):
+    n_variant_arg = death_stat_arg['dea'].shape[1]
+    stats_mean_arg = np.mean(death_stat_arg['dea'], axis=0)
+    stats_err_arg = stats.sem(death_stat_arg['dea'], axis=0)
+    death_serie = [stats_mean_arg[i] for i in range(n_variant_arg)]
+    err = [stats_err_arg[i] for i in range(n_variant_arg)]
+
+    indices = np.arange(n_variant_arg)
+    width = 0.6
+
+    p1 = ax.bar(indices, death_serie, width, yerr=err, align='center', alpha=0.5, ecolor="#808080", color="#44A1A0")
+
+    ax.set_ylabel('Total death')
+    ax.set_xlabel('Variant parameter')
+    ax.set_title('Total death / covid-19 variant type')
+    ax.set_xticks(np.arange(0, n_variant_arg, 1))
+    ax.set_xticklabels(tuple([str(i-n_variant_arg/2) for i in range(n_variant_arg)]))
+    ax.set_yticks(np.arange(0, int(1+max(death_serie) * 1.1), int(1+max(death_serie) / 10)))
+    ax.legend((p1[0],), ('Death',))
+
+
 def chose_draw_plot(draw_graph_arg, stats_arg, show_plot=False):
     if draw_graph_arg:
         if contains_substring("pop", draw_graph_arg):
@@ -320,8 +350,10 @@ def chose_draw_plot(draw_graph_arg, stats_arg, show_plot=False):
             draw_lockdown_state_daily(stats_arg, show_plot)
         if contains_substring("R0d", draw_graph_arg):
             draw_r0_daily_evolution(stats_arg, show_plot)
-        elif contains_substring("R0", draw_graph_arg):
+        if contains_substring("R0", draw_graph_arg):
             draw_r0_evolution(stats_arg, show_plot, 14)
+        elif contains_substring("metasimu", draw_graph_arg):
+            draw_meta_simulation(stats_arg, show_plot)
 
 
 def contains_substring(substr_arg, list_arg):

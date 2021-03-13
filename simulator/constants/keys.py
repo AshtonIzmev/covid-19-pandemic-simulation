@@ -40,6 +40,7 @@ draw_graph_key = "DRAW_GRAPH"
 show_plot_key = "SHOW_PLOT"
 nindividual_key = "N_INDIVIDUALS"
 nday_key = "N_DAYS"
+nvariant_key = "N_VARIANT"
 
 innoculation_number_key = "INITIAL_INNOCULATION_NB"
 nb_1d_block_key = "NB_1D_GRID_BLOCK"
