@@ -50,6 +50,7 @@ def draw_new_daily_cases(stats_arg, show_plot, x_tick=10):
 def draw_meta_simulation(death_stat_arg, show_plot):
     fig, ax = plt.subplots(figsize=(15, 10))
     set_ax_meta_simulation(ax, death_stat_arg)
+    print("ok")
     if show_plot:
         plt.show()
     else:
@@ -325,12 +326,16 @@ def set_ax_meta_simulation(ax, death_stat_arg):
 
     p1 = ax.bar(indices, death_serie, width, yerr=err, align='center', alpha=0.5, ecolor="#808080", color="#44A1A0")
 
+    bottom_y = int(min(death_serie) * 0.8)
+    top_y = int(1+max(death_serie) * 1.2)
+
+    ax.set_ylim(bottom=bottom_y, top=top_y)
     ax.set_ylabel('Total death')
     ax.set_xlabel('Variant parameter')
     ax.set_title('Total death / covid-19 variant type')
     ax.set_xticks(np.arange(0, n_variant_arg, 1))
-    ax.set_xticklabels(tuple([str(i-n_variant_arg/2) for i in range(n_variant_arg)]))
-    ax.set_yticks(np.arange(0, int(1+max(death_serie) * 1.1), int(1+max(death_serie) / 10)))
+    ax.set_xticklabels([round(s, 2) for s in np.arange(0.25, 1.75, 1.5 / n_variant_arg)])
+    ax.set_yticks(np.arange(bottom_y, top_y, int(1+max(death_serie) / 10)))
     ax.legend((p1[0],), ('Death',))
 
 

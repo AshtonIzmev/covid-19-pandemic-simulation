@@ -51,7 +51,7 @@ def get_parser():
                         action='store_true')
 
     # Scenarios related
-    parser.add_argument('--extra-scenario-params', type=float, nargs="*", help='Additional scenario parameters',
+    parser.add_argument('--extra-scenario-params', type=str, nargs="*", help='Additional scenario parameters',
                         dest=additional_scenario_params_key)
 
     return parser

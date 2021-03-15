@@ -32,7 +32,7 @@ def do_parallel_run(env_dic, params, run_id, specific_seed, pba: ActorHandle):
     if len(params[additional_scenario_params_key]) < 1:
         raise AssertionError("Need an additional_scenario parameter")
 
-    days_to_lockdown_loosening = params[additional_scenario_params_key][0]
+    days_to_lockdown_loosening = float(params[additional_scenario_params_key][0])
     days_with_no_cases = 0
     first_day_lockdown_loosening = -1
     virus_dic = get_virus_simulation_t0(params)

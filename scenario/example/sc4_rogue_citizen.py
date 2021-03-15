@@ -26,7 +26,7 @@ def do_parallel_run(env_dic, params, run_id, specific_seed, pba: ActorHandle):
         raise AssertionError("Need more additional_scenario parameter")
 
     nb_rogue = int(params[additional_scenario_params_key][0])
-    rogue_factor = params[additional_scenario_params_key][1]
+    rogue_factor = float(params[additional_scenario_params_key][1])
 
     params[store_preference_key] = 0.95
     params[remote_work_key] = 0.98

@@ -11,9 +11,10 @@
 ```bash
 pip install pandemic-simulation  # Last stable version
 # or
+apt-get install python3-venv gcc python3-dev
 python3 -m venv ./venv
 source ./venv/bin/activate
-pip install --upgrade -r requirements.txt
+pip install -r requirements.txt
 
 
 ### To plot new daily cases

@@ -45,7 +45,7 @@ def do_parallel_run(env_dic, params, run_id, specific_seed, pba: ActorHandle):
         pba.update.remote(1)
         old_healthy = [(k, env_dic[IAG_K][k]) for k, v in virus_dic[STA_K].items() if v == HEALTHY_V]
         nb_indiv_vaccinated = max(0, int(params[nindividual_key] * rate_daily_vaccinated * (1-day/100)))
-        if len(old_healthy) > nb_indiv_vaccinated:
+        if len(old_healthy) > nb_indiv_vaccinated and day <= 100:
             old_sorted = sorted(old_healthy, key=lambda kv: -kv[1])
             old_lucky = [o[0] for o in old_sorted[:nb_indiv_vaccinated]]
             virus_dic[STA_K].update((o, IMMUNE_V) for o in old_lucky)

@@ -26,7 +26,7 @@ def do_parallel_run(env_dic, params, run_id, specific_seed, pba: ActorHandle):
         raise AssertionError("Need more additional_scenario parameter")
 
     nb_bloc = int(params[additional_scenario_params_key][0])
-    rogue_factor = params[additional_scenario_params_key][1]
+    rogue_factor = float(params[additional_scenario_params_key][1])
 
     rogues_blocks_x = np.random.choice(range(params[nb_1d_block_key]), nb_bloc)
     rogues_blocks_y = np.random.choice(range(params[nb_1d_block_key]), nb_bloc)

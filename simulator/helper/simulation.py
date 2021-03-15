@@ -55,8 +55,8 @@ def get_virus_simulation_t0(params_arg):
         DEA_INIT_K: copy.deepcopy(time_to_death),
         IMM_INIT_K: copy.deepcopy(time_to_end_immunity),
 
-        variant_mortality_k: 1,
-        variant_hospitalization_k: 1,
+        variant_mortality_k: params_arg[variant_mortality_k] if variant_mortality_k in params_arg else 1,
+        variant_hospitalization_k: params_arg[variant_hospitalization_k] if variant_hospitalization_k in params_arg else 1,
 
         STA_K: life_state,
         NC_K: 0

@@ -23,7 +23,7 @@ def do_parallel_run(env_dic, params, run_id, specific_seed, pba: ActorHandle):
     if len(params[additional_scenario_params_key]) < 1:
         raise AssertionError("Need more additional_scenario parameter")
 
-    percent_increase = params[additional_scenario_params_key][0]
+    percent_increase = float(params[additional_scenario_params_key][0])
 
     params[store_preference_key] = 0.3
     params[remote_work_key] = 0.58
