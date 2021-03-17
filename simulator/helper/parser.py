@@ -39,7 +39,7 @@ def get_parser():
     parser.add_argument('--death-bounds', type=int, nargs=2, help='Death bounds', dest=death_bounds_key)
     parser.add_argument('--immunity-bounds', type=int, nargs=2, help='Immunity bounds', dest=immunity_bounds_key)
 
-    parser.add_argument('--nbeds-icu', type=int, help='Number of ICU beds per thousand population',
+    parser.add_argument('--nbeds-icu', type=float, help='Number of ICU beds per thousand population',
                         dest=icu_bed_per_thousand_individual_key)
 
     parser.add_argument('--scenario-id', "--sce", type=int, help='Immunity bounds', dest=scenario_id_key)

@@ -50,7 +50,6 @@ def draw_new_daily_cases(stats_arg, show_plot, x_tick=10):
 def draw_meta_simulation(death_stat_arg, show_plot):
     fig, ax = plt.subplots(figsize=(15, 10))
     set_ax_meta_simulation(ax, death_stat_arg)
-    print("ok")
     if show_plot:
         plt.show()
     else:

@@ -65,6 +65,6 @@ if __name__ == '__main__':
         stats_result = launch_parallel_byvariant(params, env_dic, scenario_variant_dic[params[scenario_id_key]],
                                                  params[ncpu_key])
     else:
-        sys.exit(0)
+        raise KeyError("Unknown scenario")
     print("It took : %.2f seconds" % (time.time() - t_start))
     chose_draw_plot(params[draw_graph_key], stats_result, params[show_plot_key])
