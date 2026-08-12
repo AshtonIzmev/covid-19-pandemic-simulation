@@ -1,3 +1,5 @@
+
+
 [![Build Status](https://travis-ci.org/AshtonIzmev/covid-19-pandemic-simulation.svg?branch=master)](https://travis-ci.org/AshtonIzmev/covid-19-pandemic-simulation)
 [![codecov](https://codecov.io/gh/AshtonIzmev/covid-19-pandemic-simulation/branch/master/graph/badge.svg)](https://codecov.io/gh/AshtonIzmev/covid-19-pandemic-simulation)
 [![pypi](https://badge.fury.io/py/pandemic-simulation.svg)](https://badge.fury.io/py/pandemic-simulation)
@@ -170,7 +172,7 @@ So what is "life" in a pandemic lockdown situation (where almost all nations are
 # Public transportation model
 Each house and workplace is being assigned a geolocation in a grid. This grid can be cut into blocks (defined by a parameter).
 When a worker goes from his house to his workplace, he goes through blocks that are shared by other workers.
-We maintain a dictionnary of this transportation relationship between workers to propagate the pandemic.
+We maintain a dictionary of this transportation relationship between workers to propagate the pandemic.
 
 # Some graphs
 With default parameters.
