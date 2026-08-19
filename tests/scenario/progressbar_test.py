@@ -14,30 +14,59 @@ from simulator.constants.keys import nday_key, nrun_key
 PlainProgressBarActor = ProgressBarActor.__ray_metadata__.modified_class
 
 
+def with_actor(body):
+    """Run `body(actor)` inside a fresh event loop, actor included.
+
+    The actor holds an asyncio.Event. Before python 3.10 that binds itself to
+    the current event loop at construction time, and asyncio.run() clears the
+    current loop when it returns -- so building the actor outside a running
+    loop, as a plain setUp would, raises "There is no current event loop" for
+    every test after the first one that awaited anything. Ray always builds the
+    actor inside its own loop, and so does this.
+    """
+    async def main():
+        return await body(PlainProgressBarActor())
+
+    return asyncio.run(main())
+
+
 class TestProgressBarActor(unittest.TestCase):
 
     def setUp(self):
-        self.actor = PlainProgressBarActor()
+        # Clear the ambient loop so nothing here can quietly rely on one.
+        # On 3.9 asyncio.run() leaves it cleared anyway; this makes every test
+        # start from that state instead of depending on execution order.
+        asyncio.set_event_loop(None)
 
     def test_it_starts_empty(self):
-        self.assertEqual(self.actor.get_counter(), 0)
+        async def body(actor):
+            return actor.get_counter()
+
+        self.assertEqual(with_actor(body), 0)
 
     def test_update_accumulates(self):
-        self.actor.update(3)
-        self.actor.update(4)
-        self.assertEqual(self.actor.get_counter(), 7)
+        async def body(actor):
+            actor.update(3)
+            actor.update(4)
+            return actor.get_counter()
+
+        self.assertEqual(with_actor(body), 7)
 
     def test_wait_for_update_returns_the_delta_and_the_total(self):
-        self.actor.update(2)
-        delta, counter = asyncio.run(self.actor.wait_for_update())
-        self.assertEqual((delta, counter), (2, 2))
+        async def body(actor):
+            actor.update(2)
+            return await actor.wait_for_update()
+
+        self.assertEqual(with_actor(body), (2, 2))
 
     def test_the_delta_resets_between_waits_but_the_counter_does_not(self):
-        self.actor.update(2)
-        asyncio.run(self.actor.wait_for_update())
-        self.actor.update(5)
-        delta, counter = asyncio.run(self.actor.wait_for_update())
-        self.assertEqual((delta, counter), (5, 7))
+        async def body(actor):
+            actor.update(2)
+            await actor.wait_for_update()
+            actor.update(5)
+            return await actor.wait_for_update()
+
+        self.assertEqual(with_actor(body), (5, 7))
 
 
 class TestSequentialLaunchRun(unittest.TestCase):
