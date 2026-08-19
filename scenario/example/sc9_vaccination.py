@@ -4,10 +4,33 @@ import numpy as np
 import ray
 from ray.actor import ActorHandle
 
-from scenario.helper.scenario import get_zero_run_stats, is_weekend
-from simulator.constants.keys import *
-from simulator.helper.dynamic import propagate_to_stores, propagate_to_houses, propagate_to_workplaces, \
-    increment_pandemic_1_day, update_run_stat, propagate_to_transportation
+from scenario.helper.scenario import get_zero_run_stats, is_weekend, read_extra_params
+from simulator.constants.keys import (
+    HEALTHY_V,
+    IAG_K,
+    IMMUNE_V,
+    STA_K,
+    house_infect_key,
+    icu_bed_per_thousand_individual_key,
+    immunity_bounds_key,
+    innoculation_number_key,
+    nday_key,
+    nindividual_key,
+    remote_work_key,
+    store_infection_key,
+    store_preference_key,
+    transport_contact_cap_key,
+    transport_infection_key,
+    work_infection_key,
+)
+from simulator.helper.dynamic import (
+    increment_pandemic_1_day,
+    propagate_to_houses,
+    propagate_to_stores,
+    propagate_to_transportation,
+    propagate_to_workplaces,
+    update_run_stat,
+)
 from simulator.helper.simulation import get_virus_simulation_t0
 
 
@@ -17,11 +40,7 @@ def do_parallel_run(env_dic, params, run_id, specific_seed, pba: ActorHandle):
     random.seed(specific_seed)
     np.random.seed(specific_seed)
 
-    if len(params[additional_scenario_params_key]) < 1:
-        raise AssertionError("Need more additional_scenario parameter")
-    else:
-        rate_daily_vaccinated = int(params[additional_scenario_params_key][0])
-
+    (rate_daily_vaccinated,) = read_extra_params(params, float)
     if rate_daily_vaccinated < 0:
         # Morrocan daily rate of vaccination
         rate_daily_vaccinated = 0.00428

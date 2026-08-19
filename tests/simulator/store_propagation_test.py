@@ -1,8 +1,9 @@
 import random
 import unittest
 
+from simulator.constants.keys import CON_K, HA_K, IBE_K, IH_K, IS_K, NC_K, STA_K
 from simulator.helper.dynamic import propagate_to_stores
-from tests.constant import *
+from tests.constant import D, F, H
 from tests.utils import g_d
 
 

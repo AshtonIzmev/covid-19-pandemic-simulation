@@ -1,6 +1,41 @@
-from simulator.constants.keys import *
-from simulator.helper.utils import get_random_sample, get_r, reduce_multiply_by_key, choose_weight_order, \
-    get_random_choice_list
+from simulator.constants.keys import (
+    CON_INIT_K,
+    CON_K,
+    DEA_INIT_K,
+    DEA_K,
+    DEAD_V,
+    HA_K,
+    HEALTHY_V,
+    HI_K,
+    HOS_INIT_K,
+    HOS_K,
+    HOSPITALIZED_V,
+    IBE_K,
+    IDEA_K,
+    IH_K,
+    IHOS_K,
+    IMM_INIT_K,
+    IMM_K,
+    IMMUNE_V,
+    INFECTED_V,
+    IS_K,
+    ISOLATED_V,
+    ISYM_K,
+    ITI_K,
+    IW_K,
+    NC_K,
+    STA_K,
+    WI_K,
+    variant_hospitalization_k,
+    variant_mortality_k,
+)
+from simulator.helper.utils import (
+    choose_weight_order,
+    get_r,
+    get_random_choice_list,
+    get_random_sample,
+    reduce_multiply_by_key,
+)
 
 
 def update_infection_period(newly_infected_individuals_arg, virus_dic):
@@ -78,7 +113,7 @@ def increment_pandemic_1_day(env_dic, virus_dic, available_beds):
 
 
 def get_virus_carrier_people(virus_dic):
-    return [k for k, v in virus_dic[STA_K].items() if v == ISOLATED_V or v == HOSPITALIZED_V or v == INFECTED_V]
+    return [k for k, v in virus_dic[STA_K].items() if v in (ISOLATED_V, HOSPITALIZED_V, INFECTED_V)]
 
 
 def get_isolated_people(virus_dic):
@@ -141,7 +176,7 @@ def propagate_to_houses(env_dic, virus_dic, probability_home_infection_arg):
 
 def propagate_to_workplaces(env_dic, virus_dic, probability_work_infection_arg, probability_remote_work_arg):
     # [1, 2, 3] go to work
-    all_gotowork = [i for i in env_dic[IW_K].keys() if get_r() < (1-probability_remote_work_arg) * env_dic[IBE_K][i]]
+    all_gotowork = [i for i in env_dic[IW_K] if get_r() < (1-probability_remote_work_arg) * env_dic[IBE_K][i]]
 
     # Contagious people who will go to work
     infected_gotowork = [i for i in all_gotowork if is_contagious(i, virus_dic)]
@@ -175,7 +210,7 @@ def propagate_to_transportation(env_dic, virus_dic, probability_transport_infect
                                 probability_remote_work_arg, transportation_cap_arg):
     # Contagious people who will go to work
     # [1, 2, 3] go to work
-    infected_who_goto_work = [i for i in get_contagious_people(virus_dic) if i in env_dic[IW_K].keys()
+    infected_who_goto_work = [i for i in get_contagious_people(virus_dic) if i in env_dic[IW_K]
                               and get_r() < (1-probability_remote_work_arg) * env_dic[IBE_K][i]]
 
     # Infected public transportation blocks with cap 2
@@ -223,7 +258,7 @@ def propagate_to_stores(env_dic, virus_dic, probability_store_infection_arg, sam
 
     # We get the list of people who are healty + have chosen an infected store + get bad luck with get_r
     # [2, 6] got infected
-    gonna_be_infected = [ind for (ind, s) in individuals_healthy_with_store if s in infected_stores_dic.keys()
+    gonna_be_infected = [ind for (ind, s) in individuals_healthy_with_store if s in infected_stores_dic
                          and get_r() < probability_store_infection_arg * env_dic[IBE_K][ind] * infected_stores_dic[s]]
 
     # INFECTION STATE UPDATE

@@ -1,31 +1,37 @@
+PYTHON ?= python
+
 init:
-	pip install -r requirements.txt
+	$(PYTHON) -m pip install -r requirements.txt
+
+init-dev:
+	$(PYTHON) -m pip install -r requirements-dev.txt
+
+lint:
+	$(PYTHON) -m ruff check .
+
+format:
+	$(PYTHON) -m ruff check . --fix
 
 test:
-	 python -m tests.run
+	$(PYTHON) -m pytest
 
 coverage:
-	 coverage run -m pytest && coverage xml
-
-report:
-	 coverage report
-
-codecov:
-	 codecov --token=${CODECOV_TOKEN}
+	$(PYTHON) -m pytest --cov --cov-report=xml --cov-report=term
 
 build:
-	 python setup.py sdist bdist_wheel
-
-clean:
-	 python setup.py clean --all
+	$(PYTHON) -m build
 
 check:
-	 python -m twine check dist/*
+	$(PYTHON) -m twine check dist/*
 
-testdeploy:
-	  python -m twine upload --repository testpypi dist/*
+clean:
+	rm -rf build dist *.egg-info .pytest_cache .coverage coverage.xml
+	find . -name __pycache__ -type d -prune -exec rm -rf {} +
 
-deploy:
-	  python -m twine upload dist/*
+testdeploy: build check
+	$(PYTHON) -m twine upload --repository testpypi dist/*
 
-.PHONY: init test clean
+deploy: build check
+	$(PYTHON) -m twine upload dist/*
+
+.PHONY: init init-dev lint format test coverage build check clean testdeploy deploy
