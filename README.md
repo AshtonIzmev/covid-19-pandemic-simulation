@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/AshtonIzmev/covid-19-pandemic-simulation.svg?branch=master)](https://travis-ci.org/AshtonIzmev/covid-19-pandemic-simulation)
+[![CI](https://github.com/AshtonIzmev/covid-19-pandemic-simulation/actions/workflows/ci.yml/badge.svg)](https://github.com/AshtonIzmev/covid-19-pandemic-simulation/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/AshtonIzmev/covid-19-pandemic-simulation/branch/master/graph/badge.svg)](https://codecov.io/gh/AshtonIzmev/covid-19-pandemic-simulation)
 [![pypi](https://badge.fury.io/py/pandemic-simulation.svg)](https://badge.fury.io/py/pandemic-simulation)
 [![license](https://img.shields.io/pypi/l/pandemic-simulation.svg)](https://github.com/AshtonIzmev/covid-19-pandemic-simulation/blob/master/LICENSE)
@@ -8,27 +8,56 @@
 
 
 # Getting started
+
+Python 3.9 or newer.
+
 ```bash
-pip install pandemic-simulation  # Last stable version
-# or
-apt-get install python3-venv gcc python3-dev
+pip install pandemic-simulation  # last stable version
+```
+
+or from a clone of this repository:
+
+```bash
 python3 -m venv ./venv
 source ./venv/bin/activate
 pip install -r requirements.txt
-
+```
 
 ### To plot new daily cases
+```bash
 python -m simulator.run --draw new --show-plot
+```
 
 ### To plot daily state with 150 days and other parameters kept default
-python -m simulator.run --nday 150  --draw pop --show-plot
+```bash
+python -m simulator.run --nday 150 --draw pop --show-plot
+```
 
 ### To plot hospitalization state with 5000 individuals
+```bash
 python -m simulator.run --nday 200 --nind 5000 --draw hos --show-plot
+```
 
 ### To plot a summary of the pandemic (with short immunity time)
-python -m simulator.run  --nday 500 --nind 5000 --immunity-bounds 120 150 --draw sum new --show-plot
+```bash
+python -m simulator.run --nday 500 --nind 5000 --immunity-bounds 120 150 --draw sum new --show-plot
 ```
+
+Without `--show-plot`, graphs are written as png files to `images/output`
+(override with the `PANDEMIC_SIMULATION_OUTPUT_DIR` environment variable).
+
+# Development
+
+```bash
+make init-dev   # install runtime + dev dependencies
+make lint       # ruff
+make test       # pytest
+make coverage   # pytest with a coverage report
+```
+
+Scenario runs cache their environment model under `env_models/` so that
+repeated runs with the same structural parameters skip the rebuild
+(override with `PANDEMIC_SIMULATION_ENV_DIR`).
 
 # Run a scenario
 35k individuals (--nind), 20 simulations (--nrun). Add --show-plot if you want plots to be displayed in a pop-up instead of written to images/output folder
@@ -74,31 +103,27 @@ More scenarios are available in the scenario package.
 
 # Usage
 ```bash
-usage: run_benchmark.py [-h] [--nrun NRUN] [--random-seed RANDOM_SEED]
-                        [--ncpu NUM_CPU] [--nind N_INDIVIDUALS]
-                        [--nday N_DAYS] [--sto-house NB_STORE_PER_HOUSE]
-                        [--nblock NB_1D_GRID_BLOCK]
-                        [--remote-work REMOTE_WORK_PERCENT]
-                        [--sto-pref PROB_PREFERENCE_STORE]
-                        [--sto-nb STORE_NB_CHOICE_KEY]
-                        [--inn-infec INITIAL_INNOCULATION_NB]
-                        [--p-house PROB_HOUSE_INFECTION]
-                        [--p-store PROB_STORE_INFECTION]
-                        [--p-work PROB_WORK_INFECTION]
-                        [--p-transport PROB_TRANSPORT_INFECTION]
-                        [--transport-contact-cap TRANSPORT_CONTACT_CAP]
-                        [--contagion-bounds CONTAGION_BOUNDS CONTAGION_BOUNDS]
-                        [--hospitalization-bounds HOSPITALIZATION_BOUNDS HOSPITALIZATION_BOUNDS]
-                        [--death-bounds DEATH_BOUNDS DEATH_BOUNDS]
-                        [--immunity-bounds IMMUNITY_BOUNDS IMMUNITY_BOUNDS]
-                        [--nbeds-icu ICU_BED_PER_1K_INDIV]
-                        [--scenario-id SCENARIO_ID]
-                        [--draw [DRAW_GRAPH [DRAW_GRAPH ...]]]
-                        [--extra-scenario-params [ADDITIONAL_SCENARIO_PARAMETERS [ADDITIONAL_SCENARIO_PARAMETERS ...]]]
+usage: run.py [-h] [--nrun NRUN] [--random-seed RANDOM_SEED] [--ncpu NUM_CPU]
+          [--nind N_INDIVIDUALS] [--nday N_DAYS] [--nvariant N_VARIANT]
+          [--sto-house NB_STORE_PER_HOUSE] [--nblock NB_1D_GRID_BLOCK]
+          [--remote-work REMOTE_WORK_PERCENT]
+          [--sto-pref PROB_PREFERENCE_STORE] [--sto-nb STORE_NB_CHOICE_KEY]
+          [--inn-infec INITIAL_INNOCULATION_NB]
+          [--p-house PROB_HOUSE_INFECTION] [--p-store PROB_STORE_INFECTION]
+          [--p-work PROB_WORK_INFECTION]
+          [--p-transport PROB_TRANSPORT_INFECTION]
+          [--transport-contact-cap TRANSPORT_CONTACT_CAP]
+          [--contagion-bounds CONTAGION_BOUNDS CONTAGION_BOUNDS]
+          [--hospitalization-bounds HOSPITALIZATION_BOUNDS HOSPITALIZATION_BOUNDS]
+          [--death-bounds DEATH_BOUNDS DEATH_BOUNDS]
+          [--immunity-bounds IMMUNITY_BOUNDS IMMUNITY_BOUNDS]
+          [--nbeds-icu ICU_BED_PER_1K_INDIV] [--scenario-id SCENARIO_ID]
+          [--draw [DRAW_GRAPH ...]] [--show-plot]
+          [--extra-scenario-params [ADDITIONAL_SCENARIO_PARAMETERS ...]]
 
 Please feed model parameters
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   --nrun NRUN           Number of simulations
   --random-seed RANDOM_SEED
@@ -118,7 +143,7 @@ optional arguments:
   --sto-nb STORE_NB_CHOICE_KEY
                         Number of nearest stores to consider
   --inn-infec INITIAL_INNOCULATION_NB
-                        Initial innoculation percentage
+                        Number of individuals infected at day 0
   --p-house PROB_HOUSE_INFECTION
                         Probability of house infection
   --p-store PROB_STORE_INFECTION
@@ -140,14 +165,15 @@ optional arguments:
   --nbeds-icu ICU_BED_PER_1K_INDIV
                         Number of ICU beds per thousand population
   --scenario-id SCENARIO_ID, --sce SCENARIO_ID
-                        Immunity bounds
-  --draw [DRAW_GRAPH [DRAW_GRAPH ...]]
-                        Draw a kind of graph by specifying at least the first
-                        3 letters of its keys. Choose from "example",
-                        "hospital", "new", "summary", "population", "lockdown"
-                        and more
-  --show-plot           Show the plots instead of persistings them to files
-  --extra-scenario-params [ADDITIONAL_SCENARIO_PARAMETERS [ADDITIONAL_SCENARIO_PARAMETERS ...]]
+                        Scenario to run, see the scenario.example package
+  --draw [DRAW_GRAPH ...]
+                        Draw one or more graphs, named by a prefix of their
+                        key. Choose from "population", "new", "hospital",
+                        "summary", "example", "lockdown", "R0", "R0d" and
+                        "metasimu"
+  --show-plot           Show the plots in a window instead of writing them to
+                        images/output
+  --extra-scenario-params [ADDITIONAL_SCENARIO_PARAMETERS ...]
                         Additional scenario parameters
 ```
 

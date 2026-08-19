@@ -1,8 +1,9 @@
 import random
 import unittest
 
+from simulator.constants.keys import CON_K, IBE_K, IW_K, NC_K, STA_K, WI_K
 from simulator.helper.dynamic import propagate_to_workplaces
-from tests.constant import *
+from tests.constant import F, H
 from tests.utils import g_d
 
 

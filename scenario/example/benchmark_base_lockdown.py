@@ -1,24 +1,40 @@
-import random
 import time
 
 import numpy as np
 
-from scenario.helper.scenario import measure_lockdown_strength, get_zero_stats
-from simulator.constants.keys import nrun_key, nindividual_key, nday_key, innoculation_number_key, remote_work_key, \
-    store_preference_key, house_infect_key, work_infection_key, store_infection_key, transport_infection_key, \
-    transport_contact_cap_key, icu_bed_per_thousand_individual_key
-from simulator.constants.keys import random_seed_key
-from simulator.helper.dynamic import propagate_to_stores, propagate_to_houses, propagate_to_workplaces, \
-    increment_pandemic_1_day, update_stats, propagate_to_transportation
+from scenario.helper.scenario import get_zero_stats, measure_lockdown_strength
+from simulator.constants.keys import (
+    house_infect_key,
+    icu_bed_per_thousand_individual_key,
+    innoculation_number_key,
+    nday_key,
+    nindividual_key,
+    nrun_key,
+    remote_work_key,
+    store_infection_key,
+    store_preference_key,
+    transport_contact_cap_key,
+    transport_infection_key,
+    work_infection_key,
+)
+from simulator.helper.dynamic import (
+    increment_pandemic_1_day,
+    propagate_to_houses,
+    propagate_to_stores,
+    propagate_to_transportation,
+    propagate_to_workplaces,
+    update_stats,
+)
 from simulator.helper.simulation import get_virus_simulation_t0
 
-# I did not find any satisfying python profiler Help needed
-prof_stats = np.zeros(5)
-prof_nstats = np.zeros(5)
+STEP_NAMES = ("houses", "transport", "workplaces", "stores", "day")
 
 
-# This scenario is the basic one with a classic dynamic
-def launch_run(params, env_dic):
+# This scenario is the basic one with a classic dynamic.
+# `profile` prints the cumulated wall time of each propagation step.
+def launch_run(params, env_dic, profile=False):
+    prof_stats = np.zeros(len(STEP_NAMES))
+    prof_nstats = np.zeros(len(STEP_NAMES))
     stats = get_zero_stats(params)
     for r in range(params[nrun_key]):
 
@@ -39,11 +55,11 @@ def launch_run(params, env_dic):
             prof_stats[1] += time.time() - time_init
             prof_nstats[1] += 1
             time_init = time.time()
-            ind_work = propagate_to_workplaces(env_dic, virus_dic, params[work_infection_key], params[remote_work_key])
+            propagate_to_workplaces(env_dic, virus_dic, params[work_infection_key], params[remote_work_key])
             prof_stats[2] += time.time() - time_init
             prof_nstats[2] += 1
             time_init = time.time()
-            ind_sto = propagate_to_stores(env_dic, virus_dic, params[store_infection_key], params[store_preference_key])
+            propagate_to_stores(env_dic, virus_dic, params[store_infection_key], params[store_preference_key])
             prof_stats[3] += time.time() - time_init
             prof_nstats[3] += 1
             time_init = time.time()
@@ -54,6 +70,7 @@ def launch_run(params, env_dic):
             update_stats(virus_dic, stats, r, day)
             stats["loc"][r][day] = measure_lockdown_strength(params)
 
-    print(prof_stats)
-    print(prof_nstats)
+    if profile:
+        for name, total, count in zip(STEP_NAMES, prof_stats, prof_nstats):
+            print(f"{name:<10} {total:7.3f}s over {int(count)} calls")
     return stats

@@ -2,13 +2,81 @@ import random
 
 import numpy as np
 import ray
-
-from scenario.helper.scenario import get_zero_run_stats, is_weekend
-from simulator.constants.keys import *
-from simulator.helper.dynamic import propagate_to_stores, propagate_to_houses, propagate_to_workplaces, \
-    increment_pandemic_1_day, update_run_stat, propagate_to_transportation, get_deadpeople
-from simulator.helper.simulation import get_virus_simulation_t0
 from ray.actor import ActorHandle
+
+from scenario.helper.scenario import is_weekend, parse_bool, read_extra_params
+from simulator.constants.keys import (
+    HEALTHY_V,
+    IAG_K,
+    IMMUNE_V,
+    STA_K,
+    death_bounds_key,
+    hospitalization_bounds_key,
+    house_infect_key,
+    icu_bed_per_thousand_individual_key,
+    immunity_bounds_key,
+    innoculation_number_key,
+    nday_key,
+    nindividual_key,
+    nvariant_key,
+    remote_work_key,
+    store_infection_key,
+    store_preference_key,
+    transport_contact_cap_key,
+    transport_infection_key,
+    variant_hospitalization_k,
+    variant_mortality_k,
+    work_infection_key,
+)
+from simulator.helper.dynamic import (
+    get_deadpeople,
+    increment_pandemic_1_day,
+    propagate_to_houses,
+    propagate_to_stores,
+    propagate_to_transportation,
+    propagate_to_workplaces,
+)
+from simulator.helper.simulation import get_virus_simulation_t0
+
+VARIANT_KINDS = ("C", "I", "M", "H", "MH", "HM")
+
+
+def get_variant_factors(variant_kind, variant_iter, nb_variants, restrict_genetic_cost):
+    """The four factors describing one variant along the studied axis.
+
+    Contagiosity, mortality and hospitalisation sweep [0.25, 1.75] (+/- 75%) and
+    immunisation escape sweeps [1, 3]; the untouched axes stay neutral at 1.
+
+    The factors used to be initialised once outside the sweep and mutated in
+    place, so under `restrict_genetic_cost` each iteration re-normalised the
+    already-normalised values of the previous one and they decayed towards 0.
+    """
+    if variant_kind not in VARIANT_KINDS:
+        raise ValueError(f"Unknown variant kind {variant_kind!r}, expected one of {list(VARIANT_KINDS)}")
+
+    step = variant_iter / nb_variants
+    contagiosity, immunization, mortality, hospital = 1.0, 1.0, 1.0, 1.0
+
+    if variant_kind == "C":
+        contagiosity = 0.25 + 1.5 * step
+    elif variant_kind == "I":
+        immunization = 1 + 2 * step
+    elif variant_kind == "M":
+        mortality = 0.25 + 1.5 * step
+    elif variant_kind == "H":
+        hospital = 0.25 + 1.5 * step
+    else:  # "MH" / "HM" : deadlier but less hospitalising, and the other way round
+        mortality = 0.25 + 1.5 * step
+        hospital = 1.75 - 1.5 * step
+
+    if restrict_genetic_cost:
+        # A variant only has so much genome to spend: normalise so the four
+        # advantages always sum to 1.
+        total_cost = contagiosity + immunization + mortality + hospital
+        contagiosity, immunization, mortality, hospital = (contagiosity / total_cost, immunization / total_cost,
+                                                           mortality / total_cost, hospital / total_cost)
+
+    return contagiosity, immunization, mortality, hospital
 
 
 @ray.remote
@@ -17,14 +85,8 @@ def do_parallel_run(env_dic, params, run_id, specific_seed, pba: ActorHandle):
     random.seed(specific_seed)
     np.random.seed(specific_seed)
 
-    if len(params[additional_scenario_params_key]) < 3:
-        raise AssertionError("Need more additional_scenario parameter")
-    else:
-        assert(params[additional_scenario_params_key][2] in ["False", "True"])
-        rate_daily_vaccinated = int(params[additional_scenario_params_key][0])
-        variant_kind = params[additional_scenario_params_key][1]
-        restrict_genetic_cost = params[additional_scenario_params_key][2] == "True"
-
+    rate_daily_vaccinated, variant_kind, restrict_genetic_cost = read_extra_params(
+        params, float, str, parse_bool)
     if rate_daily_vaccinated < 0:
         # Morrocan daily rate of vaccination
         rate_daily_vaccinated = 0.00428
@@ -34,35 +96,11 @@ def do_parallel_run(env_dic, params, run_id, specific_seed, pba: ActorHandle):
     params[innoculation_number_key] = 5
     available_beds = params[icu_bed_per_thousand_individual_key] * params[nindividual_key] / 1000
 
-    # Variant parameters
-    variant_contagiosity = 1
-    variant_immunization = 1
-    variant_mortality = 1  # tradeoff parameter
-    variant_hospital = 1  # tradeoff parameter
-
     death_stat = []
 
     for param_variant_iter in range(params[nvariant_key]):
-        # Update parameters
-        # Range [0.25, 1.75] with a 1/param step (+/- 75%)
-        if variant_kind == "C":
-            variant_contagiosity = 0.25 + 1.5 * param_variant_iter / params[nvariant_key]
-        if variant_kind == "I":
-            variant_immunization = 1 + 2 * param_variant_iter / params[nvariant_key]
-        if variant_kind == "M":
-            variant_mortality = 0.25 + 1.5 * param_variant_iter / params[nvariant_key]
-        if variant_kind == "H":
-            variant_hospital = 0.25 + 1.5 * param_variant_iter / params[nvariant_key]
-        if variant_kind == "MH" or variant_kind == "HM":
-            variant_mortality = 0.25 + 1.5 * param_variant_iter / params[nvariant_key]
-            variant_hospital = 1.75 - 1.5 * param_variant_iter / params[nvariant_key]
-
-        if restrict_genetic_cost:
-            variant_total_cost = variant_contagiosity + variant_immunization + variant_mortality + variant_hospital
-            variant_contagiosity /= variant_total_cost
-            variant_immunization /= variant_total_cost
-            variant_mortality /= variant_total_cost
-            variant_hospital /= variant_total_cost
+        variant_contagiosity, variant_immunization, variant_mortality, variant_hospital = \
+            get_variant_factors(variant_kind, param_variant_iter, params[nvariant_key], restrict_genetic_cost)
 
         params[house_infect_key] = 0.5 * variant_contagiosity
         params[work_infection_key] = 0.05 * variant_contagiosity

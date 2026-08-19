@@ -1,5 +1,7 @@
-env_models/env*
+env_models/*
+!env_models/.gitkeep
 images/output/*
+!images/output/.gitkeep
 
 .idea
 
