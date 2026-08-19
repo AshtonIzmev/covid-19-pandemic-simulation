@@ -1,7 +1,9 @@
 import ray
+
 # For typing purposes
 from ray.actor import ActorHandle
 from tqdm import tqdm
+
 from scenario.helper.progressbar_actor import ProgressBarActor
 
 

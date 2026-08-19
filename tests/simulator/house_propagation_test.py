@@ -1,8 +1,9 @@
 import random
 import unittest
 
+from simulator.constants.keys import CON_K, HI_K, IBE_K, IH_K, NC_K, STA_K
 from simulator.helper.dynamic import propagate_to_houses
-from tests.constant import *
+from tests.constant import D, F, H, M
 from tests.utils import g_d
 
 

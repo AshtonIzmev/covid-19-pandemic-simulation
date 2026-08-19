@@ -3,16 +3,51 @@ import random
 
 from scipy import spatial
 
-from simulator.constants.keys import nindividual_key, store_per_house_key, nb_1d_block_key, store_nb_choice_key, \
-    transport_contact_cap_key, IH_K, HI_K, IAD_K, IAG_K, IW_K, WI_K, HA_K, HS_K, ITI_K, HB_K, IBE_K, IDEA_K, IHOS_K, \
-    IS_K, SI_K, ITB_K, ISYM_K
-from simulator.constants.parameters import TPE_MAX_EMPLOYEES, PME_MAX_EMPLOYEES, GE_MAX_EMPLOYEES, covid_mortality_rate, \
-    covid_hospitalization_rate, covid_symptom_rate
-from simulator.constants.parameters import age_dist_adults_cs, age_dist_adults, \
-    age_dist_children, age_dist_children_cs
-from simulator.helper.utils import invert_map, get_r, get_center_squized_random, rec_get_manhattan_walk, \
-    invert_map_list, \
-    get_random_sample, get_clipped_gaussian_number
+from simulator.constants.keys import (
+    HA_K,
+    HB_K,
+    HI_K,
+    HS_K,
+    IAD_K,
+    IAG_K,
+    IBE_K,
+    IDEA_K,
+    IH_K,
+    IHOS_K,
+    IS_K,
+    ISYM_K,
+    ITB_K,
+    ITI_K,
+    IW_K,
+    SI_K,
+    WI_K,
+    nb_1d_block_key,
+    nindividual_key,
+    store_nb_choice_key,
+    store_per_house_key,
+    transport_contact_cap_key,
+)
+from simulator.constants.parameters import (
+    GE_MAX_EMPLOYEES,
+    PME_MAX_EMPLOYEES,
+    TPE_MAX_EMPLOYEES,
+    age_dist_adults,
+    age_dist_adults_cs,
+    age_dist_children,
+    age_dist_children_cs,
+    covid_hospitalization_rate,
+    covid_mortality_rate,
+    covid_symptom_rate,
+)
+from simulator.helper.utils import (
+    get_center_squized_random,
+    get_clipped_gaussian_number,
+    get_r,
+    get_random_sample,
+    invert_map,
+    invert_map_list,
+    rec_get_manhattan_walk,
+)
 
 
 def get_clean_env_params(params_arg):
@@ -22,13 +57,8 @@ def get_clean_env_params(params_arg):
             "nb_1d_block": params_arg[nb_1d_block_key],
             "nb_store_choice": params_arg[store_nb_choice_key],
             "transportation_cap": params_arg[transport_contact_cap_key]
-        }, "%d-%d-%d-%d-%d" % (
-        params_arg[nindividual_key],
-        params_arg[store_per_house_key],
-        params_arg[nb_1d_block_key],
-        params_arg[store_nb_choice_key],
-        params_arg[transport_contact_cap_key]
-    )
+        }, "-".join(str(params_arg[k]) for k in (nindividual_key, store_per_house_key, nb_1d_block_key,
+                                                    store_nb_choice_key, transport_contact_cap_key))
 
 
 def get_environment_simulation(params_arg):
@@ -104,9 +134,9 @@ def build_individual_houses_map(number_individual_arg):
     i_ind = 0
     while i_ind < number_individual_arg:
         family_members = get_moroccan_household_distribution()
-        individulas = range(i_ind, i_ind+family_members)
+        individuals = range(i_ind, i_ind+family_members)
         index_house = [i_hou]*family_members
-        one_house = dict(zip(individulas, index_house))
+        one_house = dict(zip(individuals, index_house))
         all_ind_hou.update(one_house)
         i_ind = i_ind+family_members
         i_hou += 1
@@ -156,24 +186,15 @@ def build_individual_age_map(individual_house_map_arg):
 
 
 def build_individual_death_rate_map(indiv_age_arg):
-    indiv_death_rate = {}
-    for k, v in indiv_age_arg.items():
-        indiv_death_rate[k] = get_mortalty_rate(indiv_age_arg[k])
-    return indiv_death_rate
+    return {k: get_mortality_rate(age) for k, age in indiv_age_arg.items()}
 
 
 def build_individual_hospitalization_map(indiv_age_arg):
-    indiv_hos_rate = {}
-    for k, v in indiv_age_arg.items():
-        indiv_hos_rate[k] = get_hospitalization_rate(indiv_age_arg[k])
-    return indiv_hos_rate
+    return {k: get_hospitalization_rate(age) for k, age in indiv_age_arg.items()}
 
 
 def build_individual_symptom_map(indiv_age_arg):
-    indiv_sym_rate = {}
-    for k, v in indiv_age_arg.items():
-        indiv_sym_rate[k] = get_symptom_rate(indiv_age_arg[k])
-    return indiv_sym_rate
+    return {k: get_symptom_rate(age) for k, age in indiv_age_arg.items()}
 
 
 def build_house_adult_map(individual_house_map_arg, individual_adult_map_arg):
@@ -187,17 +208,11 @@ def build_house_adult_map(individual_house_map_arg, individual_adult_map_arg):
 
 
 def build_geo_positions_house(number_house_arg):
-    return [(get_r(), get_r()) for i in range(number_house_arg)]
+    return [(get_r(), get_r()) for _ in range(number_house_arg)]
 
 
 def build_block_assignment(geo_arg, nb_1d_blocks_arg):
     return [(int(h[0] * nb_1d_blocks_arg), int(h[1] * nb_1d_blocks_arg)) for h in geo_arg]
-
-
-def build_2d_item_behavior(nb_items):
-    item_list = [(i, j) for i in range(nb_items) for j in range(nb_items)]
-    behavior_list = [get_lockdown_behavior_distribution() for _ in range(nb_items * nb_items)]
-    return dict(zip(item_list, behavior_list))
 
 
 def build_1d_item_behavior(nb_items):
@@ -206,15 +221,11 @@ def build_1d_item_behavior(nb_items):
 
 
 def build_geo_positions_store(number_store_arg):
-    return [(get_r(), get_r()) for i in range(number_store_arg)]
+    return [(get_r(), get_r()) for _ in range(number_store_arg)]
 
 
-def build_geo_positions_workplace(number_workpolace_arg):
-    return [(get_center_squized_random(), get_center_squized_random()) for i in range(number_workpolace_arg)]
-
-
-def get_store_index(indexes, prob_preference_store):
-    return [index[0] if get_r() < prob_preference_store else index[1] for index in indexes]
+def build_geo_positions_workplace(number_workplace_arg):
+    return [(get_center_squized_random(), get_center_squized_random()) for _ in range(number_workplace_arg)]
 
 
 def build_house_store_map(geo_position_store_arg, geo_position_house_arg, nb_store_choice):
@@ -236,12 +247,12 @@ def build_store_individual_map(indiv_store_arg):
 
 def build_individual_work_map(individual_adult_map_arg):
     # Only adults work
-    workers = list([ind for ind, is_adult in individual_adult_map_arg.items() if is_adult == 1])
+    workers = [ind for ind, is_adult in individual_adult_map_arg.items() if is_adult == 1]
     random.shuffle(workers)
     all_ind_wor = {}
     i_wor = 0
     while len(workers) > 0:
-        for j in range(pick_random_company_size()):
+        for _j in range(pick_random_company_size()):
             if len(workers) == 0:
                 break
             ind = workers.pop()
@@ -259,7 +270,7 @@ def build_individual_workblock_map(individual_house_map_arg, individual_workplac
                                    house_block_map_arg, workplace_block_map_arg):
     # Individual to blocks durint public transport
     intermediate_blocks = {}
-    for ind, work in individual_workplace_map_arg.items():
+    for ind, _work in individual_workplace_map_arg.items():
         house_block = house_block_map_arg[individual_house_map_arg[ind]]
         workplace_block = workplace_block_map_arg[individual_workplace_map_arg[ind]]
         intermediate_blocks[ind] = rec_get_manhattan_walk([], house_block, workplace_block)
@@ -317,7 +328,7 @@ def pick_age(is_child):
     return int(min_age_i + (max_age_i - min_age_i) * get_r())
 
 
-def get_mortalty_rate(age):
+def get_mortality_rate(age):
     i = next(x for x in enumerate(list(covid_mortality_rate.keys())) if x[1] <= age / 10)
     return covid_mortality_rate[i[1]]
 

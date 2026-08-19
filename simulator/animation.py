@@ -1,10 +1,10 @@
-import random
 import math
+import random
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
-
 
 all_ind_hou = {0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2}
 all_hou_sto = {0: [0, 1, 1], 1: [0, 1, 1], 2: [0, 1, 1]}
@@ -23,32 +23,35 @@ geo_wor = [(0.4897435154301719, 0.5274856155785992)]
 colors = {0: "#3F88C5", 3: "#151515", 1: "#A63D40", 4: "#5000FA", 2: "#90A959", 5: "#008080"}
 
 
-fig, ax = plt.subplots(figsize=(12, 12))
+def build_figure():
+    fig, ax = plt.subplots(figsize=(12, 12))
 
-sto_sizes_dic = {k: len(v) for k, v in sto_ind.items()}
+    sto_sizes_dic = {k: len(v) for k, v in sto_ind.items()}
 
-scale_houses = 100*pd.Series(all_ind_hou).value_counts().sort_index().values  # Size of each house
-scale_workplaces = 100*pd.Series(all_ind_wor).value_counts().sort_index().values  # Size of each house
-scale_stores = 100*pd.Series(sto_sizes_dic).value_counts().sort_index().values  # Size of each house
+    scale_houses = 100*pd.Series(all_ind_hou).value_counts().sort_index().values  # Size of each house
+    scale_workplaces = 100*pd.Series(all_ind_wor).value_counts().sort_index().values  # Size of each house
+    scale_stores = 100*pd.Series(sto_sizes_dic).value_counts().sort_index().values  # Size of each house
 
-ax.scatter(np.array(geo_hou)[:, 0], np.array(geo_hou)[:, 1], c="#989C94", s=scale_houses, label="House",
-           alpha=0.25, edgecolors='none')
-ax.scatter(np.array(geo_wor)[:, 0], np.array(geo_wor)[:, 1], c="#593C8F", s=scale_workplaces, label="Workplace",
-           alpha=0.25, edgecolors='none')
-ax.scatter(np.array(geo_sto)[:, 0], np.array(geo_sto)[:, 1], c="#FFCB47", s=scale_stores, label="Store",
-           alpha=0.25, edgecolors='none')
+    ax.scatter(np.array(geo_hou)[:, 0], np.array(geo_hou)[:, 1], c="#989C94", s=scale_houses, label="House",
+               alpha=0.25, edgecolors='none')
+    ax.scatter(np.array(geo_wor)[:, 0], np.array(geo_wor)[:, 1], c="#593C8F", s=scale_workplaces, label="Workplace",
+               alpha=0.25, edgecolors='none')
+    ax.scatter(np.array(geo_sto)[:, 0], np.array(geo_sto)[:, 1], c="#FFCB47", s=scale_stores, label="Store",
+               alpha=0.25, edgecolors='none')
 
-for x, y in geo_hou:
-    ax.text(x-0.005, y+0.02, 'H')
-for x, y in geo_wor:
-    ax.text(x-0.005, y+0.02, 'W')
-for x, y in geo_sto:
-    ax.text(x-0.005, y+0.01, 'S')
+    for x, y in geo_hou:
+        ax.text(x-0.005, y+0.02, 'H')
+    for x, y in geo_wor:
+        ax.text(x-0.005, y+0.02, 'W')
+    for x, y in geo_sto:
+        ax.text(x-0.005, y+0.01, 'S')
 
-ax.legend()
-ax.grid(True)
+    ax.legend()
+    ax.grid(True)
 
-scat = ax.scatter([], [], s=60)
+    scat = ax.scatter([], [], s=60)
+
+    return fig, scat
 
 
 def c_r(noise):
@@ -149,8 +152,9 @@ def get_loc_around_work(n_indiv_arg, work_indices_arg, noise):
     return result
 
 
-def init_plot():
-    scat.set_offsets([])
+def init_plot(scat):
+    # set_offsets rejects a plain empty list, it wants an (N, 2) array.
+    scat.set_offsets(np.empty((0, 2)))
     return scat,
 
 
@@ -171,7 +175,7 @@ f = int(1.9*dt)
 g = int(2.9*dt)
 
 
-def update(frame):
+def update(frame, scat, ind_colors):
     if frame < a:
         scat.set_offsets(np.array(get_loc_house_to_store(len(all_ind_hou), ind_sto, sig, frame, a)))
     elif frame < b:
@@ -191,5 +195,15 @@ def update(frame):
     return scat,
 
 
-ani = FuncAnimation(fig, update, frames=g, interval=50, init_func=init_plot, blit=True)
-plt.show()
+def main(show=True):
+    fig, scat = build_figure()
+    ind_colors = np.array([colors[v] for v in sta_k.values()])
+    ani = FuncAnimation(fig, lambda frame: update(frame, scat, ind_colors), frames=g,
+                        interval=50, init_func=lambda: init_plot(scat), blit=True)
+    if show:
+        plt.show()
+    return ani
+
+
+if __name__ == '__main__':
+    main()

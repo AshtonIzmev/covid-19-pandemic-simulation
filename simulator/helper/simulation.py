@@ -1,12 +1,48 @@
-from simulator.constants.keys import *
-from simulator.constants.keys import nrun_key, scenario_id_key, random_seed_key, draw_graph_key, nindividual_key, \
-    nday_key, \
-    innoculation_number_key, nb_1d_block_key, quarantine_days_key, remote_work_key, store_per_house_key, \
-    store_preference_key, store_nb_choice_key, house_infect_key, work_infection_key, store_infection_key, \
-    transport_infection_key, transport_contact_cap_key, contagion_bounds_key, hospitalization_bounds_key, \
-    death_bounds_key, immunity_bounds_key, icu_bed_per_thousand_individual_key, additional_scenario_params_key
-from simulator.helper.utils import get_r
 import copy
+
+from simulator.constants.keys import (
+    CON_INIT_K,
+    CON_K,
+    DEA_INIT_K,
+    DEA_K,
+    HEALTHY_V,
+    HOS_INIT_K,
+    HOS_K,
+    IMM_INIT_K,
+    IMM_K,
+    INFECTED_V,
+    NC_K,
+    STA_K,
+    additional_scenario_params_key,
+    contagion_bounds_key,
+    death_bounds_key,
+    draw_graph_key,
+    hospitalization_bounds_key,
+    house_infect_key,
+    icu_bed_per_thousand_individual_key,
+    immunity_bounds_key,
+    innoculation_number_key,
+    nb_1d_block_key,
+    ncpu_key,
+    nday_key,
+    nindividual_key,
+    nrun_key,
+    nvariant_key,
+    random_seed_key,
+    remote_work_key,
+    scenario_id_key,
+    show_plot_key,
+    store_infection_key,
+    store_nb_choice_key,
+    store_per_house_key,
+    store_preference_key,
+    transport_contact_cap_key,
+    transport_infection_key,
+    variant_hospitalization_k,
+    variant_mortality_k,
+    work_infection_key,
+)
+from simulator.helper.utils import get_r
 
 
 def get_virus_simulation_t0(params_arg):
@@ -17,28 +53,27 @@ def get_virus_simulation_t0(params_arg):
     death_bound_args = params_arg[death_bounds_key]
     immunity_bound_args = params_arg[immunity_bounds_key]
 
-    inn_ind_cov = dict(zip(range(number_of_individuals_arg),
-                           [int(get_r() <= infection_initialization_number_arg / number_of_individuals_arg)
-                            for i in range(number_of_individuals_arg)]))
+    innoculation_probability = infection_initialization_number_arg / number_of_individuals_arg
+    infected_individual_init = [i for i in range(number_of_individuals_arg)
+                                if get_r() <= innoculation_probability]
 
-    life_state = dict(zip(range(number_of_individuals_arg), [HEALTHY_V] * number_of_individuals_arg))
+    life_state = dict.fromkeys(range(number_of_individuals_arg), HEALTHY_V)
 
-    def get_infection_params():
-        return get_infection_parameters(contagion_bound_args[0], contagion_bound_args[1],
-                                        hospitalization_args[0], hospitalization_args[1],
-                                        death_bound_args[0], death_bound_args[1],
-                                        immunity_bound_args[0], immunity_bound_args[1])
+    # One draw of the 4 periods per individual. This used to call
+    # get_infection_parameters() four times per individual and keep a single
+    # component of each result, burning 12 random numbers out of every 16.
+    individual_periods = [
+        get_infection_parameters(contagion_bound_args[0], contagion_bound_args[1],
+                                 hospitalization_args[0], hospitalization_args[1],
+                                 death_bound_args[0], death_bound_args[1],
+                                 immunity_bound_args[0], immunity_bound_args[1])
+        for _ in range(number_of_individuals_arg)
+    ]
 
-    time_to_contagion = dict(zip(range(number_of_individuals_arg),
-                                 [get_infection_params()[0] for _ in range(number_of_individuals_arg)]))
-    time_to_hospital = dict(zip(range(number_of_individuals_arg),
-                                [get_infection_params()[1] for _ in range(number_of_individuals_arg)]))
-    time_to_death = dict(zip(range(number_of_individuals_arg),
-                             [get_infection_params()[2] for _ in range(number_of_individuals_arg)]))
-    time_to_end_immunity = dict(zip(range(number_of_individuals_arg),
-                                    [get_infection_params()[3] for _ in range(number_of_individuals_arg)]))
-
-    infected_individual_init = [k for k, v in inn_ind_cov.items() if v == 1]
+    time_to_contagion = {i: p[0] for i, p in enumerate(individual_periods)}
+    time_to_hospital = {i: p[1] for i, p in enumerate(individual_periods)}
+    time_to_death = {i: p[2] for i, p in enumerate(individual_periods)}
+    time_to_end_immunity = {i: p[3] for i, p in enumerate(individual_periods)}
 
     for individual in infected_individual_init:
         life_state[individual] = INFECTED_V
@@ -55,8 +90,8 @@ def get_virus_simulation_t0(params_arg):
         DEA_INIT_K: copy.deepcopy(time_to_death),
         IMM_INIT_K: copy.deepcopy(time_to_end_immunity),
 
-        variant_mortality_k: params_arg[variant_mortality_k] if variant_mortality_k in params_arg else 1,
-        variant_hospitalization_k: params_arg[variant_hospitalization_k] if variant_hospitalization_k in params_arg else 1,
+        variant_mortality_k: params_arg.get(variant_mortality_k, 1),
+        variant_hospitalization_k: params_arg.get(variant_hospitalization_k, 1),
 
         STA_K: life_state,
         NC_K: 0
@@ -109,8 +144,6 @@ def get_default_params():
         # we still don't really know about long-term immunity so let's assume it is a lifetime one
         # https://edition.cnn.com/2020/04/17/health/south-korea-coronavirus-retesting-positive-intl-hnk/index.html
         immunity_bounds_key: (900, 1000),  # Bounds defining a draw for immunity period
-
-        quarantine_days_key: 15,  # the days of isolation if the test is positive
 
         # Moroccan data : http://northafricapost.com/39786-covid-19-morocco-expands-hospital-capacity.html
         icu_bed_per_thousand_individual_key: 0.085,

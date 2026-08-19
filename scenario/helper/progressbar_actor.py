@@ -1,5 +1,4 @@
 from asyncio import Event
-from typing import Tuple
 
 import ray
 
@@ -24,7 +23,7 @@ class ProgressBarActor:
         self.delta += num_items_completed
         self.event.set()
 
-    async def wait_for_update(self) -> Tuple[int, int]:
+    async def wait_for_update(self) -> tuple[int, int]:
         """Blocking call.
 
         Waits until somebody calls `update`, then returns a tuple of

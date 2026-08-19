@@ -3,9 +3,9 @@ HI_K = "house_to_individual_mapping"
 IAD_K = "individual_to_adult_mapping"
 IAG_K = "individual_to_age_mapping"
 
-IDEA_K = "individual_to_death_mapping"
-IHOS_K = "individual_to_hospitalization_mapping"
-ISYM_K = "individual_to_symptom_mapping"
+IDEA_K = "individual_to_death_rate_mapping"
+IHOS_K = "individual_to_hospitalization_rate_mapping"
+ISYM_K = "individual_to_symptom_rate_mapping"
 
 IW_K = "individual_to_work_mapping"
 WI_K = "work_to_individual_mapping"
@@ -44,7 +44,6 @@ nvariant_key = "N_VARIANT"
 
 innoculation_number_key = "INITIAL_INNOCULATION_NB"
 nb_1d_block_key = "NB_1D_GRID_BLOCK"
-quarantine_days_key = "QUARANTINE_DAYS"
 remote_work_key = "REMOTE_WORK_PERCENT"
 
 store_per_house_key = "NB_STORE_PER_HOUSE"

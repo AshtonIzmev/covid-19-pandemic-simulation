@@ -1,9 +1,32 @@
 import random
 import unittest
 
-from simulator.helper.dynamic import increment_pandemic_1_day, hospitalize_infected, isolate_infected, \
-    decide_life_immunity
-from tests.constant import *
+from simulator.constants.keys import (
+    CON_INIT_K,
+    CON_K,
+    DEA_INIT_K,
+    DEA_K,
+    HI_K,
+    HOS_INIT_K,
+    HOS_K,
+    IAG_K,
+    IDEA_K,
+    IH_K,
+    IHOS_K,
+    IMM_INIT_K,
+    IMM_K,
+    ISYM_K,
+    STA_K,
+    variant_hospitalization_k,
+    variant_mortality_k,
+)
+from simulator.helper.dynamic import (
+    decide_life_immunity,
+    hospitalize_infected,
+    increment_pandemic_1_day,
+    isolate_infected,
+)
+from tests.constant import D, F, H, M, P, S
 
 
 class TestSimulation(unittest.TestCase):

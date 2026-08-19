@@ -1,12 +1,11 @@
-pandas~=1.1.5
-matplotlib~=3.3.4
-seaborn~=0.11.1
-scipy~=1.5.4
-numpy~=1.19.5
-argparse~=1.4.0
-ray~=1.2.0
-psutil~=5.7.0
-joblib~=1.0.1
-setuptools~=54.1.0
-scikit-learn~=0.24.1
-tqdm~=4.59
+# Runtime dependencies. Versions are also declared in pyproject.toml;
+# this file pins the floors that are known to work with python >= 3.9.
+joblib>=1.3
+matplotlib>=3.7
+numpy>=1.24
+pandas>=2.0
+psutil>=5.9
+ray>=2.9
+scikit-learn>=1.3
+scipy>=1.10
+tqdm>=4.65
